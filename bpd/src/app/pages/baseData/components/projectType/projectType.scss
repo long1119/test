@@ -1,0 +1,50 @@
+@import "../../../sass/privateStyle";
+.project-type-content {
+    .data-table {
+        text-align: center;
+        margin-top: 1rem;
+        .edit-button {
+            margin: .3rem;
+            &>span {
+                background-color: $buttons;
+                padding: .2rem .5rem;
+            }
+        }
+    }
+    .content-changes {
+        margin: 2rem 0 1rem 0;
+        border-bottom: 1px solid shade($ebontab, 15%);
+        button {
+            margin: 0 1rem 0 0; // padding: .3rem;
+            border: 2px solid shade($ebontab, 15%);
+            background-color: shade($ebontab, 5%);
+            border-color: shade($ebontab, 5%);
+            color: #000; // border-radius: 20%;
+            &:hover {
+                border: 2px solid shade($buttons, 15%);
+            }
+            &:focus {
+                border: 2px solid shade($buttons, 15%);
+                background-color: shade($buttons, 15%);
+                border-color: shade($buttons, 15%);
+                color: #fff;
+            }
+        }
+    }
+    .dialog {
+        &>div {
+            width: 30%;
+            &>div {
+                &>div {
+                    &>div {
+                        margin: .5rem 0;
+                    }
+                }
+            }
+            input {
+                width: 100%;
+                // float: right;
+            }
+        }
+    }
+}

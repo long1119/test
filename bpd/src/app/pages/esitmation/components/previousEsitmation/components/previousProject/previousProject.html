@@ -1,0 +1,123 @@
+<div class="previous-project">
+    <button *ngIf="localStorageAuthority" [disabled]="!changeProjectCode" pButton type="button" class="project-button" (click)="addClick()" label="Add"></button>
+    <button *ngIf="localStorageAuthority" [disabled]="!changeProjectCode" pButton type="button" class="project-button" (click)="exportClick()" label="Export"></button>
+    <p-dataTable class="ui-grid-col-12 data-table" [value]="baseData" [paginator]="true" rows="10">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="data.projectEstimationCode">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="regionCategoryName" header="Item "></p-column>
+        <p-column styleClass="ui-grid-col-2" field="investment" header="Investment"></p-column>
+        <p-column styleClass="ui-grid-col-2" field="estimationDescription" header="Description"></p-column>
+        <p-column styleClass="ui-grid-col-2" field="estimateComment" header="Comment"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-3" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span class="edit-span" *ngIf="data.projectEstimationCode" (click)="editClick(idx,data)">Edit</span>
+                <span class="edit-span" *ngIf="data.projectEstimationCode" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- 添加页面显示 -->
+    <p-dialog class="dialog" header="Esitmation Add" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label>Item :</label></div>
+                <div class="ui-grid-col-7">
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <p-dataTable class="data-table" [value]="categoryData" [(selection)]="selectedCategory" scrollable="true" scrollHeight="15rem">
+                    <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+                    <p-column field="regionCategoryNameEnglish" header="Region Category Code"></p-column>
+                    <p-column field="regionCategoryNameChinese" header="Region Category Name"></p-column>
+                </p-dataTable>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label>Investment :</label></div>
+                <div class="ui-grid-col-3">
+                    <input (keydown)="messageService.checkNumValue($event, 99999999)" type="text" pInputText required [(ngModel)]="dialogInvestment" />
+                </div>
+                <div class="ui-grid-col-7"></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label>Description :</label></div>
+                <div class="ui-grid-col-3">
+                    <input maxlength="150" pInputText [(ngModel)]="dialogDescription" />
+                </div>
+                <div class="ui-grid-7"></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label>Comment :</label></div>
+                <div class="ui-grid-col-3">
+                    <input maxlength="150" pInputText [(ngModel)]="dialogComment" />
+                </div>
+                <div class="ui-grid-col-7"></div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                <button type="submit" [(disabled)]="!selectedCategory.length" pButton  (click)="addSave()" label="Save"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 编辑页面 -->
+    <p-dialog class="dialog" header="Esitmation Edit" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label>Item :</label></div>
+                <div class="ui-grid-col-7">
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <p-dataTable class="data-table" [value]="categoryData" [(selection)]="selectedCategory" scrollable="true" scrollHeight="15rem">
+                    <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+                    <p-column field="regionCategoryNameEnglish" header="Region Category Code"></p-column>
+                    <p-column field="regionCategoryNameChinese" header="Region Category Name"></p-column>
+                </p-dataTable>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label>Investment :</label></div>
+                <div class="ui-grid-col-3">
+                    <input (keydown)="messageService.checkNumValue($event, 999999)" type="text" pInputText maxlength="10" [(ngModel)]="dialogInvestment" />
+                </div>
+                <div class="ui-grid-col-7"></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label>Description :</label></div>
+                <div class="ui-grid-col-3">
+                    <input pInputText maxlength="150" [(ngModel)]="dialogDescription" />
+                </div>
+                <div class="ui-grid-7"></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label>Comment :</label></div>
+                <div class="ui-grid-col-3">
+                    <input maxlength="150" pInputText [(ngModel)]="dialogComment" />
+                </div>
+                <div class="ui-grid-col-7"></div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="editCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!selectedCategory.length" pButton  (click)="editSave()" label="Save"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog delete-dialog" header="Esitmation" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete The Data?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo()" label="No"></button>
+                <button type="button" pButton  (click)="deleteYes()" label="Yes"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

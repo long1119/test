@@ -1,0 +1,49 @@
+@import "../../../sass/privateStyle";
+.buget-template {
+    // .main-left {
+    //     h3 {
+    //         width: 95%;
+    //         text-align: center;
+    //         background-color: $table-head;
+    //         margin: 0 0 0 0;
+    //         font-size: 1.5rem;
+    //         height: 3rem;
+    //         line-height: 3rem;
+    //         color: #fff;
+    //         border-radius: .3rem .3rem 0 0;
+    //     }
+    //     .data-list {
+    //         width: 95%;
+    //         .ui-listbox {
+    //             height: 36.1rem;
+    //         }
+    //     }
+    // }
+    // .main-right {
+    //     .add-button {
+    //         margin-bottom: 1rem;
+    //         background-color: $buttons;
+    //         width: 10%;
+    //     }
+    //     p-dataTable {
+    //         .table-align {
+    //             text-align: left;
+    //         }
+    //     }
+    // }
+    .data-table {
+        &>div {
+            width: 100%;
+        }
+    }
+    .dialog {
+        &>div {
+            width: 70%;
+        }
+    }
+    .delete-dialog {
+        &>div {
+            width: 30%;
+        }
+    }
+}

@@ -1,0 +1,17 @@
+@import '../../../../../sass/privateStyle';
+.rental-analysis {
+	.button-content {
+		margin: 1rem;
+	}
+	.data-table {
+		.ui-datatable table {
+			table-layout: auto;
+			// .index-row {
+			// 	width: 9rem;
+			// }
+			// .other-row {
+			// 	width: 6rem;
+			// }
+		}
+	}	
+}

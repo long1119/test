@@ -1,0 +1,93 @@
+<div class="land-information">
+    <div *ngIf="localStorageAuthority" class="button-content">
+        <button pButton type="button" class="program-add" (click)="addLandInformationClick()" label="Add"></button>
+        <button pButton type="button" class="program-add" (click)="exportLandInformationClick()" label="Export"></button>
+    </div>
+    <p-dataTable class="ui-grid data-table" scrollable="true" scrollHeight="29.5rem" [value]="landInformationData" [rows]="10">
+        <!-- <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="landInformationData[idx]">{{idx + 1}}</span>
+            </template>
+        </p-column> -->
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="region" header="Region"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1 align-right" header="Land Price">
+            <template pTemplate="body" let-data="rowData">
+                <span>{{data.landPrice | ammountPips}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1 align-right" field="rentalPrice" header="Rental Price">
+            <template pTemplate="body" let-data="rowData">
+                <span>{{data.rentalPrice | ammountPips}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="vacancyRate" header="Vacancy Rates"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="volume" header="Volume"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="priceTrend" header="Price Trend"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="supplyAndDemandChange" header="Demand & Supply"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="potentialResources" header="Potential Assets"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="type" header="Type"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-1" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="landInformationData[idx].informationId" class="edit-span" (click)="editLandInformationClick(idx,data)">Edit</span>
+                <span *ngIf="landInformationData[idx].informationId" class="edit-span" (click)="deleteLandInformationClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- <p-paginator rows="10" totalRecords="{{informationPaginatorTotal}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="informationPaginate($event)"></p-paginator> -->
+    <!-- 添加界面 -->
+    <p-dialog class="dialog land-information-midify" header="Modify Land Information" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label class="required" for="regionCode">Location :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="50" pInputText id="regionCode" [(ngModel)]="dialogLocation" /></div>
+                <div class="ui-grid-col-6"></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label class="required" for="regionCode">Land Price :</label></div>
+                <div class="ui-grid-col-4"><input (keydown)="messageService.checkNumValue($event, 99999999)" pInputText id="regionCode" [(ngModel)]="dialogLandPrice" /></div>
+                <div class="ui-grid-col-2"><label class="required" for="regionCode">Rental Price :</label></div>
+                <div class="ui-grid-col-4"><input (keydown)="messageService.checkNumValue($event, 99999999)" pInputText id="regionCode" [(ngModel)]="dialogRentalPrice" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label for="regionCode">Vacancy Rates :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="50" pInputText id="regionCode" [(ngModel)]="dialogVacancyRates" /></div>
+                <div class="ui-grid-col-2"><label for="regionCode">Volume :</label></div>
+                <div class="ui-grid-col-4"><input (keydown)="messageService.checkNumValue($event, 99999999)" pInputText id="regionCode" [(ngModel)]="dialogVolume" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label for="regionCode">Price Trend :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="50" pInputText id="regionCode" [(ngModel)]="dialogPriceTrend" /></div>
+                <div class="ui-grid-col-2"><label for="regionCode">Demand & Supply :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="50" pInputText id="regionCode" [(ngModel)]="dialogDemandSupply" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label for="regionCode">Potential Assets :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="50" pInputText id="regionCode" [(ngModel)]="dialogPotentialAssets" /></div>
+                <div class="ui-grid-col-2"><label class="required" for="regionCode">Type :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="50" pInputText id="regionCode" [(ngModel)]="dialogType" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="modifyLandInformationCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogLocation || !dialogLandPrice || !dialogType || !dialogRentalPrice" pButton  (click)="modifyLandInformationSave()"
+                    label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="Delete Land Inforamtion" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteLandInformationNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteLandInformationYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

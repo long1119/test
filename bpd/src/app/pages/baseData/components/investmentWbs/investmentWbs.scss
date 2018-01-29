@@ -1,0 +1,42 @@
+@import "../../../sass/privateStyle";
+.wbs-content {
+    .main-left {
+        h3 {
+            width: 95%;
+            text-align: center;
+            background-color: $table-head;
+            margin: 0 0 0 0;
+            font-size: 1.5rem;
+            height: 3rem;
+            line-height: 3rem;
+            border-radius: .3rem .3rem 0 0;
+        }
+        .data-table-list {
+            &>div {
+                width: 95%;
+            }
+        }
+    }
+    .main-right {
+        .add-button {
+            margin-bottom: 1rem;
+            background-color: $buttons;
+            width: 10%;
+        }
+        p-treetable {
+            .ui-treetable-tablewrapper {
+                height: 32rem;
+                overflow: auto;
+                border: 1px solid #ddd;
+                & > table {
+                    border-right: 0 none;
+                }
+            }
+        }
+    }
+    .vpps-dialog {
+            &>div{
+                width: 35%;
+            }
+        }
+}

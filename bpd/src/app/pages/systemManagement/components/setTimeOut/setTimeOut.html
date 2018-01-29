@@ -1,0 +1,64 @@
+<div class="set-time-out ui-grid">
+    <p-dataTable [rows]="10" [value]="setTimeOutData" selectionMode="single" [(selection)]="selectedSetTimeOutData" class="data-table"
+        scrollable="true" scrollHeight="30rem" (onRowClick)="setTimeOutLogRowClick($event)">
+        <p-column field="jobName" header="Job Name" styleClass="ui-grid-col-4 align-center"></p-column>
+        <p-column field="description" header="Description" styleClass="ui-grid-col-5 align-center">
+            <template let-item="rowData" pTemplate="body">
+                <span *ngIf="item.description" class="edit-span" (click)="editBtn(item, false)">{{item.description}}</span>
+            </template>
+        </p-column>
+        <!-- <p-column field="startTime" header="Start Time" styleClass="ui-grid-col-3 align-center"></p-column> -->
+        <!-- <p-column field="endTime" header="End Time" styleClass="ui-grid-col-3 align-center"></p-column> -->
+        <!-- <p-column field="prevFireTime" header="Preview Time" styleClass="ui-grid-col-3 align-center"></p-column> -->
+        <!-- <p-column field="nextFireTime" header="Next Time" styleClass="ui-grid-col-3 align-center"></p-column> -->
+        <p-column header="Expression" styleClass="ui-grid-col-3 align-center">
+            <template let-item="rowData" pTemplate="body">
+                <span *ngIf="item.cronExpression" class="edit-span" (click)="editBtn(item, true)">{{item.cronExpression}}</span>
+            </template>
+        </p-column>
+        <p-column field="triggerState" header="Status" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column header="" styleClass="ui-grid-col-3 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.jobName && item.triggerState != 'WAITING'" class="edit-span" (click)="pauseBtn(item, false)">Waiting</span>
+                <span *ngIf="item.jobName && item.triggerState == 'WAITING'" class="edit-span" (click)="pauseBtn(item, true)">Pause</span>
+                <span *ngIf="item.jobName" class="edit-span" (click)="noticeBtn(item)">Start Now</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-tabView class="tab-view">
+        <p-tabPanel header="Log">
+            <set-time-out-log [changeTriggerName]="changeTriggerName"></set-time-out-log>
+        </p-tabPanel>
+    </p-tabView>
+    <p-dialog class="dialog" header="Set Time" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div *ngIf="editFlag"  class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="regionCode">Cron Expression :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <!-- <input pInputText id="regionCode" [(ngModel)]="dialogCronExporession" /> -->
+                    <p-dropdown class="yearDrop" autoWidth="false" [options]="hourOption" [(ngModel)]="selectedHour"></p-dropdown>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-dropdown class="yearDrop" autoWidth="false" [options]="minuteOption" [(ngModel)]="selectedMinute"></p-dropdown>
+                </div>
+            </div>
+            <div *ngIf="!editFlag" class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="regionCode">Description :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText id="regionCode" [(ngModel)]="dialogDescription" />
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="editCancle()" label="Cancel"></button>
+                <button type="button" pButton (click)="editSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

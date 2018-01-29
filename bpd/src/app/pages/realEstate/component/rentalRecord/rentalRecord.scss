@@ -1,0 +1,58 @@
+@import '../../../sass/privateStyle';
+.rental-record {
+    .button-content {
+        margin: 1rem 0;
+    }
+    .rental-modify-dialog {
+        &>div {
+            .ui-dialog-content {
+                height: 40rem;
+                overflow: auto;
+            }
+            width: 70%;
+        }
+        .property-drop-down {
+            &>div {
+                width: 95% !important;
+            }
+        }
+    }
+    .dialog-delete {
+        &>div {
+            width: 40%;
+        }
+    }
+    .dialog-copy {
+        &>div {
+            width: 70%;
+        }
+    }
+    .calendar-input {
+        width: 100%;
+        span {
+            width: 100%;
+            input {
+                width: 100%;
+            }
+        }
+    }
+    .yearDrop {
+        width: 50%;
+        float: left;
+    }
+    .yearCalendar {
+        width: 50%;
+        float: left;
+        // &>span {
+            // margin-right: 1rem; 
+        // }
+    }
+    .monthDrop {
+        width: 20%;
+        float: left;
+    }
+    .dayDrop {
+        width: 30%;
+        float: left;
+    }
+}

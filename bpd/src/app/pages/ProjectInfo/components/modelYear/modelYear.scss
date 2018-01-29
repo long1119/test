@@ -1,0 +1,256 @@
+@import '../../../sass/privateStyle';
+model-year {
+	.ui-button-text-only .ui-button-text {
+	    padding: 0.35em 1.4em;
+	}
+	.ui-datatable th.ui-state-default {
+		background: rgb(214,229,252);
+	}
+	.topBar {
+		padding: 10px;
+		.searchInput {
+			margin: 0 20px 0 10px;
+		}
+		button {
+			margin-right: 10px;
+		}
+	}
+	.editBtn {
+	    margin-right: 10px;
+	    display: inline-block;
+	    text-align: center;
+	}
+	.editBtn, .delBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+	}
+	.ui-dialog-content, .ui-widget-content {
+		// min-height: 500px;
+	}
+	.ui-dropdown-panel .ui-dropdown-filter-container {
+		top: -10px;
+		left: 2px;
+	}
+	.dialog {
+		.ui-dialog .ui-dialog-content {
+			overflow: inherit;
+		}
+	}
+	.PTdialog {
+		.ui-dialog-content, .ui-widget-content {
+			// min-height: 300px;
+		}
+	}
+	.pt-download-dialog {
+		.ui-dialog-content {
+			margin: 0 1rem;
+		}
+	}
+	.addHeader > div {
+		width: 160px;
+		height: 45px;
+		background-color: rgba(57,137,231,0.7);
+		color: #fff;
+		float: left;
+		line-height: 45px;
+		font-size: 14px;
+		position: relative;
+	}
+	.round {
+		width: 30px;
+		height: 30px;
+		display: inline-block;
+		border-radius: 50%;
+		background-color: #fff;
+		color: #000;
+		position: absolute;
+		top: 50%;
+		left: 10px;
+		transform: translateY(-50%);
+		line-height: 30px;
+		text-align: center;
+	}
+	.rightLine {
+		border-right: 1px solid rgb(141,181,222);
+	}
+	.name {
+		position: absolute;
+		top: 50%;
+		left: 45px;
+		transform: translateY(-50%);
+	}
+	.title {
+		height: 35px;
+		background-color: rgb(235,235,235);
+		border-top: 1px solid #fff;
+		display: block;
+		text-indent: 20px;
+		line-height: 35px;
+		font-size: 16px;
+	}
+	.ui-dialog.ui-widget .ui-dialog-content {
+		padding: 0;
+	}
+	.ui-dropdown {
+		width: 50% !important;
+	}
+	.ui-inputgroup {
+		position: relative;
+		input, p-dropdown {
+			position: absolute;
+			right: 0;
+		}
+	}
+	.ui-md-1, .ui-md-2, .ui-md-3, .ui-md-4, .ui-md-5, .ui-md-6, .ui-md-7, .ui-md-8, .ui-md-9, .ui-md-10, .ui-md-11, .ui-md-12 {
+	    padding: 1em;
+	}
+	.ui-g {
+		padding-left: 25px;
+	}
+	.ui-md-6 {
+		padding-left: 30px;
+	}
+	.footer {
+		text-align: right;
+	    margin-right: 115px !important;
+	    margin-top: 50px !important;
+	    margin-bottom: 20px !important;
+	}
+	.textAreafooter {
+		text-align: right;
+	    margin-right: 20px;
+	}
+	.selected {
+		background-color: rgb(251,0,6);
+		color: #fff;
+	}
+	.selectedHeader {
+		background-color: rgb(57,137,231) !important;
+	}
+	.step2Table {
+		.ui-datatable th.ui-state-default {
+	    	background: #ebedf0;
+		}
+		.ui-widget-content, program-info .ui-datatable-even {
+			height: 25px;
+		}
+	}
+	.programGrid {
+		.ui-widget-content, program-info .ui-datatable-even {
+			min-height: 25px;
+		}
+	}
+	.ui-datatable tbody > tr.ui-widget-content.ui-state-highlight .editBtn{
+		color: #fff;
+	}
+	.align-center {
+		text-align: center;
+	}
+	.align-right {
+		text-align: right;
+	}
+	.modelGrid, .ptInfo, .umd {
+		div {
+			padding: 0 !important;
+		}
+		.ui-datatable th.ui-state-default {
+			height: 40px;
+			border: none;
+		}
+	}
+	.ui-tabview.ui-tabview-top>.ui-tabview-nav li {
+		background-color: #ebedf0;
+		border-radius: 5px 5px 0 0;
+		width: 165px;
+		margin-right: 10px;
+		a {
+			text-align: center;
+			width: 100%;
+		}
+		a:hover {
+			cursor: pointer;
+			background-color: rgb(190,203,216);
+			border-radius: 5px 5px 0 0;
+			font-weight: bold;
+		}
+	}
+	.ui-tabview .ui-tabview-nav > li.ui-state-active {
+		cursor: text;
+		background-color: rgb(190,203,216);
+		border-radius: 5px 5px 0 0;
+		font-weight: bold;
+	}
+	.tabView > div {
+		margin-top: 30px;
+	}
+	.radioGroup {
+	    width: 49%;
+	    display: inline-block;
+	    padding: 20px 50px;
+	}
+	.ui-calendar {
+		display: inline;
+	    position: static;
+	}
+	.ui-datepicker.ui-widget {
+		top: auto !important;
+	}
+	.ui-dropdown .ui-dropdown-panel {
+		top: auto !important;
+	}
+	.dropdown {
+		width: 310px;
+		right: -155px !important;
+	}
+	.plantDropDown {
+		.ui-dropdown-panel .ui-dropdown-list {
+		    padding-right: 3em;
+		}
+	}
+	.ui-dropdown-panel {
+		min-height: 200px !important;
+	}
+	.ui-fluid .ui-inputtext {
+		// width: auto;
+		width: 155px;
+	}
+	.ui-datatable .ui-datatable-thead > tr > th, .ui-datatable .ui-datatable-tfoot > tr > td, .ui-datatable .ui-datatable-data > tr > td {
+		height: 25px;
+	}
+	.dialog > div {
+		width: 800px;
+		min-height: auto;
+	}
+	.ui-datepicker.ui-widget .ui-datepicker-header {
+	    background: #f6f7f9;
+	    color: #000;
+	}
+	.ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+	.modelYearLtt {
+		.ui-dropdown {
+			width: 100% !important;
+		}
+		width: 70px;
+	}
+	.modelYearLttInput {
+		left: 140px;
+	    width: 145px !important;
+	}
+	p-confirmDialog {
+		.ui-dialog.ui-widget .ui-dialog-titlebar {
+			background: #2399e5;
+			color: #fff;
+			a {
+				color: #fff;
+			}
+		}
+	 	.ui-dialog.ui-widget .ui-dialog-content {
+			padding: 1em 2em;
+		}
+	}
+}
+.ui-dropdown-panel .ui-dropdown-items-wrapper {
+	min-width: 65px;
+}

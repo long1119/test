@@ -1,0 +1,280 @@
+<div class="topBar">
+    Program Code:<input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="programCodeSearch" class="searchInput">
+    <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+</div>
+<p-dataTable [rows]="15" [value]="gridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="50rem">
+    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+    <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-3"></p-column>
+    <p-column field="modelPlatform" header="Platform" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="brandName" header="Brand" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="bodyStyle" header="Body Style" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="projManagerStr" header="PM" styleClass="ui-grid-col-4 align-center"></p-column>
+    <p-column header="" styleClass="ui-grid-col-3 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="toDetailBtn(item)">View Document</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[15,30,45]" (onPageChange)="gridPaginate($event)"></p-paginator>
+
+<p-dialog class="dialog" [(visible)]="dialog" [responsive]="true" [modal]="true" width="1050">
+    <p-header>
+        <span style="font-size:16px;">{{dialogTitle}}  Documents</span>
+        <button style="margin-right:5px;margin-left:5px;color:#2399e5;background:#FFF;" pButton type="button" (click)="switchProj()" label="Switch Program"></button>
+        <button *ngIf="isManager == '1'" style="margin-right:5px;color:#2399e5;background:#FFF;" pButton type="button" (click)="authorizeBtn()" label="Authorize"></button>
+    </p-header>
+    <div style="width:30%;float:left;">
+       <div class="topBar1" *ngIf="haveFolder">
+            <button *ngIf="isManager == '1'" [(disabled)]="!addChild" style="margin-right:5px;" pButton type="button" (click)="addFolderBtn()" label="Add Folder"></button>
+            <button *ngIf="isManager == '1'" [(disabled)]="!haveSelected" style="margin-right:5px;" pButton type="button" (click)="modifyNameBtn()" label="Modify Name"></button>
+            <button *ngIf="isManager == '1'" [(disabled)]="!haveSelected" style="margin-right:5px;" pButton type="button" (click)="delFolderBtn()" label="Delete"></button>
+        </div>
+        <div class="topBar1" *ngIf="!haveFolder">
+            <button style="margin-right:5px;" pButton type="button" (click)="addMainFolderBtn()" label="Init"></button>
+        </div>
+        <div class="tree_menu">
+            <p-tree id="pTree" [value]="items" expanded="true" selectionMode="single" [(selection)]="selectedFile" (onNodeSelect)="nodeSelect($event)"></p-tree>
+        </div> 
+    </div>
+    <div style="width:69%;float:right;">
+        <div *ngIf="normalFolder">
+            <div class="topBar1" *ngIf="!localJump">
+                <button *ngIf="isManager == '1' || (isManager == '2' && writeRead == '1')" [(disabled)]="!addChild" pButton type="button" (click)="uploadBtn()" label="Upload"></button>
+                Upload User:<input (keyup)="fileLookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="uploadUserSearch" class="searchInput">
+                File Name:<input (keyup)="fileLookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="fileNameSearch" class="searchInput">
+                <button [(disabled)]="!addChild" pButton type="button" (click)="fileLookUpBtn()" label="Search"></button>
+            </div>
+            <p-dataTable *ngIf="!localJump" [rows]="10" [value]="fileStore" class="data-table" scrollable="true" scrollHeight="30rem" [rowHover]=true>
+                <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                <p-column field="uploadUserName" header="Upload User" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="uploadTime" header="Upload Date" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="modelYear" header="Model Year" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column header="File Name" styleClass="ui-grid-col-4 align-center">
+                    <template pTemplate="body" let-item="rowData">
+                        <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="fileClickBtn(item)">{{item.fileFullName}}</span>
+                    </template>
+                </p-column>
+                <p-column header="" styleClass="ui-grid-col-4 align-center">
+                    <template pTemplate="body" let-item="rowData">
+                        <span *ngIf="item.id && item.allowDownLoad == '1' && isManager == '1'" class="editBtn" (click)="shareBtn(item)">Share</span>
+                        <!-- <span *ngIf="item.id && item.allowDownLoad == '1' && isManager == '1'" class="editBtn" (click)="cancelShareBtn(item)">Cancel Share</span> -->
+                        <span *ngIf="item.id && item.allowDownLoad == '1' && (isManager == '1' || isManager == '2' && writeRead == '1')" class="editBtn" (click)="editBtn(item)">Update</span>
+                        <span *ngIf="item.id && item.allowDownLoad == '1' && isManager == '1'" class="editBtn" (click)="delBtn(item)">Delete</span>
+                        <span *ngIf="item.id && item.allowDownLoad == '0'" class="editBtn" (click)="delBtn(item)">Delete</span>
+                    </template>
+                </p-column>
+            </p-dataTable>
+            <p-dataTable *ngIf="localJump" [rows]="10" [value]="fileStore" class="data-table" scrollable="true" scrollHeight="30rem" [rowHover]=true>
+                <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                <p-column field="createUserName" header="Create User" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="createTime" header="Create Date" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="modelYear" header="Model Year" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column header="File Name" styleClass="ui-grid-col-4 align-center">
+                    <template pTemplate="body" let-item="rowData">
+                        <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="localJumpBtn(item)">{{item.fileName}}</span>
+                    </template>
+                </p-column>
+            </p-dataTable>
+        </div>
+        <div *ngIf="!normalFolder">
+            <div class="topBar1">
+                File Name:<input (keyup)="shareFileEnterSearch($event)" type="text" pInputText [(ngModel)]="shareFileNameSearch" class="searchInput">
+                <button pButton type="button" (click)="shareFileLookUpBtn()" label="Search"></button>
+            </div>
+            <p-dataTable [rows]="10" [value]="shareFileStore" class="data-table" scrollable="true" scrollHeight="30rem" [rowHover]=true>
+                <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                <p-column field="uploadUserName" header="Upload User" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="uploadTime" header="Upload Date" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column header="File Name" styleClass="ui-grid-col-4 align-center">
+                    <template pTemplate="body" let-item="rowData">
+                        <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="shareFileClickBtn(item)">{{item.fileFullName}}</span>
+                    </template>
+                </p-column>
+                <p-column *ngIf="shareFileType == '1'" header="" styleClass="ui-grid-col-2 align-center">
+                    <template pTemplate="body" let-item="rowData">
+                        <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="shareBtn(item)">Share</span>
+                    </template>
+                </p-column>
+            </p-dataTable>
+        </div>
+    </div>
+</p-dialog>
+<p-dialog class="dialog" header="Select Program" [(visible)]="selectInvestmentDialog" width="850">
+    <div class="topBar1">
+        Program Code:<input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="programCodeSearch" class="searchInput">
+        <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="gridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem" (onRowDblclick)="dbclick($event)">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-3"></p-column>
+        <p-column field="modelPlatform" header="Platform" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="brandName" header="Brand" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="bodyStyle" header="Body Style" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="sorp" header="SORP" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column field="eop" header="EOP" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column field="lcaVolume" header="LCA Volume" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="lifecycleVolume" header="Lifecycle Volume" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column field="projManager" header="PM" styleClass="ui-grid-col-4 align-center"></p-column>
+    </p-dataTable>
+    <p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="gridPaginate($event)"></p-paginator>
+</p-dialog>
+<p-dialog class="dialog" header="Document Authorize Write" [(visible)]="documentAuthorize" width="650">
+    <div class="topBar1">
+        <button pButton type="button" (click)="addAuthorizeBtn()" label="Add"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="authorizeStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="dirEname" header="Folder Name" styleClass="ui-grid-col-3"></p-column>
+        <p-column field="roleName" header="Role Name" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column header="" styleClass="ui-grid-col-3 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="delAuthorizeBtn(item)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+</p-dialog>
+<p-dialog class="dialog" header="Management Authorization" [(visible)]="setAuthorizeDialog" width="450">
+    <div style="font-size:14px;font-weight:bold;margin-bottom:5px;background-color:#e6e6e6;padding:7px">Select Folder:</div>
+    <div class="ui-g" style="height:15rem;overflow:scroll;">
+        <div *ngFor="let item of folderListStore" class="ui-g-12" style="margin:0;"><p-checkbox name="folderGroup" value="{{item.dirId}}" label="{{item.dirEname}}" [(ngModel)]="selectedFolders"></p-checkbox></div>
+    </div>
+    <div style="font-size:14px;font-weight:bold;margin-bottom:5px;background-color:#e6e6e6;padding:7px">Select Role:</div>
+    <div class="ui-g" style="height:15rem;overflow:scroll">
+        <div *ngFor = "let item of roleStore" class="ui-g-12" style="margin:0;"><p-checkbox name="folderGroup" value="{{item.roleCode}}" label="{{item.roleName}}" [(ngModel)]="selectedRoles"></p-checkbox></div>
+    </div>
+    <div class="footer">
+        <button pButton type="button" [(disabled)]="!selectedRoles.length || !selectedFolders.length" (click)="setAuthorizeSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="setAuthorizeCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Add Folder" [(visible)]="addFolderDisplay" width="450" modal="modal" class="dialog">
+    <div style="margin: 10px 0 20px 20px;">
+        Folder Name:<input style="width:55%;margin-left:30px" type="text" pInputText [(ngModel)]="folderName" (ngModelChange)="checkFolderName()" maxlength="50">
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="addFolderSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="addFolderCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Modify Folder Name" [(visible)]="modifyFolderDisplay" width="450" modal="modal" class="dialog">
+    <div style="margin: 10px 0 20px 20px;">
+        Folder Name:<input style="width:55%;margin-left:30px" type="text" pInputText [(ngModel)]="folderName" (ngModelChange)="checkFolderName()" maxlength="50">
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="modifyFolderSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="modifyFolderCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-confirmDialog></p-confirmDialog>
+<!-- 文件上传 -->
+<p-dialog class="dialog" header="Folder" [(visible)]="fileUpLoadDialog" [responsive]="true" showEffect="fade" [modal]="true">
+    <p-fileUpload mode="basic" name="file[]" url="{{budgetFileUpLoadUrlFirstStep}}?bussinessId={{businessId}}&attId={{UuId}}&name=file[]&allowDownLoad=1&sourceType=doc&projId={{businessId}}" multiple="{{uploadNum}}" accept="xlsm" maxFileSize="50000000"
+        (onUpload)="onFolderFileUpload($event)"></p-fileUpload>
+</p-dialog>
+
+<!-- 分享文件 -->
+<p-dialog class="dialog" header="Share File" [(visible)]="shareFileDialog" modal="modal" width="450">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon" style="float:left;margin-top:10px;">Share to:</span>
+                <p-dataGrid [value]="selectUserStore" class="dataView">
+                    <template let-items pTemplate="item">
+                        <div class="dataViewContainer">
+                            <div>{{items.userName}}
+                                <i class="fa fa-close" (click)="delUser(items)" style="cursor:pointer"></i>
+                            </div>
+                        </div>
+                    </template>
+                </p-dataGrid>
+                <button type="button" (click)="getUser()" style="float:left;margin-top:5px">Select</button>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="cancelShareBtn()" label="Cancel All" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="shareFileBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="shareFileDialog=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+
+<!-- 多选选人控件 -->
+<p-dialog class="dialog" header="Please Choose User" [(visible)]="searchDialog" [responsive]="true" [modal]="true" width="800">
+    <div class="topBar">
+        Department:<input (keyup)="managerEnterSearch($event)" type="text" pInputText [(ngModel)]="dialogDepartment" class="searchInput">
+        User Name:<input (keyup)="managerEnterSearch($event)" type="text" pInputText [(ngModel)]="dialogUserName" class="searchInput">
+        <button pButton type="button" (click)="managerlookClick()" label="Search"></button>
+    </div>
+    <div class="ui-grid" style="padding:5px">
+        <p-dataTable [rowHover]=true class="data-table" [value]="managerData" rows="10" scrollable="true" scrollHeight="30rem" [(selection)]="managerSelectedStore">
+            <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="userName" header="User Name"></p-column>
+            <p-column field="employeeCode" header="Employee ID" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="jobPosition" header="Job"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="telephone" header="Telphone"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="emailAddress" header="Email"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="departmentName" header="Department"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="masterName" header="Manager"></p-column>
+        </p-dataTable>
+        <p-paginator rows="{{managerDataRows}}" first="{{managerDataFirst}}" totalRecords="{{managerDataLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="managerPaginate($event)"></p-paginator>
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="managerSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="searchDialog=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+<!-- 可视化弹窗 -->
+<p-dialog class="dialogTiming dialog-view-timing" header="Preview Time Sheet" *ngIf="previewDialog" [(visible)]="previewDialog">
+    <!-- 弹框展示图片 -->
+    <iframe [src]="specialURL" width="100%" height="100%"></iframe>
+</p-dialog>
+
+<!-- scroecard弹窗 -->
+<p-dialog header="Scorecard" [(visible)]="statusDisplay" width="950" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="topBar">
+        Pre_Status Version:
+        <p-dropdown autoWidth="false" [options]="preStatusStore" [(ngModel)]="preStatus" (onChange)="preStatusChange($event)" appendTo="body"></p-dropdown>
+        Cur_Status Version:
+        <p-dropdown autoWidth="false" [options]="curStatusStore" [(ngModel)]="curStatus" (onChange)="curStatusChange($event)" appendTo="body"></p-dropdown>
+        <button pButton type="button" (click)="refreshBtn()" label="Refresh"></button>
+        <button pButton type="button" [(disabled)]="!statusStore[0].metricGroup" (click)="exportBtn()" label="Export"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="statusStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem">
+        <p-headerColumnGroup>
+            <p-row>
+                <p-column header="NO" styleClass="ui-grid-col-1 align-center"></p-column>
+                <p-column header="Group" styleClass="ui-grid-col-2"></p-column>
+                <p-column header="Metrics" styleClass="ui-grid-col-5"></p-column>
+                <p-column header="{{title}}" styleClass="ui-grid-col-2"></p-column>
+                <p-column header="{{title1}} Status" colspan="2" styleClass="ui-grid-col-4"></p-column>
+                <p-column header="{{title2}} Status" colspan="2" styleClass="ui-grid-col-4"></p-column>
+                <p-column header="Memo" styleClass="ui-grid-col-3"></p-column>
+            </p-row>
+        </p-headerColumnGroup>
+        <p-column field="id" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="metricGroup" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="indexName" styleClass="ui-grid-col-5"></p-column>
+        <p-column field="targetVolume" styleClass="ui-grid-col-2"></p-column>
+        <!-- <p-column field="proposedTarget" styleClass="ui-grid-col-2"></p-column> -->
+        <p-column field="valueOfMilestone1" styleClass="ui-grid-col-3"></p-column>
+        <p-column styleClass="ui-grid-col-1 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <i *ngIf="item.statusOfMilestone1 == 'G'" class="fa fa-circle green"></i>
+                <i *ngIf="item.statusOfMilestone1 == 'Y'" class="fa fa-circle yellow"></i>
+                <i *ngIf="item.statusOfMilestone1 == 'R'" class="fa fa-circle red"></i>
+                <i *ngIf="item.statusOfMilestone1 == 'W'" class="fa fa-circle white"></i>
+            </template>
+        </p-column>
+        <p-column field="valueOfMilestone2" styleClass="ui-grid-col-3"></p-column>
+        <p-column styleClass="ui-grid-col-1 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <i *ngIf="item.statusOfMilestone2 == 'G'" class="fa fa-circle green"></i>
+                <i *ngIf="item.statusOfMilestone2 == 'Y'" class="fa fa-circle yellow"></i>
+                <i *ngIf="item.statusOfMilestone2 == 'R'" class="fa fa-circle red"></i>
+                <i *ngIf="item.statusOfMilestone2 == 'W'" class="fa fa-circle white"></i>
+            </template>
+        </p-column>
+        <p-column field="statusDesc" styleClass="ui-grid-col-3"></p-column>
+    </p-dataTable>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

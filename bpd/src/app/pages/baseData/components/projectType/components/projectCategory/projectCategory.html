@@ -1,0 +1,58 @@
+<div class="ui-grid project-category">
+    <button *ngIf="localStorageAuthority" pButton type="button" [disabled]="!projectType" [ngClass]="{'project-add': true}" (click)="addClick()" label="Add"></button>
+    <p-dataTable class="ui-grid-row data-table" [value]="baseData" [paginator]="true" rows="10">
+        <p-column styleClass="ui-grid-col-2" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                {{idx + 1}}
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-4" field="categoryName" header="Category Name"></p-column>
+        <!-- <p-column styleClass="ui-grid-col-4" field="serialNo" header="Serial No"></p-column> -->
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2">
+            <template pTemplate="header">
+                
+            </template>
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+
+    <p-dialog class="dialog" header="Project Category" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="plantComment">Project Type :</label></div>
+                <div class="ui-grid-col-8"><input disabled pInputText id="plantComment" [(ngModel)]="projectTypeName" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="plantComment">Category Name :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="50" pInputText id="plantComment" [(ngModel)]="dialogCategoryName" /></div>
+            </div>
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="plantComment">Serial No :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="6" type="number" pInputText id="plantComment" [(ngModel)]="dialogLevel" /></div>
+            </div> -->
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogCategoryName" pButton  (click)="addSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="Project Category" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+     <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

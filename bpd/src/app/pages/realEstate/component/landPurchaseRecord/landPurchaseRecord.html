@@ -1,0 +1,89 @@
+<div class="land-purchase-record">
+    <div *ngIf="localStorageAuthority" class="button-content">
+        <button pButton type="button" class="program-add" (click)="addPurchaseClick()" label="Add"></button>
+        <button pButton type="button" class="program-add" (click)="exportPurchaseClick()" label="Export"></button>
+    </div>
+    <p-dataTable class="ui-grid data-table" scrollable="true" scrollHeight="29.5rem" [value]="purchaseData" [rows]="10">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="purchaseData[idx].purchaseRecordId">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="blockAddress" header="Land Address"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="enterprise" header="Enterprise"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="address" header="Address"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="acreage" header="Acreage (sqm)"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="constructure" header="Constructure (sqm)"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="landCertificateNo" header="Land Certificate No"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="houseePropertyNumber" header="House Property Number"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="useManagementEnterprise" header="Use Management Enterprise"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="serviceLife" header="Service Life"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="warrantCustodyStatus" header="Warrant Custody Status"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-1" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="purchaseData[idx].purchaseRecordId" class="edit-span" (click)="editPurchaseClick(idx,data)">Edit</span>
+                <span *ngIf="purchaseData[idx].purchaseRecordId" class="edit-span" (click)="deletePurchaseClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- <p-paginator rows="10" totalRecords="{{purchasePaginatorTotal}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="purchasePaginate($event)"></p-paginator> -->
+    <!-- 添加界面 -->
+    <p-dialog class="dialog purchase-modify-dialog" header="Modify Land Purchase Record" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label class="required" for="regionCode">Land Adress :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="50" pInputText id="regionCode" [(ngModel)]="dialogLandAdress" /></div>
+                <div class="ui-grid-col-2"><label for="regionType">Enterprise :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="50" pInputText id="regionType" [(ngModel)]="dialogEnterprise" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label for="regionCode">Adress :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="50" pInputText id="regionCode" [(ngModel)]="dialogAdress" /></div>
+                <div class="ui-grid-col-2"><label class="required" for="regionType">Acreage(sqm) :</label></div>
+                <div class="ui-grid-col-4"><input pInputText (keydown)="messageService.checkNumValue($event, 99999999)" id="regionType" [(ngModel)]="dialogAcreage" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label class="required" for="regionType">Constructure(sqm) :</label></div>
+                <div class="ui-grid-col-4"><input pInputText (keydown)="messageService.checkNumValue($event, 99999999)"  id="regionType" [(ngModel)]="dialogConstructure" /></div>
+                <div class="ui-grid-col-2"><label for="regionType">Land Certificate No :</label></div>
+                <div class="ui-grid-col-4"><input pInputText maxlength="100" id="regionType" [(ngModel)]="dialogLandCertificateNo" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label for="regionType">House Number :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="100" pInputText id="regionType" [(ngModel)]="dialogHouseNumber" /></div>
+                <div class="ui-grid-col-2"><label for="regionType">Manage Enterprise :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="100" pInputText id="regionType" [(ngModel)]="dialogManagementEnterprise" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label for="regionType">Service Life :</label></div>
+                <div class="ui-grid-col-4">
+                    <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="dialogServiceLife"></p-calendar>
+                </div>
+                <div class="ui-grid-col-2"><label for="regionType">Custody Status :</label></div>
+                <div class="ui-grid-col-4"><input maxlength="100" pInputText id="regionType" [(ngModel)]="dialogCustodyStatus" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="modifyPurchaseCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogAcreage || !dialogConstructure || !dialogLandAdress" pButton  (click)="modifyPurchaseSave()"
+                    label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="Delete Land Purchase Record" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deletePurchaseNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deletePurchaseYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

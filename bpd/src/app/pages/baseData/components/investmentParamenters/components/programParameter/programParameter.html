@@ -1,0 +1,107 @@
+<div class="ui-grid program-parameter-content">
+    <div class="ui-grid-col-12 program-parameter-top" style="margin-top: 1rem;">
+        <div class="ui-grid-col-1">
+            <button *ngIf="localStorageAuthority" [disabled]="!changedCatId" pButton type="button" class="program-add" (click)="addClick()" label="Add"></button>
+        </div>
+        <div class="ui-grid-col-3">
+            <div class="parameter-font" style="float: left;">Parameter Group:</div>
+            <div style="margin-left: .7rem; width: 50%;  float: left;">
+                <p-dropdown class="drop-down" autoWidth="false" [options]="parameterGroupOption" [(ngModel)]="selectedParameterGroup"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-grid-col-8">
+            <div class="parameter-font" style="float: left;">Parameter Name:&nbsp;&nbsp;</div>
+            <div style="width: 20%; float: left; margin-left: .7rem;">
+                <input maxlength="36" (keyup)="parameterNameEnterSearch($event)" style="width: 95%;" pInputText [(ngModel)]="dialogDescription" />
+            </div>
+            <div style="float: left; margin-left: 1rem;">
+                <button pButton type="button" class="program-add" (click)="lookClick()" label="Search"></button>
+            </div>
+        </div>
+        <div class="ui-grid-col-1"></div>
+    </div>
+    <p-dataTable class="ui-grid-col-12 data-table" [value]="baseData" scrollable="true" scrollHeight="30rem">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                {{idx + 1}}
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="investAssumeIndexName" header="ParameterName"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="indexDataType" header="Date Type"></p-column>
+        <p-column styleClass="ui-grid-col-6" field="investAssumeCatName" header="Parameter Group"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+               <span class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                <span class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- 添加页面显示 -->
+    <p-dialog class="dialog" header="Parameter Group" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label for="regionCode">Parameter Name :</label></div>
+                <div class="ui-grid-col-7"><input maxlength="36" pInputText id="regionCode" [(ngModel)]="dialogParameterName" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label for="regionType">Data Type :</label></div>
+                <div class="ui-grid-col-7">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="dataTypeOption" [(ngModel)]="selectedDataType"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label for="regionCode">Parameter Group :</label></div>
+                <div class="ui-grid-col-7">
+                    <input pInputText disabled id="regionCode" [(ngModel)]="dialogParameterGroup" />
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                <button type="button" pButton  (click)="addSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 编辑页面 -->
+    <p-dialog class="dialog" header="Parameter Group" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label for="regionCode">Parameter Name :</label></div>
+                <div class="ui-grid-col-7"><input maxlength="36" pInputText id="regionCode" [(ngModel)]="dialogParameterName" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label for="regionCode">Data Type :</label></div>
+                <div class="ui-grid-col-7">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="dataTypeOption" [(ngModel)]="selectedDataType"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label for="regionType">Parameter Group :</label></div>
+                <div class="ui-grid-col-7">
+                    <input pInputText disabled id="regionCode" [(ngModel)]="dialogParameterGroup" />
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="editCancle()" label="Cancel"></button>
+                <button type="button" pButton  (click)="editSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="Parameter Group" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo()" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+     <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

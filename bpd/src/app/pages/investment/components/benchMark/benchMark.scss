@@ -1,0 +1,128 @@
+@import '../../../sass/privateStyle';
+bench-mark {
+	.topBar {
+		padding: 10px;
+		p-dropdown {
+		    display: inline-block;
+		    width: 150px;
+		    margin-left: 10px;
+		    margin-right: 20px;
+		}
+		.searchInput {
+			margin: 0 20px 0 10px;
+		}
+		input {
+			width: auto;
+		}
+		button {
+			margin-right: 20px;
+		}
+	}
+	#yearDrop {
+		.ui-dropdown {
+			width: 100px !important;
+		}
+	}
+	#monthDrop {
+		.ui-dropdown {
+			width: 85px !important;
+		}
+	}
+	.footer {
+		text-align: right;
+	    padding-top: 10px;
+	}
+	.generalDialog {
+		.ui-dialog-titlebar {
+		    background: #4B98DC;
+		    color: #fff;
+		}
+		.ui-dialog-titlebar a {
+			color: #fff;
+		}
+		.ui-fluid .ui-inputtext {
+			width: 200px;
+		}
+		.ui-fluid .ui-dropdown {
+		    width: 200px !important;
+		}
+		.ui-inputgroup-addon {
+			width: 130px;
+			display: inline-block;
+		}
+	}
+	.title {
+	    color: #870000;
+	    border-bottom: 2px solid #ebebeb;
+	    font-weight: bold;
+	    font-size: 14px;
+	    display: inline-block;
+	    padding-bottom: 5px;
+	}
+	.sonTitle {
+		background-color: #ebebeb;
+		padding: 5px;
+		& > span {
+			display: inline-block;
+			width: 200px;
+			font-weight: bold;
+			text-indent: 10px;
+		}
+		button {
+			width: 70px;
+		}
+	}
+	.indexGrid {
+		min-height: 12rem;
+	}
+	.gridTable {
+    	width: 100%;
+    	text-align: center;
+    	tr {
+    		height: 3rem;
+    		text-align: center;
+    	}
+    	td {
+    		border: 1px solid #e6e4e4;
+    		text-align: center;
+    	}
+    	th {
+    		background-color: #4B98DC;
+    		text-align: center;
+    		color: #fff;
+    	}
+    	tbody > tr:not(:nth-last-child(2)) > td:first-child {
+    		color: #4B98DC;
+    		cursor: pointer;
+    	}
+    }
+    .gridScrollTable {
+		overflow: auto;
+		max-height: 30rem;
+    	text-align: center;
+    	tr {
+    		height: 3rem;
+    		text-align: center;
+    	}
+    	td {
+    		border: 1px solid #e6e4e4;
+    		text-align: center;
+    		width: 200px;
+    	}
+    	th {
+    		background-color: #4B98DC;
+    		text-align: center;
+    		color: #fff;
+    	}
+    }
+    .ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+	.dialog {
+		& > div {
+			.ui-dialog-content {
+				max-height: 55rem;
+			}
+		}
+	}
+}

@@ -1,0 +1,137 @@
+<div class="score-card-metrics">
+    <div *ngIf="localStorageAuthority" class="button-content ui-grid">
+        <div class="ui-gird-col-1">
+            <button pButton type="button" class="program-add" (click)="addClick()" label="Add"></button>
+        </div>
+        <div class="ui-grid-col-11"></div>
+    </div>
+    <p-dataTable class="ui-grid data-table" [value]="scoreCardMetricsData" scrollable="true" scrollHeight="30rem">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="scoreCardMetricsData[idx].indexId">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-3" field="indexName" header="Metrics"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="metricGroup" header="Metrics Group"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="dataSource" header="Data Resource"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="dataFlag" header="Data Flag"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="dataType" header="Data Type"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="wFlag" header="Analysis Type"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="deptName" header="Department"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="roleName" header="Owner"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="scoreCardMetricsData[idx].indexId" class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                <span *ngIf="scoreCardMetricsData[idx].indexId" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- 添加界面 -->
+    <p-dialog class="dialog land-information-midify" header="Modify Score Card Metrics" [(visible)]="modifyDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">Metric Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" pInputText id="regionCode" [(ngModel)]="dialogMetricName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">Metric Group :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="metricGroupOption" [(ngModel)]="selectedMetricGroup"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">Data Source :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown (onChange)="dropChange($event)" class="drop-down" autoWidth="false" [options]="dataSourceOption" [(ngModel)]="selectedDataSource"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">Data Flag :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="dataFlagOption" [(ngModel)]="selectedDataFlag"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">Data Type :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="dataTypeOption" [(ngModel)]="selectedDataType"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="regionCode">BFS Account :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown [disabled]="selectedDataSource !== 'BFS'" class="drop-down" autoWidth="false" [options]="bfsOption" [(ngModel)]="dialogBfsAccount"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="regionCode">Department :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="departmentOption" [(ngModel)]="selectedDepartment"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">Owner :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown filter="true" (onChange)="dropChange($event)" class="drop-down" class="drop-down" autoWidth="false" [options]="roleOption" [(ngModel)]="selectedRole"></p-dropdown>
+                    <!-- <input class="dialog-search-input" pInputText readonly id="regionType" [(ngModel)]="selectedOwnerName" />
+                    <button [ngClass]="{'dialog-search-button': true}" pButton type="button" class="previous-button"
+                        icon="fa-search" (click)="searchClick()"></button> -->
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <!--  -->
+                <p-checkbox name="checkboxName" (onChange)="onCheckboxChange()" value="1" [(ngModel)]="characterFlags"></p-checkbox> W Character Flag
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="modifyCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogMetricName || !selectedMetricGroup || !selectedDataSource || !selectedDataFlag || !selectedRole"
+                    pButton  (click)="modifySave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 添加角色弹窗 -->
+    <!-- <p-dialog class="dialog dialog-user-select" header="User Select" [(visible)]="searchDialog">
+        <user-select (selectUserNameOut)="recUserName($event)" (selectUserCodeOut)="recUserCode($event)"></user-select>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="searchCancel()" label="Cancel"></button>
+                <button type="button" pButton  (click)="searchSave()" label="Save"></button>
+            </div>
+        </p-footer>
+    </p-dialog> -->
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="Delete Score Card Metrics" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo()" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

@@ -1,0 +1,30 @@
+@import '../../../sass/privateStyle';
+.plant-code-content {
+  .content-add {
+    margin-bottom: 1rem;
+  }
+  p-dialog {
+    &>div {
+      width: 30%;
+      &>div {
+        &>div {
+          &>div {
+            margin: 1rem 0;
+          }
+        }
+      }
+      .required {
+        width: 100%;
+        // text-align: center;
+        &:before {
+          padding-right: .3rem;
+          content: "*";
+          color: red;
+        }
+      }
+      input {
+        width: 100%;
+      }
+    }
+  }
+}

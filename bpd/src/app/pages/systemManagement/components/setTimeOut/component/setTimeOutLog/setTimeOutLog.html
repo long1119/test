@@ -1,0 +1,22 @@
+<div class="set-time-out-log">
+    <div class="ui-grid">
+        <div class="ui-grid-col-3">
+            <div class="ui-grid-col-6 parameter-font">Job Main Info :</div>
+            <div class="ui-grid-col-6">
+                <!-- <input (keyup)="lookClickEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogJobMainInfo" /> -->
+                <p-dropdown class="drop-down" autoWidth="false" [options]="jobMainInfoOption" [(ngModel)]="dialogJobMainInfo"></p-dropdown>
+            </div>
+            <div class="ui-grid-col-1"></div>
+        </div>
+        <div class="ui-grid-col-2">
+            <button style="margin-left: 1rem;" pButton type="button" class="program-add" (click)="lookClick()" label="Search"></button>
+        </div>
+    </div>
+    <p-dataTable [rows]="10" [value]="setTimeOutLogData" class="data-table" scrollable="true" scrollHeight="30rem">
+        <p-column field="jobMainInfo" header="Job Main Info" styleClass="ui-grid-col-4"></p-column>
+        <p-column field="jobDesc" header="Job Description" styleClass="ui-grid-col-4"></p-column>
+        <p-column field="createDate" header="Create Date" styleClass="ui-grid-col-4"></p-column>
+    </p-dataTable>
+    <p-paginator rows="{{setTimeOutRows}}" first="{{setTimeOutFirst}}" totalRecords="{{setTimeOutLogTotal}}" pageLinkSize="3"
+        (onPageChange)="setTimeOutPaginateChange($event)"></p-paginator>
+</div>

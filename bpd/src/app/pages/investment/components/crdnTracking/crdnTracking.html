@@ -1,0 +1,154 @@
+<div class="topBar">
+    Program:
+    <p-dropdown autoWidth="false" [options]="programSerchStore" [(ngModel)]="programSerch" filter="filter" appendTo="body"></p-dropdown>
+    Model Year:
+    <input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="modelYearSerch"> Red Zone:
+    <p-dropdown autoWidth="false" appendTo="body" [options]="redZoneSerchStore" [(ngModel)]="redZoneSerch"></p-dropdown>
+    Competitive:
+    <p-dropdown autoWidth="false" [options]="competitiveSerchStore" [(ngModel)]="competitiveSerch" appendTo="body"></p-dropdown>
+    <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+    <!-- <button pButton type="button" (click)="lifecyclePlanBtn()" label="lifecycle Plan"></button> -->
+    <button *ngIf="userRoot" pButton type="button" (click)="exportBtn()" label="Export"></button>
+</div>
+<p-dataTable id="gridTable" [rows]="10" [value]="gridStore" class="data-table" scrollable="true" scrollHeight="45rem">
+    <p-column field="crdn" header="CR/DN" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="crdnNo" header="CR No" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="icrOriginalDate" header="Date in Step" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="subject" header="Subject" styleClass="ui-grid-col-3"></p-column>
+    <p-column field="programs" header="Impact Program" styleClass="ui-grid-col-3"></p-column>
+    <p-column field="programId" header="Program" styleClass="ui-grid-col-2 align-center">
+        <template *ngIf="userRoot" pTemplate="body" let-item="rowData">
+            <span *ngIf="item.programId && item.id" class="editBtn" (click)="toProgramBtn(item)">{{item.programId}}</span>
+            <span *ngIf="!item.programId && item.id" class="editBtn" (click)="toProgramBtn(item)">Set</span>
+        </template>
+    </p-column>
+    <p-column field="modelYear" header="Model Year" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="competitive" header="Competitive Activity" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="initiator" header="Initial by" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="status" header="Status" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="crdnTracking" header="Tracking" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="crdnStatus" header="Open/ Close" styleClass="ui-grid-col-2"></p-column>
+    <p-column *ngIf="userRoot" header="" styleClass="ui-grid-col-1 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" (click)="editBtn(item)">Edit</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator totalRecords="{{gridStoreLen}}" [rowsPerPageOptions]="[10,20,30]" rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" pageLinkSize="3" (onPageChange)="gridPaginate($event)"></p-paginator>
+
+<p-dialog header="CR/DN Tracking List" [(visible)]="display" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">CR/DN:</span>
+                <input type="text" pInputText value="{{itemStore.crdn}}" disabled="true">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Status:</span>
+                <p-dropdown autoWidth="false" [options]="statusStore" [(ngModel)]="crdnStatusModel" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">CR/NO:</span>
+                <input type="text" pInputText value="{{itemStore.crdnNo}}" disabled="true">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Impack Program:</span>
+                <input type="text" pInputText value="{{itemStore.programs}}" disabled="true">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Impack MY:</span>
+                <input type="text" pInputText value="{{itemStore.modelYear}}" disabled="true">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Initial by:</span>
+                <input type="text" pInputText value="{{itemStore.initiator}}" disabled="true">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Date in step:</span>
+                <input type="text" pInputText value="{{itemStore.icrOriginalDate}}" disabled="true">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Competitive Activity:</span>
+                <p-dropdown autoWidth="false" [options]="competitiveNullSerchStore" [(ngModel)]="competitiveValue" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup" style="height:60px;">
+                <span class="ui-inputgroup-addon">Subject:</span>
+                <textarea type="text" pInputTextarea style="position:absolute;right:4.5em;height:60px;width:72.8%" value="{{itemStore.subject}}" disabled="true"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup" style="height:60px;">
+                <span class="ui-inputgroup-addon">Tracking:</span>
+                <textarea type="text" pInputTextarea style="position:absolute;right:4.5em;height:60px;width:72.8%" [(ngModel)]="crdnTrackingModel" maxlength="100"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup" style="height:60px;">
+                <span class="ui-inputgroup-addon">Change From:</span>
+                <textarea type="text" pInputTextarea style="position:absolute;right:4.5em;height:60px;width:72.8%" [(ngModel)]="itemStore.changFrom" maxlength="100"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup" style="height:60px;">
+                <span class="ui-inputgroup-addon">Change To:</span>
+                <textarea type="text" pInputTextarea style="position:absolute;right:4.5em;height:60px;width:72.8%" [(ngModel)]="itemStore.changTo" maxlength="100"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="saveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="cancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Select Programs" [(visible)]="programDisplay" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="topBar">
+        Brand:
+        <p-dropdown autoWidth="false" [options]="brandSerchStore" [(ngModel)]="brandSerch" appendTo="body"></p-dropdown>
+        Platform:
+        <p-dropdown autoWidth="false" [options]="platformSerchStore" [(ngModel)]="platformSerch" filter="filter" appendTo="body"></p-dropdown>
+        <button pButton type="button" (click)="programLookUpBtn()" label="Search"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="programStore" class="data-table" scrollable="true" scrollHeight="30rem" (onRowDblclick)="dbclick($event)" [rowHover]=true>
+        <p-column field="id" header="NO" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="modelPlatform" header="Platform" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="brandName" header="Brand" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="bodyStyle" header="Body Style" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="sorp" header="SORP" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="eop" header="EOP" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="lcaVolume" header="LCA Volume" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="lifecycleVolume" header="Lifecycle Volume" styleClass="ui-grid-col-1"></p-column>
+    </p-dataTable>
+<p-paginator totalRecords="{{programStoreLen}}" [rowsPerPageOptions]="[10,20,30]" rows="{{programStoreRows}}" first="{{programStoreFirst}}" pageLinkSize="3" (onPageChange)="programPaginate($event)"></p-paginator>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

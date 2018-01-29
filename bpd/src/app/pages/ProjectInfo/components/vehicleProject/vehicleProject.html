@@ -1,0 +1,172 @@
+<div class="topBar">
+    <span style="width:100px;display:inline-block">Costbook Code:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="costbookCodeSerch" class="searchInput">
+    <span style="width:100px;display:inline-block">Costbook Name:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="projectNameSerch" class="searchInput">
+    <span style="width:100px;display:inline-block">Program Code:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="programCodeSerch" class="searchInput">
+    <span style="width:200px;display:inline-block">Approved Investment (MRMB) >=:</span><input (keyup)="lookUpEnterSearch($event)" type="number" pInputText [(ngModel)]="approveInvestmentSerch" class="searchInput">
+    <p-checkbox style="float:right" [(ngModel)]="checked" binary="true" (onChange)="checkedChange()"></p-checkbox>
+</div>
+<div class="topBar">
+    <span style="width:80px;display:inline-block;">SOP:</span>
+    <p-dropdown class="yearDrop" autoWidth="false" [options]="yearSerchStore" [(ngModel)]="sorpYearSerch" appendTo="body"></p-dropdown>
+    <p-dropdown class="monthDrop" autoWidth="false" [options]="monthSerchStore" [(ngModel)]="sorpMonthSerch" appendTo="body"></p-dropdown>
+    <span style="width:100px;display:inline-block;">Approved Date:</span>
+    <p-dropdown class="yearDrop" autoWidth="false" [options]="yearSerchStore" [(ngModel)]="approveDateYearSerch" appendTo="body"></p-dropdown>
+    <p-dropdown class="monthDrop" autoWidth="false" [options]="monthSerchStore" [(ngModel)]="approveDateMonthSerch" appendTo="body"></p-dropdown>
+    <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+    <button *ngIf="userRoot" pButton type="button" (click)="addBtn()" label="Add"></button>
+</div>
+<p-dataTable [rows]="10" [value]="gridStore" class="data-table" [rowHover]=true (onRowClick)="programGridRowClick($event)" selectionMode="single" [(selection)]="mainselectedStore" scrollable="true" scrollHeight="30rem">
+    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+    <p-column field="projectCode" header="Costbook Code" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="projectName" header="Costbook Name" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="prProgramCode" header="Program Code" styleClass="ui-grid-col-3 align-center"></p-column>
+    <p-column field="sop" header="SOP" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="approveInvestmentDate" header="Approved Date" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="approveInvestment" header="Approved Investment (MRMB)" styleClass="ui-grid-col-2 align-right">
+        <template pTemplate="body" let-item="rowData">
+            <span>{{item.approveInvestment | ammountPips}}</span>
+        </template>
+    </p-column>
+    <!-- <p-column field="plantCodeDescription" header="Plant" styleClass="ui-grid-col-2 align-left"></p-column> -->
+    <p-column field="investmentCharacter" header="Investment Character" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="projMangerName" header="Investment Manager" styleClass="ui-grid-col-2 align-left"></p-column>
+    <!-- <p-column field="projectStatus" header="Status" styleClass="ui-grid-col-3 align-center"></p-column> -->
+    <p-column *ngIf="userRoot" header="" styleClass="ui-grid-col-3 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" (click)="editBtn(item)">Edit</span>
+            <span *ngIf="item.id" class="delBtn editBtn" (click)="delBtn(item)">Delete</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+<p-tabView class="tabView" (onChange)="handleChange($event)">
+    <p-tabPanel header="Model Year Project">
+        <button *ngIf="userRoot" [(disabled)]="!mainselectedStore['projectCode']" pButton type="button" (click)="addAMYPBtn()" label="Associate Model Year" style="margin:3px;"></button>
+        <p-dataTable [rows]="10" [value]="modelStore" class="data-table" scrollable="true" scrollHeight="30rem">
+            <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+            <p-column field="modelYear" header="Model Year" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="vpSorp" header="SOP" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="levelName" header="Classification" styleClass="ui-grid-col-4 align-center"></p-column>
+            <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="userName" header="PPM" styleClass="ui-grid-col-2 align-center"></p-column>
+        </p-dataTable>
+        <p-paginator rows="10" totalRecords="{{modelStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginateModelStore($event)"></p-paginator>
+    </p-tabPanel>
+</p-tabView>
+<p-dialog header="Vehicle Project" [(visible)]="display" width="800" minHeight=800 [responsive]="true" modal="modal" class="dialog">
+    <div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Costbook Code:</span>
+                    <input type="text" pInputText (change)="programCode = checkEnglish(programCode)" [(ngModel)]="projectCode" maxlength="8" (blur)="projectCodeCheck()">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">AVD Code:</span>
+                    <input type="text" pInputText disabled="true" [(ngModel)]="avdCode">              
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Costbook Name:</span>
+                    <input type="text" pInputText [(ngModel)]="projectName" maxlength="200">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Program Code:</span>
+                    <p-dropdown autoWidth="false" [options]="programCodeStore" [(ngModel)]="programCode" class="dropdown" filter="filter" appendTo="body"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" style="position:relative;">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Approved Investment:</span>
+                    <input type="text" pInputText maxlength="10" [(ngModel)]="approvedInvestment" min="0" (keydown)="msgservice.checkNumValue($event,99999999)">
+                    <span style="position:absolute;right:5px;top:5px">MRMB</span>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Approved Date:</span>
+                    <p-calendar [(ngModel)]="approvedDate" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Investment Character:</span>
+                    <p-dropdown autoWidth="false" [options]="investmentCharacterStore" [(ngModel)]="investmentCharacter" class="dropdown"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Investment Manager:</span>
+                    <input type="text" pInputText readonly="true" [(ngModel)]="investmentManager" (click)="getUser()">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">SOP:</span>
+                    <p-calendar [(ngModel)]="sop" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" yearRange="{{yearRange}}" [yearNavigator]="true"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-11">
+                <div class="ui-inputgroup" style="height:55px">
+                    <span class="ui-inputgroup-addon" style="position:absolute;left:0;">Project Summary:</span>
+                    <textarea type="text" pInputTextarea style="width:79.3%;position:absolute;right:0;height:80px;" maxlength="500" [(ngModel)]="projectSummary"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <button *ngIf="save" pButton type="button" (click)="saveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!projectName || !programCode || !investmentManager || !sop || !projectCode"></button>
+            <button *ngIf="saveChange" pButton type="button" (click)="saveChangeBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!projectName || !programCode || !investmentManager || !sop || !projectCode"></button>
+            <button pButton type="button" (click)="cancelBtn()" label="Cancel"></button>
+        </div>
+    </div>
+</p-dialog>
+<p-dialog header="Associate Model Year Project" [(visible)]="amypDisplay" width="800" [responsive]="true" modal="modal" class="dialog">
+    <p-dataTable [rows]="10" [value]="amypGridStore" [(selection)]="selectedStore" class="data-table" [rowHover]=true (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" scrollable="true" scrollHeight="30rem">
+        <p-column styleClass="ui-grid-col-1 align-center" selectionMode="multiple"></p-column>
+        <p-column field="projectName" header="Costbook Name" styleClass="ui-grid-col-11 align-center"></p-column>
+        <p-column field="categoryName" header="Category" styleClass="ui-grid-col-10 align-left"></p-column>
+    </p-dataTable>
+    <p-paginator rows="{{amypGridStoreRows}}" first="{{amypGridStoreFirst}}" totalRecords="{{amypGridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="amypGridPageChange($event)"></p-paginator>
+    <div class="footer">
+        <button pButton type="button" (click)="amypSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="amypCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog class="dialog" header="Please Choose Your Manager" [(visible)]="searchDialog" [responsive]="true" [modal]="true">
+    <div class="topBar">
+        Department:<input (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="dialogDepartment" class="searchInput">
+        User Name:<input (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="dialogUserName" class="searchInput">
+        Employee ID:<input (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="dialogEmployeeCode" class="searchInput">
+        <button pButton type="button" (click)="lookClick()" label="Search"></button>
+    </div>
+    <div class="ui-grid" style="padding:5px">
+        <p-dataTable (onRowDblclick)="dbclick($event)" [rowHover]=true class="data-table" [value]="managerData" rows="10" scrollable="true" scrollHeight="30rem">
+            <p-column styleClass="ui-grid-col-2" field="userName" header="User Name"></p-column>
+            <p-column field="employeeCode" header="Employee ID" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="jobPosition" header="Job"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="telephone" header="Telphone"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="emailAddress" header="Email"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="departmentName" header="Department"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="masterName" header="Manager"></p-column>
+        </p-dataTable>
+        <p-paginator rows="{{managerDataRows}}" first="{{managerDataFirst}}" totalRecords="{{managerDataLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="managerPaginate($event)"></p-paginator>
+    </div>
+</p-dialog>
+
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+<p-confirmDialog></p-confirmDialog>

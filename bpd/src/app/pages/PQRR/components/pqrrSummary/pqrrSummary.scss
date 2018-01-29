@@ -1,0 +1,236 @@
+@import '../../../sass/privateStyle';
+pqrr-summary {
+	.topBar {
+		padding: 10px;
+		p-dropdown {
+		    display: inline-block;
+		    width: 200px;
+		    margin-left: 10px;
+		    margin-right: 20px;
+		}
+		button {
+			margin-right: 25px;
+			padding: 0 5px;
+		}
+	}
+	.editBtn, .noEditBtn {
+	    margin-right: 10px;
+	    display: inline-block;
+	    text-align: center;
+	}
+	.editBtn, .delBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+	}
+	.noEditBtn {
+		color: #bfbdbd;
+	}
+	.dialog {
+		.ui-inputtext {
+			width: 100%;
+		}
+		.input {
+			width: 75%;
+		}
+		.ui-dropdown {
+			width: 75% !important;
+		}
+		.ui-calendar {
+			display: inline-block;
+		    width: 65% !important;
+		}
+	}
+	.requiredNone {
+         //  width: 100%;
+         margin: -.8rem;
+         &:before {
+             padding-right: .3rem;
+             content: "*";
+             color: rgba(0,0,0,0);
+         }
+     }
+     .ui-fluid .ui-calendar {
+	    width: auto;
+	}
+	.w105 {
+		width: 110px;
+		display: inline-block;
+		margin-right: 20px !important;
+	}
+	.footer {
+		text-align: right;
+	    margin-right: 115px !important;
+	    margin-top: 50px !important;
+	    margin-bottom: 20px !important;
+	}
+	.lookUpFooter {
+		text-align: right;
+		margin-right: 20px;
+	    margin-top: 10px;
+	}
+	.tabView {
+		.ui-tabview.ui-tabview-top>.ui-tabview-nav li {
+			background-color: #ebedf0;
+			border-radius: 5px 5px 0 0;
+			width: 165px;
+			margin-right: 10px;
+			a {
+				text-align: center;
+				width: 100%;
+			}
+			a:hover {
+				cursor: pointer;
+				background-color: rgb(190,203,216);
+				border-radius: 5px 5px 0 0;
+				font-weight: bold;
+			}
+		}
+		.ui-tabview .ui-tabview-nav > li.ui-state-active {
+			cursor: text;
+			background-color: rgb(190,203,216);
+			border-radius: 5px 5px 0 0;
+			font-weight: bold;
+		}
+		.ui-tabview .ui-tabview-panel {
+			min-height: 50rem;
+		}
+	}
+	.green {
+		color: rgb(98,198,6);
+		font-size: 18px;
+	}
+	.yellow {
+		color: #e8c806;
+		font-size: 18px;
+	}
+	.red {
+		color: red;
+		font-size: 18px;
+	}
+	.progressBar {
+		.ui-progressbar-label {
+			top: 4px;
+		}
+		.ui-progressbar {
+		    height: 24px !important;
+		}
+		.ui-progressbar-value {
+			height: 22px !important;
+		}
+		.ui-corner-all {
+			border-radius: 0;
+		}
+		.ui-widget-header {
+			background-color: rgb(7,141,0);
+		}
+	}
+	.previous-head {
+        line-height: 1.6rem;
+        color: #fff;
+        text-align: center;
+        display: inline-block;
+        margin-left: 2em;
+    }
+    .previous-button {
+        float: right;
+        height: 100%;
+        margin: 0;
+        background-color: #fff !important;
+        color: $table-head !important;
+    }
+    .ui-widget-header .ui-inputtext, .ui-widget-content .ui-inputtext {
+    	width: 100%;
+    }
+    .summaryTable {
+    	width: 100%;
+    	text-indent: center;
+    	tr {
+    		height: 3rem;
+    		text-align: center;
+    	}
+    	td {
+    		border: 1px solid #e6e4e4;
+    		text-align: center;
+    	}
+    	th {
+    		background-color: #4B98DC;
+    		text-align: center;
+    		color: #fff;
+    	}
+    }
+    .ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+	.deliverTitle {
+		height: 2.2rem;
+		background-color: rgb(239,239,239);
+		line-height: 2.2rem;
+		font-size: 14px;
+		text-indent: 10px;
+	}
+	.blue {
+		color: rgb(55,138,240);
+		font-size: 16px;
+	}
+	.generalDialog {
+		.ui-dialog-titlebar {
+		    background: #4B98DC;
+		    color: #fff;
+		}
+		.ui-dialog-titlebar a {
+			color: #fff;
+		}
+		.ui-fluid .ui-inputtext {
+			width: 200px;
+		}
+		.ui-fluid .ui-dropdown {
+		    width: 200px !important;
+		}
+		.ui-inputgroup-addon {
+			width: 130px;
+			display: inline-block;
+		}
+	}
+	.calenderInput {
+		input {
+			text-align: center;
+		}
+	}
+	p-confirmDialog {
+		.ui-dialog.ui-widget .ui-dialog-titlebar {
+			background: #2399e5;
+			color: #fff;
+			a {
+				color: #fff;
+			}
+		}
+	 	.ui-dialog.ui-widget .ui-dialog-content {
+			padding: 1em 2em;
+		}
+	}
+	#calendarP {
+		.ui-datepicker{
+			width: 20rem !important;
+		}
+	}
+	.dialog {
+		& > div {
+			.ui-dialog-content {
+				overflow: inherit;
+				max-height: 65rem;
+			}
+		}
+	}
+	.closeRefreshBtn {
+		cursor: pointer;
+		width: 20px;
+	    height: 20px;
+	    line-height: 20px;
+	    text-align: center;
+	    float: right;
+	}
+	.closeRefreshBtn:hover {
+		background-color: #e6e6e6;
+		color: #000;
+	}
+}

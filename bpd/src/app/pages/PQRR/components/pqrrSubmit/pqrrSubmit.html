@@ -1,0 +1,76 @@
+<div class="topBar">
+    Programe Code:<p-dropdown autoWidth="false" [options]="programCodeSerchStore" [(ngModel)]="programCodeSerch"></p-dropdown>
+    PQRR Milestone:<p-dropdown autoWidth="false" [options]="PQRRSerchStore" [(ngModel)]="PQRRSerch"></p-dropdown>
+    <button pButton type="button" (click)="LookUpBtn()" label="Search"></button>
+</div>
+<p-dataTable [rows]="10" [value]="gridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="35rem">
+    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+    <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="elementName" header="PQRR Milestone" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="deptName" header="Department" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="roleName" header="Owner" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="status" header="Upload status" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column header="" styleClass="ui-grid-col-3 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" (click)="editBtn(item)">Edit and upload deliverable</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+
+<p-dialog header="Set Deliverable Task {{titleStr}} Deliverable Status" [(visible)]="display" width="750" modal="modal" class="dialog">
+    <p-dataTable [rows]="10" [value]="deliverableStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="35rem">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="elementId" header="Element ID" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="deliverableName" header="Deliverable Name" styleClass="ui-grid-col-5 align-center"></p-column>
+        <p-column field="deptName" header="Department" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column header="Status" styleClass="ui-grid-col-3 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <p-dropdown autoWidth="false" [style]="{'width':'120px'}" [options]="statusDropdownStore" [(ngModel)]="item.status">
+                    <template let-pic pTemplate="item">
+                        <i *ngIf="pic.value == 'green'" class="fa fa-circle" style="color:rgb(98,198,6);font-size:18px;"></i>
+                        <i *ngIf="pic.value == 'yellow'" class="fa fa-warning" style="color:#e8c806;font-size:18px;"></i>
+                        <i *ngIf="pic.value == 'red'" class="fa fa-close" style="color:red;font-size:18px;"></i>
+                    </template>
+                </p-dropdown>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <div class="deliverTitle" style="margin-top:5px">
+        Download Template File and Upload SGM201 PQRR CSO Deliverable File 
+    </div>
+    <div class="deliverTitle blue">
+        Notes: please download the template file for detail deliverable requirerment
+    </div>
+    <p-dataTable [rows]="10" [value]="downUploadStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="20rem">
+        <p-column header="Template File Name（download)" styleClass="ui-grid-col-4 align-left">
+            <template pTemplate="body" let-item="rowData">
+                <span class="editBtn" (click)="downloadBtn(item)">item.tplName</span>
+            </template>
+        </p-column>
+        <p-column field="deliverName" header="Deliverable File Name" styleClass="ui-grid-col-4 align-left"></p-column>
+        <p-column header="" styleClass="ui-grid-col-3 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span class="editBtn" (click)="uploadBtn(item)">Upload</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <div class="lookUpFooter">
+        <button pButton type="button" (click)="dialogSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="dialogCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog class="dialog" header="Deliverable Template" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+    <p-fileUpload mode="basic" name="file" url="{{uploadURL}}" accept="xlsm" maxFileSize="1000000"
+        (onUpload)="onBasicUpload($event)"></p-fileUpload>
+</p-dialog>
+<!-- 信息提示页 -->
+<p-dialog class="dialog" header="Deliverable Template" [(visible)]="messageDialog">
+    <p-dataTable class="ui-grid-row data-table" [value]="messageData">
+        <p-column styleClass="ui-grid-col-3" field="colIndex" header="Col" [sortable]="true">
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="rowIndex" header="Row" [sortable]="true"></p-column>
+        <p-column styleClass="ui-grid-col-6" field="errorInfo" header="errorInfo" [sortable]="true"></p-column>
+    </p-dataTable>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

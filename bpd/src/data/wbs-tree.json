@@ -1,0 +1,30 @@
+  [
+    {
+      "label": "XX项目类型／XX交付模式",
+      "data": "Documents Folder",
+      "expanded":true,
+      "expandedIcon": "fa-folder-open",
+      "collapsedIcon": "fa-folder",
+      "children": [
+        {
+          "label": "【01】XX名称1",
+          "data":{"code":"01"},
+          "expandedIcon": "fa-folder-open",
+          "collapsedIcon": "fa-folder",
+          "children": [
+            {
+              "label": "【0101】XX名称1.1",
+              "icon": "fa-file-word-o",
+              "data": {"code":"0101"}
+            },
+            {
+              "label": "【0102】XX名称1.2",
+              "icon": "fa-file-word-o",
+              "data": {"code":"0102"}
+            }
+          ]
+        }
+      ]
+    }
+
+  ]

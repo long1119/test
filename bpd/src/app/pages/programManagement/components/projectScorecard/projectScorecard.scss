@@ -1,0 +1,189 @@
+@import '../../../sass/privateStyle';
+project-scorecard {
+	.topBar {
+		padding: 10px;
+		p-dropdown {
+		    display: inline-block;
+		    width: 12rem;
+		    margin: 0 1rem;
+		}
+		.searchInput {
+			margin: 0 1rem;
+		}
+		input {
+			width: 70px;
+			margin: 0 1rem;
+		}
+		button {
+			margin-right: 1rem;
+		}
+	}
+	.topBar1 {
+		padding: 10px 0;
+		p-dropdown {
+		    display: inline-block;
+		    width: 20rem;
+		}
+	}
+	.footer {
+		text-align: right;
+	    padding-top: 10px;
+	}
+	.lookUpFooter {
+		text-align: right;
+		margin-right: 20px;
+	    margin-top: 10px;
+	}
+	.editBtn, .noEditBtn {
+	    margin-right: 10px;
+	    display: inline-block;
+	    text-align: center;
+	}
+	.editBtn, .delBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+	}
+	.noEditBtn {
+		color: #bfbdbd;
+	}
+	.ui-datatable tbody > tr.ui-widget-content.ui-state-highlight .editBtn{
+		color: #fff;
+	}
+	.generalDialog {
+		.ui-dialog-titlebar {
+		    background: #4B98DC;
+		    color: #fff;
+		}
+		.ui-dialog-titlebar a {
+			color: #fff;
+		}
+		.ui-fluid .ui-inputtext {
+			width: 200px;
+		}
+		.ui-fluid .ui-dropdown {
+		    width: 200px !important;
+		}
+		.ui-inputgroup-addon {
+			width: 130px;
+			display: inline-block;
+		}
+	}
+	.ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+	.dialogCommon {
+		.required {
+	         margin: -.8rem;
+	         &:before {
+	             padding-right: .3rem;
+	             content: "*";
+	             color: red;
+	         }
+	     }
+		.ui-dialog-titlebar {
+		    background: #4B98DC;
+		    color: #fff;
+		}
+		.ui-dialog-titlebar a {
+			color: #fff;
+		}
+		.ui-inputgroup {
+			& > span {
+			    width: 100px;
+			    float: left;
+			    padding-top: 15px;
+			}
+			& > textarea {
+				width: 660px;
+			    float: right;
+			}
+			& > input {
+				width: 77%;
+			    float: right;
+			}
+			& > p-dropdown {
+				width: 77%;
+			    float: right;
+			}
+		}
+	}
+	.dialogLittle {
+		.required {
+	         margin: -.8rem;
+	         &:before {
+	             padding-right: .3rem;
+	             content: "*";
+	             color: red;
+	         }
+	     }
+		.ui-dialog-titlebar {
+		    background: #4B98DC;
+		    color: #fff;
+		}
+		.ui-dialog-titlebar a {
+			color: #fff;
+		}
+		.ui-inputgroup {
+			& > span {
+			    width: 20%;
+			    float: left;
+			    padding-top: 0.5rem;
+			}
+			& > textarea {
+				width: 77%;
+			    float: right;
+			}
+			& > input {
+				width: 77%;
+			    float: right;
+			}
+			& > p-dropdown {
+				width: 77%;
+			    float: right;
+			}
+			& > p-calendar {
+				& > span {
+					width: 100%;
+					& > input {
+						width: 100%;
+					}
+				}
+				width: 77%;
+			    float: right;
+			}
+		}
+	}
+	.previous-head {
+        line-height: 1.6rem;
+        color: #fff;
+        text-align: center;
+        display: inline-block;
+        margin-left: 2em;
+    }
+    .previous-button {
+        float: right;
+        height: 100%;
+        margin: 0;
+        background-color: #fff !important;
+        color: $table-head !important;
+    }
+    .green {
+		color: rgb(98,198,6);
+		font-size: 18px;
+	}
+	.yellow {
+		color: #e8c806;
+		font-size: 18px;
+	}
+	.red {
+		color: red;
+		font-size: 18px;
+	}
+	.white {
+		color: white;
+		font-size: 18px;
+	}
+	.ui-datatable-scrollable-body {
+		border: 0.5px solid #c9c9c9;
+	}
+}

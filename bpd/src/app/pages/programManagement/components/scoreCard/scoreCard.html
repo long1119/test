@@ -1,0 +1,147 @@
+<div *ngIf="userRoot" class="topBar">
+    <button pButton type="button" (click)="addBtn()" label="Add"></button>
+</div>
+<p-dataTable [rows]="15" [value]="gridStore" class="data-table" scrollable="true" scrollHeight="50rem">
+    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+    <p-column field="subjectName" header="Subject" styleClass="ui-grid-col-4">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="viewBtn(item)">{{item.subjectName}}</span>
+        </template>
+    </p-column>
+    <p-column field="boardYear" header="Year" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="boardType" header="Type" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="createDate" header="Create Date" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="createUser" header="Create User" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="freezedStatusStr" header="Status" styleClass="ui-grid-col-2"></p-column>
+    <p-column *ngIf="userRoot" header="" styleClass="ui-grid-col-3 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id && item.freezedStatus == 0" class="editBtn" (click)="editBtn(item)">Edit</span>
+            <span *ngIf="item.id && item.freezedStatus == 0" class="editBtn" (click)="AssignBtn(item)">Notify</span>
+            <span *ngIf="item.id && item.freezedStatus == 0" class="editBtn" (click)="delBtn(item)">Delete</span>
+            <span *ngIf="item.id && item.freezedStatus == 1" class="noEditBtn">Edit</span>
+            <span *ngIf="item.id && item.freezedStatus == 1" class="noEditBtn">Notify</span>
+            <span *ngIf="item.id && item.freezedStatus == 1" class="noEditBtn">Delete</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator totalRecords="{{gridStoreLen}}" [rowsPerPageOptions]="[15,30,45]" rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" pageLinkSize="3" (onPageChange)="gridPaginate($event)"></p-paginator>
+
+<p-dialog header="Set BOD Scorecard Date" [(visible)]="subTargetDisplay" width="400" [responsive]="true" modal="modal" class="dialog generalDialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span style="width:107px;display:inline-block;">Meeting:</span>
+                <p-calendar [(ngModel)]="meetingTime" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" yearRange="{{yearRange}}" [yearNavigator]="true"></p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Type:</span>
+                <p-dropdown autoWidth="false" [options]="typeValueStore" [(ngModel)]="typeValue" class="dropdown" [(disabled)]="!isAdd" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button *ngIf="isAdd" pButton type="button" (click)="subTargetsaveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!meetingTime || !typeValue"></button>
+        <button *ngIf="!isAdd" pButton type="button" (click)="subTargetsaveChangeBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!meetingTime || !typeValue"></button>
+        <button pButton type="button" (click)="subTargetDisplay=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog class="dialog" header="ScoreCard Tasks" [(visible)]="scoreCardTasksDialog" [responsive]="true" [modal]="true" width="900">
+    <div class="ui-grid" style="padding:5px">
+        <p-dataTable [rowHover]=true class="data-table" [value]="scoreCardTasksStore" rows="10" scrollable="true" scrollHeight="30rem">
+            <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+            <p-column field="subject" header="Program Name" styleClass="ui-grid-col-5 align-left"></p-column>
+            <p-column field="userName" header="Project Manager" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="freezedStatusStr" header="Scorecard Status" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column  *ngIf="userRoot" header="" styleClass="ui-grid-col-2 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="viewstep2Btn(item)">View</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+        <p-paginator rows="{{scoreCardTasksDataRows}}" first="{{scoreCardTasksDataFirst}}" totalRecords="{{scoreCardTasksDataLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="scoreCardTasksPaginate($event)"></p-paginator>
+    </div>
+</p-dialog>
+<p-dialog header="{{viewStep2Item.subject}}" [(visible)]="addScoreCardTargetDisplay" width="800" [responsive]="true" modal="modal" class="generalDialog">
+    <p-dataTable [rows]="10" [value]="scoreCardTargetStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem">
+        <p-column field="id" header="NO" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="metricGroup" header="Metrics Group" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="indexName" header="Metrics" styleClass="ui-grid-col-5 align-left"></p-column>
+        <p-column field="targetVolume" header="Target" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="statusVolume" header="Status" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="deptName" header="Department" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="ownerName" header="Owner" styleClass="ui-grid-col-2"></p-column>
+        <p-column header="" styleClass="ui-grid-col-2 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="viewStep3Btn(item)">View</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+</p-dialog>
+<p-dialog header="{{viewStep2Item.subject}}" [(visible)]="editSingleDisplay" width="800" minHeight=800 [responsive]="true" modal="modal" class="dialogCommon">
+    <div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-12">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon requiredNone" style="height:80px;line-height:80px;">Metrics:</span>
+                    <textarea type="text" pInputTextarea style="height:80px;" value="{{viewStep3Item.indexName}}" disabled="true"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon requiredNone">Group:</span>
+                    <input type="text" disabled="true" pInputText value="{{viewStep3Item.metricGroup}}">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon requiredNone">Department:</span>
+                    <input type="text" disabled="true" pInputText value="{{viewStep3Item.deptName}}">              
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon requiredNone">Owner:</span>
+                    <input type="text" pInputText disabled="true" value="{{viewStep3Item.ownerName}}">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon requiredNone">Target:</span>
+                    <input type="text" pInputText value="{{viewStep3Item.targetVolume}}" disabled="true">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon requiredNone">Status:</span>
+                    <input type="text" pInputText value="{{viewStep3Item.statusVolume}}" disabled="true">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon requiredNone">Revised Target:</span>
+                    <input type="text" pInputText value="{{viewStep3Item.proposedTarget}}" disabled="true">
+                </div>
+            </div>
+        </div>
+        <div class="targetGrid">
+            <p-dataTable [rows]="2" [value]="targetGridStore" class="data-table" scrollable="true" scrollHeight="6rem">
+                <p-column field="subjectName" header="Subject" styleClass="ui-grid-col-1"></p-column>
+                <p-column field="subtargetVolume" header="Sub Target" styleClass="ui-grid-col-1"></p-column>
+                <p-column field="substatusVolume" header="Status" styleClass="ui-grid-col-1"></p-column>
+                <p-column field="proposedVolume" header="Proposed" styleClass="ui-grid-col-1"></p-column>
+            </p-dataTable>
+        </div>
+    </div>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+<p-confirmDialog></p-confirmDialog>

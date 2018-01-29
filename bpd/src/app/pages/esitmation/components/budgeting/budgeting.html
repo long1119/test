@@ -1,0 +1,919 @@
+<div *ngIf="step == 1">
+    <div class="topBar">
+        Project Type:
+        <p-dropdown autoWidth="false" [options]="projectTypeSerchStore" [(ngModel)]="projectTypeSerch" appendTo="body"></p-dropdown>
+        Costbook Code:
+        <input type="text" pInputText [(ngModel)]="projectCodeSerch" class="projectCodeSerch"> Approved Investment:<span style="margin:0 10px;">>=</span>
+        <input type="number" pInputText [(ngModel)]="approvedInvestmentSerch" class="approvedInvestmentSerch" min="1" (keyup)="approvedInvestmentEnterSearch($event)" onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}">MRMB
+        <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+        <p-checkbox style="float:right" [(ngModel)]="checked" binary="true" (onChange)="checkedChange()"></p-checkbox>
+    </div>
+    <p-dataTable [rows]="10" [value]="gridStore" class="data-table" [rowHover]=true (onRowClick)="programGridRowClick($event)" selectionMode="single" [(selection)]="selectedStore" scrollable="true" scrollHeight="30rem">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="projectCode" header="Costbook Code" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="projectName" header="Costbook Name" styleClass="ui-grid-col-2 align-left"></p-column>
+        <p-column field="projectTypeName" header="Project Type" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="approveInvestmentDate" header="Approved Date" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="approveInvestment" header="Approved Investment (MRMB)" styleClass="ui-grid-col-3 align-right">
+            <template pTemplate="body" let-item="rowData">
+                <span>{{item.approveInvestment | ammountPips}}</span>
+            </template>
+        </p-column>
+        <!-- <p-column field="plantName" header="Plant" styleClass="ui-grid-col-2 align-center"></p-column> -->
+        <p-column field="inevstmentCharavter" header="Investment Character" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="userName" header="Investment Manager" styleClass="ui-grid-col-2 align-center"></p-column>
+    </p-dataTable>
+    <p-paginator rows="10" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+    <div class="budgetTitle">Project Budget Version</div>
+    <p-dataTable [rows]="10" [value]="budgetStore" class="data-table" [rowHover]=true  scrollable="true" scrollHeight="30rem">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="budgetVersionName" header="Budget Version" styleClass="ui-grid-col-2 align-left"></p-column>
+        <p-column field="budgetAmount" header="Waiting For Budget" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="approvingAmount" header="Waiting For Approving" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="disapprovedAmount" header="Return" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="approvedAmount" header="Approved" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="planBudgetRmbTotal" header="Total Investment" styleClass="ui-grid-col-2 align-right">
+            <template pTemplate="body" let-item="rowData">
+                <span>{{item.planBudgetRmbTotal | ammountKPips}}</span>
+            </template>
+        </p-column>
+        <p-column field="approveDoa" header="DOA" styleClass="ui-grid-col-2 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span (mouseover)="mouseover($event,item.approveDoa)" (mouseout)="mouseup()">{{item.approveDoaBrief}}</span>
+            </template>
+        </p-column>
+        <p-column field="approveDate" header="Approve Date" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column header="" styleClass="ui-grid-col-3 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id" class="editBtn" (click)="budgetEditBtn(item)">Preview</span>
+                <span *ngIf="item.id" class="editBtn" (click)="exportRegionBudget(item)">Export</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+</div>
+<div *ngIf="step == 2">
+    <div style="width:20%;float:left;">
+        <div class="navDiv">
+        	<div class="navDivTitle" style="position:relative">{{treeTitle}}
+                <span *ngIf="!isExpanded" style="position:absolute;top:8px;right:10px;font-size:18px;cursor:pointer" class="fa fa-caret-square-o-down" (click)="expandAll()"></span>
+                <span *ngIf="isExpanded" style="position:absolute;top:8px;right:10px;font-size:18px;cursor:pointer" class="fa fa-caret-square-o-right" (click)="collapseAll()"></span>
+            </div>
+            <div class="tree_menu">
+                <p-tree id="pTree" [value]="items" expanded="true" selectionMode="single" [(selection)]="selectedFile" (onNodeExpand)="nodeExpand($event)" (onNodeSelect)="nodeSelect($event)"></p-tree>
+            </div>
+        </div>
+    </div>
+    <div style="width:79%;float:right;">
+        <div class="topBar2" *ngIf="!isFlag">
+            <button *ngIf="!isJump" pButton type="button" (click)="goBack()" label="Back"></button>
+        	<button pButton type="button" (click)="downloadTpl()" label="Dowload Template"></button>
+        	<button pButton type="button" (click)="importBudget()" label="Import Budget" [(disabled)]="!importDisplay"></button>
+            <button pButton type="button" (click)="addBudget()" label="Add Budget" [(disabled)]="!importDisplay"></button>
+        	<!-- <button pButton type="button" (click)="exportS2()" label="Export"></button> -->
+        	<button pButton type="button" (click)="commitS2()" label="Commit" [(disabled)]="!commitDisplay"></button>
+            <button pButton type="button" (click)="delAllFlagBtn()" [(disabled)]="!commitDisplay" label="Clear all"></button>
+        </div>
+        <div class="topBar2" *ngIf="isFlag">
+            <button *ngIf="!isJump" pButton type="button" (click)="goBack()" label="Back"></button>
+            <button pButton type="button" (click)="downloadTpl()" label="Dowload Template"></button>
+            <!-- <button pButton type="button" (click)="downloadTplFlag()" label="Export"></button> -->
+            <button pButton type="button" (click)="importBudgetFlag()" label="Import Budget" [(disabled)]="!importDisplay"></button>
+            <button pButton type="button" (click)="addBudget()" label="Add Budget" [(disabled)]="!importDisplay"></button>
+            <button pButton type="button" (click)="commitS2Flag()" label="Commit" [(disabled)]="!commitDisplay"></button>
+            <button pButton type="button" (click)="delAllFlagBtn()" [(disabled)]="!commitDisplay" label="Clear all"></button>
+        </div>
+        <div class="topBar">
+            WBS Code:<input (keyup)="S2EnterSearch($event)" type="text" pInputText [(ngModel)]="WBEItemNameSerch" style="width:80px;margin:0 6px">
+
+            <span *ngIf="!isFlag">Item Name:</span><input *ngIf="!isFlag" (keyup)="S2EnterSearch($event)" type="text" pInputText [(ngModel)]="ItemNameSerch" style="width:75px;margin:0 6px">
+
+            <span *ngIf="isFlag">Part Description:</span><input *ngIf="isFlag" (keyup)="S2EnterSearch($event)" type="text" pInputText [(ngModel)]="ItemNameSerch" style="width:80px;margin:0 6px">
+
+            Investment Property:<p-dropdown [options]="budgetItemSerchStore" [(ngModel)]="budgetItemSerch"></p-dropdown>
+
+            Amounnt: >=<input (keyup)="S2EnterSearch($event)" type="number" pInputText [(ngModel)]="AmountSerch" oninput="if(value.length>4)value=value.slice(0,4)" style="width:75px;margin:0 6px 0 0">
+
+            <button pButton type="button" (click)="lookupSaveBtn()" label="Search"></button>
+        </div>
+		<div *ngIf="!isFlag">
+			<p-dataTable [rows]="10" [value]="step2MainStore" class="data-table" [rowHover]=true selectionMode="single" [(selection)]="step2SelectedStore" scrollable="true" scrollHeight="40rem" frozenWidth="346px" unfrozenWidth="calc(100% - 346px)" id="frozenGrid" (onRowClick)="step2MainGridRowClick($event)">
+		        <p-column field="id" header="No" styleClass="w20 align-center" frozen="true"></p-column>
+                <p-column header="WBS L4~L5" styleClass="w40 align-center" frozen="true">
+                    <template pTemplate="body" let-item="rowData">
+                        <span style="width:60%;display:inline-block;" *ngIf="item.wbsCode && item.id && commitDisplay" class="editBtn margin0" (click)="wbsClick(item)">{{item.wbsCode}}</span>
+                        <span style="width:60%;display:inline-block;" *ngIf="item.wbsCode && item.id && !commitDisplay">{{item.wbsCode}}</span>
+                        <span style="width:60%;display:inline-block;" *ngIf="!item.wbsCode && item.id && commitDisplay" class="editBtn margin0" (click)="wbsClick(item)">-</span>
+                    </template>
+                </p-column>
+                <p-column header="WBS L7" styleClass="w30 align-center" frozen="true">
+                    <template pTemplate="body" let-item="rowData" let-i="rowIndex">
+                        <span *ngIf="commitDisplay" class="editBtn margin0" (click)="wbsL7Click(item,i)">{{item.wbsLevel7}}</span>
+                        <span *ngIf="!commitDisplay">{{item.wbsLevel7}}</span>
+                    </template>
+                </p-column>
+		        <p-column field="itemNameBrief" header="Item Name" styleClass="w80 align-left" frozen="true">
+                    <template pTemplate="body" let-item="rowData">
+                        <span (mouseover)="mouseover($event,item.itemName)" (mouseout)="mouseup()">{{item.itemNameBrief}}</span>
+                    </template>     
+                </p-column>
+                <div style="width:0px;overflow:hidden">
+                    <p-column field="investmentPropertyName" header="Investment Property" styleClass="w80 align-left" frozen="true"></p-column>
+                    <p-column field="itemDescription" header="Item Content" styleClass="w200 align-left" frozen="true"></p-column>
+                    <p-column field="planBudgetRmb" header="{{AmountTotal}}" styleClass="w50 align-right" frozen="true"></p-column>
+                    <p-column field="undefinedField1" header="{{undefinedField1}}" styleClass="w80 align-left" frozen="true"></p-column>
+                    <p-column field="undefinedField2" header="{{undefinedField2}}" styleClass="w80 align-left" frozen="true"></p-column>
+                    <p-column field="undefinedField3" header="{{undefinedField3}}" styleClass="w80 align-left" frozen="true"></p-column>
+                    <p-column field="undefinedField4" header="{{undefinedField4}}" styleClass="w80 align-left" frozen="true"></p-column>
+                    <p-column field="undefinedField5" header="{{undefinedField5}}" styleClass="w80 align-left" frozen="true"></p-column>
+                    <p-column field="quantity" header="Quantity" styleClass="w50 align-left" frozen="true"></p-column>
+                    <p-column field="price" header="Unit Price" styleClass="w50 align-right" frozen="true"></p-column>
+                    <p-column field="planBudget" header="Amount" styleClass="w50 align-right" frozen="true"></p-column>
+                    <p-column field="currencyCode" header="Currency" styleClass="w50 align-left" frozen="true"></p-column>
+                    <p-column field="budgetComment" header="Comments" styleClass="w200 align-left" frozen="true">
+                        <template pTemplate="body" let-item="rowData">
+                            <span (mouseover)="mouseover($event,item.budgetComment)" (mouseout)="mouseup()">{{item.budgetCommentBrief}}</span>
+                        </template>
+                    </p-column>
+                    <p-column field="author" header="Author" styleClass="w50 align-left" frozen="true"></p-column>
+                    <p-column styleClass="w200 align-left" header="BPD Suggestion" frozen="true">
+                        <template pTemplate="body" let-item="rowData">
+                            <span (mouseover)="mouseover($event,item.auditComment)" (mouseout)="mouseup()">{{item.auditCommentBrief}}</span>
+                        </template>
+                    </p-column>
+                </div>
+                <div style="width:0px;overflow:hidden">
+                   <p-column field="itemNameBrief" header="Item Name" styleClass="w80 align-left">
+                    <template pTemplate="body" let-item="rowData">
+                        <span (mouseover)="mouseover($event,item.itemName)" (mouseout)="mouseup()">{{item.itemNameBrief}}</span>
+                    </template>     
+                </p-column>
+                </div>
+		        <p-column field="investmentPropertyName" header="Investment Property" styleClass="w80 align-left"></p-column>
+		        <p-column field="itemDescription" header="Item Content" styleClass="w200 align-left"></p-column>
+		        <p-column field="planBudgetRmb" header="{{AmountTotal}}" styleClass="w50 align-right">
+                    <template pTemplate="body" let-item="rowData">
+                        <span>{{item.planBudgetRmb | ammountPips}}</span>
+                    </template>      
+                </p-column>
+		        <p-column field="undefinedField1" header="{{undefinedField1}}" styleClass="w80 align-left"></p-column>
+		        <p-column field="undefinedField2" header="{{undefinedField2}}" styleClass="w80 align-left"></p-column>
+		        <p-column field="undefinedField3" header="{{undefinedField3}}" styleClass="w80 align-left"></p-column>
+		        <p-column field="undefinedField4" header="{{undefinedField4}}" styleClass="w80 align-left"></p-column>
+		        <p-column field="undefinedField5" header="{{undefinedField5}}" styleClass="w80 align-left"></p-column>
+		        <p-column field="quantity" header="Quantity" styleClass="w50 align-left"></p-column>
+		        <p-column field="price" header="Unit Price" styleClass="w50 align-right">
+                    <template pTemplate="body" let-item="rowData">
+                        <span>{{item.price | ammountPips}}</span>
+                    </template>      
+                </p-column>
+		        <p-column field="planBudget" header="Amount" styleClass="w50 align-right">
+                    <template pTemplate="body" let-item="rowData">
+                        <span>{{item.planBudget | ammountPips}}</span>
+                    </template>      
+                </p-column>
+		        <p-column field="currencyCode" header="Currency" styleClass="w50 align-left"></p-column>
+                <p-column field="budgetComment" header="Comments" styleClass="w200 align-left">
+                    <template pTemplate="body" let-item="rowData">
+                        <span (mouseover)="mouseover($event,item.budgetComment)" (mouseout)="mouseup()">{{item.budgetCommentBrief}}</span>
+                    </template>
+                </p-column>
+		        <p-column field="author" header="Author" styleClass="w50 align-left"></p-column>
+                <p-column styleClass="w200 align-left" header="BPD Suggestion">
+                    <template pTemplate="body" let-item="rowData">
+                        <span (mouseover)="mouseover($event,item.auditComment)" (mouseout)="mouseup()">{{item.auditCommentBrief}}</span>
+                    </template>
+                </p-column>
+                <p-column header="" styleClass="w50 align-center">
+                    <template pTemplate="body" let-item="rowData">
+                        <span *ngIf="item.id && commitDisplay" class="editBtn" (click)="editBudgetBtn(item)">Edit</span>
+                        <span *ngIf="item.id && commitDisplay" class="editBtn" (click)="delBudgetBtn(item)">Delete</span>
+                        <span *ngIf="item.id && !commitDisplay" class="noEditBtn">Edit</span>
+                        <span *ngIf="item.id && !commitDisplay" class="noEditBtn">Delete</span>
+                    </template>
+                </p-column>
+		    </p-dataTable>
+            <p-overlayPanel #op3>
+                <div style="word-wrap:break-word;padding:10px">{{suggestionDetail}}</div>
+            </p-overlayPanel>
+		</div>
+        <p-paginator *ngIf="!isFlag" totalRecords="{{step2gridStoreLen}}" rows="{{step2gridStoreRows}}" first="{{step2gridStoreFirst}}" (onPageChange)="step2paginate($event)"></p-paginator>
+        <div *ngIf="isFlag">
+            <p-dataTable [rows]="10" [value]="step2MainStore" class="data-table" [rowHover]=true selectionMode="single" [(selection)]="step2SelectedStore" scrollable="true" scrollHeight="40rem" (onRowClick)="step2MainGridRowClick($event)">
+                <p-column header="WBS L4~L5" styleClass="w40 align-center">
+                    <template pTemplate="body" let-item="rowData">
+                        <span style="width:60%;display:inline-block;" *ngIf="item.wbsCode && item.id && commitDisplay" class="editBtn margin0" (click)="wbsClick(item)">{{item.wbsCode}}</span>
+                        <span style="width:60%;display:inline-block;" *ngIf="item.wbsCode && item.id && !commitDisplay">{{item.wbsCode}}</span>
+                        <span style="width:60%;display:inline-block;" *ngIf="!item.wbsCode && item.id && commitDisplay" class="editBtn margin0" (click)="wbsClick(item)">-</span>
+                    </template>
+                </p-column>
+                <p-column field="vppsLevelFull" header="Vpps LevelFull(>=Level3)" styleClass="w50 align-center"></p-column>
+                <p-column field="partDescription" header="Part Description" styleClass="w50 align-left"></p-column>
+                <p-column field="orderNumber" header="Order Number" styleClass="w50 align-left"></p-column>
+                <p-column field="partType" header="Part Type" styleClass="w50 align-left"></p-column>
+                <p-column field="modLevel" header="Mod.Level" styleClass="w50 align-left"></p-column>
+                <p-column field="smt" header="SMT" styleClass="w50 align-left"></p-column>
+                <p-column field="pcsMemo" header="PCS Memo" styleClass="w50 align-left"></p-column>
+                <p-column field="designNumber" header="Design Number" styleClass="w50 align-left"></p-column>
+                <p-column field="sgmNonac" header="SGM E2UL(Non-AC) CNY" styleClass="w50 align-right">
+                    <template pTemplate="body" let-item="rowData">
+                        <span>{{item.sgmNonac | ammountPips}}</span>
+                    </template>
+                </p-column>
+                <p-column field="sgmAc" header="SGM E2UL(AC) CNY " styleClass="w50 align-left">
+                    <template pTemplate="body" let-item="rowData">
+                        <span>{{item.sgmAc | ammountPips}}</span>
+                    </template>
+                </p-column>
+                <p-column field="sgmSourced" header="SGM E2UL(sourced) CNY" styleClass="w50 align-right">
+                    <template pTemplate="body" let-item="rowData">
+                        <span>{{item.sgmSourced | ammountPips}}</span>
+                    </template>
+                </p-column>
+                <p-column field="sgm" header="{{ammountFlagTotal}}" styleClass="w50 align-right">
+                    <template pTemplate="body" let-item="rowData">
+                        <span>{{item.sgm | ammountPips}}</span>
+                    </template>
+                </p-column>
+                <p-column field="variance" header="Variance CNY" styleClass="w50 align-right">
+                    <template pTemplate="body" let-item="rowData">
+                        <span>{{item.variance | ammountPips}}</span>
+                    </template>
+                </p-column>
+                <p-column styleClass="w50 align-left" header="BPD Suggestion">
+                    <template let-item="rowData" pTemplate="body">
+                        <span (click)="showDetail2($event,item,op2)">{{item.suggestion}}</span>
+                    </template>
+                </p-column>
+                <p-column field="investmentPropertyName" header="Investment Property" styleClass="w50 align-left"></p-column>
+                <p-column header="" styleClass="w50 align-center">
+                    <template pTemplate="body" let-item="rowData">
+                        <span *ngIf="item.id && commitDisplay" class="editBtn" (click)="editBudgetBtn(item)">Edit</span>
+                        <span *ngIf="item.id && commitDisplay" class="editBtn" (click)="delBudgetBtn(item)">Delete</span>
+                        <span *ngIf="item.id && !commitDisplay" class="noEditBtn">Edit</span>
+                        <span *ngIf="item.id && !commitDisplay" class="noEditBtn">Delete</span>
+                    </template>
+                </p-column>
+            </p-dataTable>
+            <p-overlayPanel #op2>
+                <div style="word-wrap:break-word;padding:10px">{{suggestionDetail}}</div>
+            </p-overlayPanel>
+        </div>
+        <p-paginator *ngIf="isFlag" totalRecords="{{step2FlaggridStoreLen}}" rows="{{step2FlaggridStoreRows}}" first="{{step2FlaggridStoreFirst}}" (onPageChange)="step2Flagpaginate($event)"></p-paginator>
+        <p-tabView class="tabView" (onChange)="handleChange($event)">
+            <p-tabPanel header="投资策略假设">
+                <p-dataTable *ngIf="assumeStore.length >= 10" [rows]="10" [value]="assumeStore" class="data-table" scrollable="true" scrollHeight="30rem">
+                    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                    <p-column field="investAssumeIndexName" header="Parameter Name" styleClass="ui-grid-col-4 align-left"></p-column>
+                    <p-column field="investAssumeCatName" header="Parameter Group" styleClass="ui-grid-col-4 align-left"></p-column>
+                    <p-column field="indexDataType" header="Data Type" styleClass="ui-grid-col-3 align-center"></p-column>
+                    <p-column field="parameterValue" header="Parameter Value" styleClass="ui-grid-col-4 align-left"></p-column>
+                    <p-column header="" styleClass="ui-grid-col-3 align-center">
+                        <template pTemplate="body" let-item="rowData">
+                            <span *ngIf="commitDisplay" class="editBtn" (click)="assumeEditBtn(item)">Edit</span>
+                            <span *ngIf="!commitDisplay" class="noEditBtn">Edit</span>
+                        </template>
+                    </p-column>
+                </p-dataTable> 
+                <p-dataTable *ngIf="assumeStore.length < 10" [rows]="10" [value]="assumeStore" class="data-table">
+                    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                    <p-column field="investAssumeIndexName" header="Parameter Name" styleClass="ui-grid-col-4 align-left"></p-column>
+                    <p-column field="investAssumeCatName" header="Parameter Group" styleClass="ui-grid-col-4 align-left"></p-column>
+                    <p-column field="indexDataType" header="Data Type" styleClass="ui-grid-col-3 align-center"></p-column>
+                    <p-column field="parameterValue" header="Parameter Value" styleClass="ui-grid-col-4 align-left"></p-column>
+                    <p-column header="" styleClass="ui-grid-col-3 align-center">
+                        <template pTemplate="body" let-item="rowData">
+                            <span *ngIf="commitDisplay" class="editBtn" (click)="assumeEditBtn(item)">Edit</span>
+                            <span *ngIf="!commitDisplay" class="noEditBtn">Edit</span>
+                        </template>
+                    </p-column>
+                </p-dataTable>
+            </p-tabPanel>
+            <p-tabPanel header="Cost Book Info" class="CBIPanel">
+                <button *ngIf="selectedStore.projectType != '300'" pButton type="button" (click)="CBISave()" label="SAVE" style="margin-bottom:3px;" [(disabled)]="!costBookDisplay || !commitDisplay"></button>
+                <div>
+                    <span class="CBIname textIndent20">Costbook Name:</span>
+                    <span class="CBIname textIndent20">{{selectedStore.projectName}}</span>
+                    <span class="CBIname textIndent20">Costbook Code:</span>
+                    <span class="CBIname borderRight textIndent20">{{selectedStore.projectCode}}</span>
+                </div>
+                <div *ngIf="selectedStore.projectType == '120' || selectedStore.projectType == '200'">
+                    <span class="CBIname textIndent20">Plant:</span>
+                    <span *ngIf="commitDisplay" class="CBIname">
+                        <p-dropdown class="CBIdrop" autoWidth="false" [options]="plantStore" [(ngModel)]="plant" (onChange)="plantChange($event)"></p-dropdown>
+                    </span>
+                    <span *ngIf="!commitDisplay" class="CBIname textIndent20">{{selectedStore.plantCode}}</span>
+                    <span class="CBIname textIndent20">Plant Code:</span>
+                    <span *ngIf="commitDisplay" class="CBIname borderRight textIndent20">{{plantCode}}</span>
+                    <span *ngIf="!commitDisplay" class="CBIname borderRight textIndent20">{{selectedStore.plantName}}</span>
+                </div>
+                <div *ngIf="selectedStore.projectType == '110'">
+                    <span class="CBIname textIndent20">Plant:</span>
+                    <span *ngIf="commitDisplay" class="CBIname">
+                        <p-dropdown class="CBIdrop" autoWidth="false" [options]="plantStore" [(ngModel)]="plant" (onChange)="plantChange($event)"></p-dropdown>
+                    </span>
+                    <span *ngIf="!commitDisplay" class="CBIname textIndent20">{{step2SelectedStore.plantCode}}</span>
+                    <span class="CBIname textIndent20">Plant Code:</span>
+                    <span *ngIf="commitDisplay" class="CBIname borderRight textIndent20">{{plantCode}}</span>
+                    <span *ngIf="!commitDisplay" class="CBIname borderRight textIndent20">{{step2SelectedStore.plantCode}}</span>
+                </div>
+                <div *ngIf="selectedStore.projectType == '300'">
+                    <span class="CBIname textIndent20">Company:</span>
+                    <span class="CBIname textIndent20">{{selectedStore.plantName}}</span>
+                    <span class="CBIname textIndent20">Plant Code:</span>
+                    <span class="CBIname borderRight textIndent20">{{selectedStore.plantCode}}</span>
+                </div>
+                <div>
+                    <span class="CBIname lastDiv textIndent20">Region Name:</span>
+                    <span class="CBIname lastDiv textIndent20">{{costBookRegionName}}</span>
+                    <span class="CBIname lastDiv textIndent20">Region Code(L3):</span>
+                    <span class="CBIname lastDiv borderRight textIndent20">{{costBookRegionCode}}</span>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Audit Log">
+                <div class="topBar">
+                    WBS Code:
+                    <input type="text" pInputText [(ngModel)]="logWbsCodeSearch" class="projectCodeSerch" (keyup)="logEnterSearch($event)">
+                    Item Name:
+                    <input type="text" pInputText [(ngModel)]="logItemNameSearch" class="projectCodeSerch" (keyup)="logEnterSearch($event)">
+                    <button pButton type="button" (click)="logSearch()" label="Search"></button>
+                </div>
+                <p-dataTable [rows]="10" [value]="AuditLogStore" class="data-table" scrollable="true" scrollHeight="30rem">
+                    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                    <p-column field="wbsCode" header="WBS Code" styleClass="ui-grid-col-4 align-left"></p-column>
+                    <p-column field="itemName" header="Item Name" styleClass="ui-grid-col-4 align-left"></p-column>
+                    <p-column field="itemMemo" header="Item Memo" styleClass="ui-grid-col-3 align-center"></p-column>
+                    <p-column field="logDate" header="Log Date" styleClass="ui-grid-col-4 align-left"></p-column>
+                    <p-column field="suggestion" header="Suggestion" styleClass="ui-grid-col-4 align-left"></p-column>
+                </p-dataTable>
+            </p-tabPanel>
+            <p-tabPanel header="Files">
+                <div *ngIf="commitDisplay" class="budgetTitle" style="text-align:left;padding-left:10px">
+                    <button pButton type="button" (click)="onBudgetFileUpLoadBtn()" label="Upload"></button>
+                </div>
+                <p-dataTable [rows]="10" [value]="budgetFileUpLoadList" class="data-table" [rowHover]=true scrollable="true" scrollHeight="25rem">
+                    <p-column field="fileFullName" header="File Name" styleClass="ui-grid-col-3 align-left">
+                        <template pTemplate="body" let-list="rowData">
+                            <span class="editBtn" (click)="downloadBudgetFile(list)">{{list.fileFullName}}</span>
+                            <i *ngIf="commitDisplay" class="fa fa-close" style="color:red;font-size:18px;" (click)="onBudgetFileDeleteBtn(list)"></i>
+                        </template>
+                    </p-column>
+                    <p-column field="uploadUserName" header="Upload User" styleClass="ui-grid-col-2 align-center"></p-column>
+                    <p-column field="uploadTime" header="Upload Date" styleClass="ui-grid-col-2 align-center"></p-column>
+                </p-dataTable>
+            </p-tabPanel>
+            <p-tabPanel header="Budget Log">
+                <div class="topBar">
+                    <span>WBS Code:</span>
+                    <input type="text" pInputText [(ngModel)]="budgetLogWbsCodeSearch" class="projectCodeSerch" (keyup)="budgetLogEnterSearch($event)">
+                    <span *ngIf="!isFlag">Item Name:</span>
+                    <span *ngIf="isFlag">Part Description:</span>
+                    <input type="text" pInputText [(ngModel)]="budgetLogItemNameSearch" class="projectCodeSerch" (keyup)="budgetLogEnterSearch($event)">
+                    <button pButton type="button" (click)="budgetLogSearch()" label="Search"></button>
+                </div>
+                <p-dataTable *ngIf="!isFlag" [rows]="10" [value]="budgetLogStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="25rem">
+                    <p-column field="wbsCode" header="WBS Code" styleClass="align-center" [style]="{'width':'120px'}"></p-column>
+                    <p-column field="itemName" header="Item Name" styleClass="align-center" [style]="{'width':'200px'}"></p-column>
+                    <p-column field="quantity" header="Quantity" styleClass="align-center" [style]="{'width':'120px'}"></p-column>
+                    <p-column field="price" header="Price" styleClass="align-right" [style]="{'width':'120px'}">
+                        <template pTemplate="body" let-item="rowData">
+                            <span>{{item.price | ammountPips}}</span>
+                        </template>
+                    </p-column>
+                    <p-column field="planBudget" header="Plan Budget" styleClass="align-right" [style]="{'width':'120px'}">
+                        <template pTemplate="body" let-item="rowData">
+                            <span>{{item.planBudget | ammountPips}}</span>
+                        </template>
+                    </p-column>
+                    <p-column field="userName" header="User Name" styleClass="align-center" [style]="{'width':'150px'}"></p-column>
+                    <p-column field="createTime" header="Create Time" styleClass="align-center" [style]="{'width':'200px'}"></p-column>
+                </p-dataTable>
+                
+                <p-dataTable *ngIf="isFlag" [rows]="10" [value]="budgetLogStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="25rem">
+                    <p-column field="wbsCode" header="WBS Code" styleClass="align-center" [style]="{'width':'120px'}"></p-column>
+                    <p-column field="partDescription" header="Part Description" styleClass="align-center" [style]="{'width':'200px'}"></p-column>
+                    <p-column field="sgmNonac" header="SGM E2UL(Non-AC) CNY" styleClass="align-right" [style]="{'width':'120px'}">
+                        <template pTemplate="body" let-item="rowData">
+                            <span>{{item.sgmNonac | ammountPips}}</span>
+                        </template>
+                    </p-column>
+                    <p-column field="sgmAc" header="SGM E2UL(AC) CNY" styleClass="align-right" [style]="{'width':'120px'}">
+                        <template pTemplate="body" let-item="rowData">
+                            <span>{{item.sgmAc | ammountPips}}</span>
+                        </template>
+                    </p-column>
+                    <p-column field="sgmSourced" header="SGM E2UL(Sourced) CNY" styleClass="align-right" [style]="{'width':'120px'}">
+                        <template pTemplate="body" let-item="rowData">
+                            <span>{{item.sgmSourced | ammountPips}}</span>
+                        </template>
+                    </p-column>
+                    <p-column field="sgm" header="SGM E2UL CNY" styleClass="align-right" [style]="{'width':'120px'}">
+                        <template pTemplate="body" let-item="rowData">
+                            <span>{{item.sgm | ammountPips}}</span>
+                        </template>
+                    </p-column>
+                    <p-column field="userName" header="User Name" styleClass="align-center" [style]="{'width':'150px'}"></p-column>
+                    <p-column field="createTime" header="Create Time" styleClass="align-center" [style]="{'width':'200px'}"></p-column>
+                </p-dataTable>
+
+                <p-paginator rows="{{budgetLogRows}}" first="{{budgetLogFirst}}" totalRecords="{{budgetLogLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="budgetLogPaginate($event)"></p-paginator>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+
+    <!-- <p-dialog header="Search Budget Items" [(visible)]="lookupDisplay" width="450" modal="modal" class="dialog">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-11">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">WBS Code:</span>
+                    <input (keyup)="S2EnterSearch($event)" type="text" pInputText [(ngModel)]="WBEItemNameSerch">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-11">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Item Name:</span>
+                    <input (keyup)="S2EnterSearch($event)" type="text" pInputText [(ngModel)]="ItemNameSerch">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-11">
+                <div class="ui-inputgroup pdrop">
+                    <span class="ui-inputgroup-addon">Investment Property:</span>
+                    <p-dropdown [options]="budgetItemSerchStore" [(ngModel)]="budgetItemSerch"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-11">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Amounnt: >= </span>
+                    <input (keyup)="S2EnterSearch($event)" type="number" pInputText [(ngModel)]="AmountSerch" oninput="if(value.length>4)value=value.slice(0,4)">
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <button pButton type="button" (click)="lookupSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+            <button pButton type="button" (click)="lookupCancelBtn()" label="Cancel"></button>
+        </div>
+    </p-dialog> -->
+    <p-dialog header="Modify Budget Item" [(visible)]="setBudgetDisplay" width="880" modal="modal" class="dialog singleBudget">
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Item Name:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.itemName" maxlength="50">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Investment Property:</span>
+                    <p-dropdown id="changeDrop" [options]="investmentPropertyStore" [(ngModel)]="singleBudgetItem.investmentPropertyCode" appendTo="body"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Item Content:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.itemDescription" maxlength="100">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Currency:</span>
+                    <p-dropdown id="changeDrop2" [options]="currencyStore" [(ngModel)]="singleBudgetItem.currencyCode" appendTo="body"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Quantity:</span>
+                    <input type="text" (blur)="quantity($event)" pInputText [(ngModel)]="singleBudgetItem.quantity" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Unit Price:</span>
+                    <input type="text" (blur)="quantity($event)" pInputText [(ngModel)]="singleBudgetItem.price" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Amount:</span>
+                    <input type="text" disabled="true" pInputText [(ngModel)]="singleBudgetItem.planBudget" (keydown)="msgservice.checkNumValue($event,99999999999999)">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Comments:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.budgetComment" maxlength="100">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Author:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.author" maxlength="25">
+                </div>
+            </div>
+        </div>
+
+        <!-- // isFlag -->
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Vpps:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.vppsLevelFull" maxlength="20">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Part Description:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.partDescription" maxlength="100">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Order Number:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.orderNumber" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Part Type:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.partType" maxlength="50">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Mod Level:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.modLevel" maxlength="50">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">SMT:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.smt" maxlength="50">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">PCS Memo:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.pcsMemo" maxlength="50">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Design Number:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.designNumber" (keydown)="msgservice.checkNumValue($event,9999999999)">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Non-Ac:</span>
+                    <input type="text" pInputText (blur)="quantityFlag($event)" [(ngModel)]="singleBudgetItem.sgmNonac" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">AC:</span>
+                    <input type="text" pInputText (blur)="quantityFlag($event)" [(ngModel)]="singleBudgetItem.sgmAc" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Sourced:</span>
+                    <input type="text" pInputText (blur)="quantityFlag($event)" [(ngModel)]="singleBudgetItem.sgmSourced" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">CNY:</span>
+                    <input type="text" disabled="true" pInputText [(ngModel)]="singleBudgetItem.sgm" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Variance CNY:</span>
+                    <input type="text" pInputText [(ngModel)]="singleBudgetItem.variance" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <button pButton type="button" (click)="setBudgetSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+            <button pButton type="button" (click)="setBudgetDisplay=false" label="Cancel"></button>
+        </div>
+    </p-dialog>
+    <p-dialog header="Set Parameter Value" [(visible)]="parameterDisplay" width="450" modal="modal" class="dialog">
+        <div style="margin: 10px 0 20px 15px;">
+            Parameter Value:
+            <input *ngIf="assumeItem['indexDataType'] == 'string'" style="width:55%;margin-left:30px" type="text" pInputText [(ngModel)]="parameterValue" maxlength="100">
+            <input *ngIf="assumeItem['indexDataType'] == 'number'" style="width:55%;margin-left:30px" type="text" pInputText [(ngModel)]="parameterValue" (keydown)="msgservice.checkNumValue($event,9999999999)">
+            <p-calendar  [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" *ngIf="assumeItem['indexDataType'] == 'date'" class="dataInput" [(ngModel)]="parameterValue" dateFormat="yy-mm-dd" appendTo="body"></p-calendar>
+        </div>
+        <div class="footer">
+            <button pButton type="button" (click)="parameterSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+            <button pButton type="button" (click)="parameterCancelBtn()" label="Cancel"></button>
+        </div>
+    </p-dialog>
+    <p-dialog header="Import Budget" [(visible)]="chooseBudgetSheetDisplay" width="400" modal="modal" class="dialog">
+        <div style="margin: 10px 0 20px 20px;">
+            Sheet Name:<input style="width:55%;margin-left:30px" type="text" pInputText [(ngModel)]="sheetValue" (keyup)="sheetEnterSearch($event)">
+        </div>
+        <div class="footer">
+            <button pButton type="button" (click)="chooseBudgetSheetSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+            <button pButton type="button" (click)="chooseBudgetSheetDisplay=false" label="Cancel"></button>
+        </div>
+    </p-dialog>
+    <p-dialog class="dialog" header="Budgeting" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <p-fileUpload mode="basic" name="file" url="{{uploadURL}}" accept="xlsm" maxFileSize="10000000"
+            (onUpload)="onBasicUpload($event)" (onSelect)="onfileSelect($event)"></p-fileUpload>
+    </p-dialog>
+    <!-- 文件上传 -->
+    <p-dialog class="dialog" header="Budgeting" [(visible)]="fileUpLoadDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <p-fileUpload mode="basic" name="file" url="{{budgetFileUpLoadUrlFirstStep}}?bussinessId={{adProjectBusinessId}}&attId={{UuId}}&projId={{selectedStore.adProjectCode}}&sourceType=budgetRegion" accept="xlsm" maxFileSize="10000000"
+            (onUpload)="onBudgetFileUpload($event)"></p-fileUpload>
+    </p-dialog>
+    <!-- 信息提示页 -->
+    <p-dialog class="dialog" header="Budgeting" [(visible)]="messageDialog">
+        <p-dataTable class="ui-grid-row data-table" [value]="messageData" scrollable="true" scrollHeight="30rem">
+            <p-column styleClass="ui-grid-col-3" field="colIndex" header="Col" [sortable]="true">
+            </p-column>
+            <p-column styleClass="ui-grid-col-3" field="rowIndex" header="Row" [sortable]="true"></p-column>
+            <p-column styleClass="ui-grid-col-6" field="errorInfo" header="Error Info" [sortable]="true"></p-column>
+        </p-dataTable>
+    </p-dialog>
+    <p-dialog header="Set WBS~L7 Code" [(visible)]="wbsL7Display" width="250" modal="modal" class="dialog">
+        <div style="margin: 10px 0 20px 20px;">
+            No:<input style="width:55%;margin-left:30px" type="number" pInputText [(ngModel)]="wbsL7Value" min="0" (keydown)="msgservice.checkNumValue($event,99)">
+        </div>
+        <div class="footer">
+            <button pButton type="button" (click)="wbsL7SaveBtn()" label="Confirm" style="margin-right:10px"></button>
+            <button pButton type="button" (click)="wbsL7CancelBtn()" label="Cancel"></button>
+        </div>
+    </p-dialog>
+    <p-dialog header="Select Mapping WBS L5 Item" [(visible)]="wbsDisplay" width="450" modal="modal" class="dialog">
+        <p-treeTable [value]="wbsTreeStore" (dblclick)="wbsDbclick($event)" selectionMode="single" [(selection)]="wbsTreeSelectedStore" class="tree-table" scrollable="true" scrollHeight="30rem">
+            <p-column field="wbsCode" header="Item Code" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="wbsName" header="Item Name" styleClass="ui-grid-col-2 align-center"></p-column>
+        </p-treeTable>
+    </p-dialog>
+    <p-dialog class="dialog" width="550" header="Budgeting Template" [(visible)]="budgetTplDialog">
+        <p-dataTable class="ui-grid-row data-table" [value]="budgetTplData" scrollable="true" scrollHeight="30rem" (onRowDblclick)="dbclick($event)" [rowHover]=true>
+            <p-column styleClass="ui-grid-col-12" field="fileFullName" header="File Name">
+            </p-column>
+        </p-dataTable>
+    </p-dialog>
+
+    <!-- //  单条增加预算明细 -->
+    <p-dialog header="Add Budget Item" [(visible)]="addBudgetDisplay" width="880" modal="modal" class="dialog singleBudget" id="addBudgetDrop">
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">WBS L4~L5:</span>
+                    <input type="text" pInputText readonly="true" (click)="getWbsCode()" [(ngModel)]="addWbs">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">WBS L7:</span>
+                    <input type="number" min="0" pInputText [(ngModel)]="addWbsL7" (keydown)="msgservice.checkNumValue($event,99)">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Item Name:</span>
+                    <input type="text" pInputText [(ngModel)]="addItemName" maxlength="50">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Investment Property:</span>
+                    <p-dropdown [options]="investmentPropertyStore" [(ngModel)]="addInvestmentPropertyCode" appendTo="body"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Item Content:</span>
+                    <input type="text" pInputText [(ngModel)]="addItemDescription" maxlength="100">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Currency:</span>
+                    <p-dropdown [options]="currencyStore" [(ngModel)]="addCurrencyCode" appendTo="body"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Comments:</span>
+                    <input type="text" pInputText [(ngModel)]="addBudgetComment" maxlength="100">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">{{undefinedField1}}:</span>
+                    <input type="text" pInputText [(ngModel)]="addUndefined1" maxlength="50">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">{{undefinedField2}}:</span>
+                    <input type="text" pInputText [(ngModel)]="addUndefined2" maxlength="50">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">{{undefinedField3}}:</span>
+                    <input type="text" pInputText [(ngModel)]="addUndefined3" maxlength="50">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">{{undefinedField4}}:</span>
+                    <input type="text" pInputText [(ngModel)]="addUndefined4" maxlength="50">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">{{undefinedField5}}:</span>
+                    <input type="text" pInputText [(ngModel)]="addUndefined5" maxlength="50">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Quantity:</span>
+                    <input type="text" (blur)="addQuantityFun($event)" pInputText [(ngModel)]="addQuantity" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Unit Price:</span>
+                    <input type="text" (blur)="addQuantityFun($event)" pInputText [(ngModel)]="addPrice" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="!isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Amount:</span>
+                    <input type="text" disabled="true" pInputText [(ngModel)]="addPlanBudget" (keydown)="msgservice.checkNumValue($event,99999999999999)">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Author:</span>
+                    <input type="text" pInputText [(ngModel)]="addAuthor" maxlength="25">
+                </div>
+            </div>
+        </div>
+
+        <!-- // isFlag -->
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">WBS L4~L5:</span>
+                    <input type="text" pInputText readonly="true" (click)="getWbsCode()" [(ngModel)]="addWbsFlag">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Vpps:</span>
+                    <input type="text" pInputText [(ngModel)]="addVppsLevelFullFlag" maxlength="50">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Part Description:</span>
+                    <input type="text" pInputText [(ngModel)]="addPartDescriptionFlag" maxlength="50">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Order Number:</span>
+                    <input type="text" pInputText [(ngModel)]="addOrderNumberFlag" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Part Type:</span>
+                    <input type="text" pInputText [(ngModel)]="addPartTypeFlag" maxlength="50">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Mod Level:</span>
+                    <input type="text" pInputText [(ngModel)]="addModLevelFlag" maxlength="50">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">SMT:</span>
+                    <input type="text" pInputText [(ngModel)]="addSmtFlag" maxlength="50">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">PCS Memo:</span>
+                    <input type="text" pInputText [(ngModel)]="addPcsMemoFlag" maxlength="50">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Design Number:</span>
+                    <input type="text" pInputText [(ngModel)]="addDesignNumberFlag" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Non-Ac:</span>
+                    <input type="text" pInputText (blur)="addQuantityFlagFun($event)" [(ngModel)]="addSgmNonacFlag" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">AC:</span>
+                    <input type="text" pInputText (blur)="addQuantityFlagFun($event)" [(ngModel)]="addSgmAcFlag" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Sourced:</span>
+                    <input type="text" pInputText (blur)="addQuantityFlagFun($event)" [(ngModel)]="addSgmSourcedFlag" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">CNY:</span>
+                    <input type="text" disabled="true" pInputText [(ngModel)]="addSgmFlag" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid" *ngIf="isFlag">
+            <div class="ui-g-12 ui-md-5">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Variance CNY:</span>
+                    <input type="text" pInputText [(ngModel)]="addVarianceFlag" (keydown)="msgservice.checkNumValue($event,99999999)">
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Investment Property:</span>
+                    <p-dropdown [options]="investmentPropertyStore" [(ngModel)]="addInvestmentPropertyCode" appendTo="body"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="footer" style="padding-top:5px">
+            <button *ngIf="!isFlag" pButton type="button" (click)="addBudgetSaveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!addItemName || !addQuantity || !addPrice"></button>
+            <button *ngIf="isFlag" pButton type="button" (click)="addBudgetSaveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!addSgmSourcedFlag || !addSgmAcFlag || !addSgmNonacFlag || !addPartDescriptionFlag"></button>
+            <button pButton type="button" (click)="addBudgetDisplay=false" label="Cancel"></button>
+        </div>
+    </p-dialog>
+</div>
+<div id="messageDetail"></div>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+<p-confirmDialog></p-confirmDialog>

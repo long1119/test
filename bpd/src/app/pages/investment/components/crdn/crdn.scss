@@ -1,0 +1,96 @@
+@import '../../../sass/privateStyle';
+crdn {
+	.topBar {
+		padding: 10px;
+		p-dropdown {
+		    display: inline-block;
+		    width: 100px;
+		    margin-left: 10px;
+		    margin-right: 20px;
+		}
+		.small {
+			display: inline-block;
+		    width: 70px;
+		    margin-left: 10px;
+		    margin-right: 20px;
+		}
+		.log {
+			display: inline-block;
+		    width: 160px;
+		    margin-left: 10px;
+		    margin-right: 20px;
+		}
+		.searchInput {
+			margin: 0 20px 0 10px;
+		}
+		input {
+			width: auto;
+		}
+		button {
+			margin-right: 20px;
+		}
+	}
+	.footer {
+		text-align: right;
+	    padding-top: 10px;
+	}
+	.editBtn {
+	    margin-right: 10px;
+	    display: inline-block;
+	    text-align: center;
+	}
+	.editBtn, .delBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+	}
+	.tabView {
+		.ui-tabview.ui-tabview-top>.ui-tabview-nav li {
+			background-color: #ebedf0;
+			border-radius: 5px 5px 0 0;
+			width: 165px;
+			margin-right: 10px;
+			a {
+				text-align: center;
+				width: 100%;
+			}
+			a:hover {
+				cursor: pointer;
+				background-color: rgb(190,203,216);
+				border-radius: 5px 5px 0 0;
+				font-weight: bold;
+			}
+		}
+		.ui-tabview .ui-tabview-nav > li.ui-state-active {
+			cursor: text;
+			background-color: rgb(190,203,216);
+			border-radius: 5px 5px 0 0;
+			font-weight: bold;
+		}
+		.tabView > div {
+			margin-top: 30px;
+		}
+		.ui-tabview .ui-tabview-panel {
+			padding: 0;
+		}
+	}
+	.ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+	.crdnDialog {
+		.ui-dialog.ui-widget .ui-dialog-content {
+		    min-height: 45rem;
+		}
+	}
+	p-confirmDialog {
+		.ui-dialog.ui-widget .ui-dialog-titlebar {
+			background: #2399e5;
+			color: #fff;
+			a {
+				color: #fff;
+			}
+		}
+	 	.ui-dialog.ui-widget .ui-dialog-content {
+			padding: 1em 2em;
+		}
+	}
+}

@@ -1,0 +1,26 @@
+@import '../../theme/sass/conf/conf';
+@import './dialogStyle';
+@import './dataTableStyle';
+@import './messageStyle';
+@import './dataListStyle';
+@import './tabStyle';
+@import './treeTableStyle';
+@import './dropDownStyle';
+@import './tabViewStyle';
+@import './calendarStyle';
+@import './panelStyle';
+@import './radioStyle';
+@import './confirmStyle';
+
+.align-left {
+    text-align: left;
+}
+.align-center {
+    text-align: center;
+}
+.align-right {
+    text-align: right;
+}
+* {
+    font-size: 13px;
+}

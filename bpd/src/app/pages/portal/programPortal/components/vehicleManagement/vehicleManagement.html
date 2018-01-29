@@ -1,0 +1,959 @@
+<div class="main-content">
+    <!-- card1 里的tab切换 -->
+    <p-tabView (onChange)="handleChange($event)">
+        <p-tabPanel header="NOD" [selected]="tabs[0]" leftIcon="fa-bell">
+            <div class="body1">
+                <!-- <div class="ui-g top-content">
+                    <div class="ui-g-4">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;padding-left:1rem;">Project Code:</div>
+                        <div class="ui-g-8">
+                            <input (keyup)="checkEnterSearch($event)" id="input" type="text" pInputText [(ngModel)]="projectCode" style="width:90%;">
+                        </div>
+                    </div>
+                    <div class="ui-g-4">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;">Approve Status:</div>
+                        <div class="ui-g-8">
+                            <p-dropdown class="dropdown" [options]="status" [(ngModel)]="selectedStatus"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="ui-g-2" style="padding-top:1rem;">
+                        <button pButton type="button" (click)="check()" label="Search"></button>
+                    </div>
+                </div> -->
+                <!-- <div class="ui-g body-content1">
+                    <div class="ui-g-1">
+                        <div class="image">
+                            <img src="../../../../assets/img/programPortal/chess.png">
+                        </div>
+                    </div>
+                    <div class="ui-g-5 main-body">
+                        <p class="title" style="color:blue;text-align:center;font-weight:bold;">Wating For Approving Node</p>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Nod No:</label></div>
+                            <div class="ui-g-6 text">{{1}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Project Name:</label></div>
+                            <div class="ui-g-6 text">{{2}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Project Code:</label></div>
+                            <div class="ui-g-6 text">{{3}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>SORP/EOP:</label></div>
+                            <div class="ui-g-6 text">{{4}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Approved Investment:</label></div>
+                            <div class="ui-g-6 text">{{5}}</div>
+                        </div>
+                    </div>
+                    <div class="ui-g-6">
+                        <div style="width:160px;height:30px;text-align:center;background-color:#F2F2F2;border-radius:5px 5px 0 0;padding:0.5rem;">
+                            <label>Decision Description:</label>
+                        </div>
+                        <div style="width:450px;height:130px;border:1px solid #E1E1E1;overflow:hidden;">
+                            {{0}} 
+                        </div>
+                    </div>
+                </div>
+                <hr style="border:1px dashed #858585;margin:0 0.5rem;">
+                <div class="ui-g body-content1">
+                    <div class="ui-g-1">
+                        <div class="image">
+                            <img src="../../../../assets/img/programPortal/chess.png">
+                        </div>
+                    </div>
+                    <div class="ui-g-5 main-body">
+                        <p class="title" style="color:blue;text-align:center;font-weight:bold;">Wating For Approving Node</p>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Nod No:</label></div>
+                            <div class="ui-g-6 text">{{1}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Project Name:</label></div>
+                            <div class="ui-g-6 text">{{2}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Project Code:</label></div>
+                            <div class="ui-g-6 text">{{3}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>SORP/EOP:</label></div>
+                            <div class="ui-g-6 text">{{4}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Approved Investment:</label></div>
+                            <div class="ui-g-6 text">{{5}}</div>
+                        </div>
+                    </div>
+                    <div class="ui-g-6">
+                        <div style="width:160px;height:30px;text-align:center;background-color:#F2F2F2;border-radius:5px 5px 0 0;padding:0.5rem;">
+                            <label>Decision Description:</label>
+                        </div>
+                        <div style="width:450px;height:130px;border:1px solid #E1E1E1;">
+                            
+                        </div>
+                    </div>
+                </div> -->
+                <workflow (refreshFlag)="refreshFlag($event)" (ListCountOut)="nodListCount($event)" *ngIf="selectedNod" [wfType]="wfType"></workflow>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Timesheet" [selected]="tabs[1]" leftIcon="fa-calendar">
+            <div class="body2">
+                <!-- <div class="ui-g top-content">
+                    <div class="ui-g-4">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;padding-left:1rem;">Project Code:</div>
+                        <div class="ui-g-8">
+                            <input (keyup)="checkEnterSearch($event)" id="input" type="text" pInputText [(ngModel)]="projectCode" style="width:90%;">
+                        </div>
+                    </div>
+                    <div class="ui-g-4">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;">Approve Status:</div>
+                        <div class="ui-g-8">
+                            <p-dropdown class="dropdown" [options]="status" [(ngModel)]="selectedStatus"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="ui-g-2" style="padding-top:1rem;">
+                        <button pButton type="button" (click)="check()" label="Search"></button>
+                    </div>
+                </div> -->
+                <!-- <div class="body-table"> -->
+                    <!-- <table class="table table-bordered table-hover">
+                        <thead class="thead-inverse" style="background-color:#F2F2F2;">
+                            <tr>
+                                <th>No</th>
+                                <th>Subject</th>
+                                <th>Owner</th>
+                                <th>Expiration Time</th>
+                                <th>Project Code</th>
+                                <th>Moddel Year</th>
+                            </tr> 
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let option of timeSheetTable;let i=index">
+                                <td>{{i+1}}</td>
+                                <td style="color:blue;cursor:pointer;" (click)="openMasterTimeSheet()">{{option.subject}}</td>
+                                <td>{{option.owner}}</td>
+                                <td>{{option.expirationTime}}</td>
+                                <td>{{option.projectCode}}</td>
+                                <td>{{option.modelYear}}</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                    <workflow (refreshFlag)="refreshFlag($event)" (ListCountOut)="timeSheetListCount($event)" *ngIf="selectedTimeSheet" [wfType]="wfType"></workflow>
+                <!-- </div> -->
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Meeting" [selected]="tabs[2]" leftIcon="fa-clock-o">
+            <div class="body3">
+                <div class="ui-g" style="margin:0;">
+                    <div class="ui-g-4">
+                        <button pButton type="button" (click)="lookMonth()" label="Month Calendar"></button>
+                        <button pButton type="button" (click)="lookDay()" label="Day Calendar"></button>
+                    </div>
+                    <div class="ui-g-4" style="padding:0;">
+                        <div class="ui-g-4">Meeting Type:</div>
+                        <div class="ui-g-8"><p-dropdown [options]="types" [(ngModel)]="selectedType"></p-dropdown></div>
+                    </div>
+                    <div class="ui-g-2">
+                        <button pButton type="button" (click)="checkCalendar()" label="Search"></button>
+                    </div>
+                </div>
+                <div class="head-title">
+                    <span style="font-weight:bold;">{{Today}}</span>
+                    <i class="fa fa-arrow-left fa-lg" aria-hidden="true" style="float:left;cursor:pointer;" (click)="pre()"></i>
+                    <i class="fa fa-arrow-right fa-lg" aria-hidden="true" style="float:right;cursor:pointer;" (click)="next()"></i>
+                </div>
+                <div *ngIf="monthCalendar" class="monthCalendar" style="margin:0;">
+                    <div class="body-title">
+                        <div class="title">Monday</div>
+                        <div class="title">Tuesday</div>
+                        <div class="title">Wednesday</div>
+                        <div class="title">Thursday</div>
+                        <div class="title">Friday</div>
+                        <div class="title">Saturday</div>
+                        <div class="title">Sunday</div>
+                    </div>
+                    <div class="body-body" id="calendar">
+                        <div class="body" *ngFor="let option of calendarTable" id={{option}} (click)="gotoDay(option)" [ngClass]="{'border': giveBorder(option)}">
+                            <div style="height:1rem;text-align:center;">{{option}}</div>
+                            <div *ngFor="let item of calendarData">
+                                <div class="child" *ngIf="item.meetingTime==option" [ngStyle]="{'background-color':item.timeFlag>newTime ? 'lime':'gray'}">{{item.meetingName}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="dayCalendar" class="dayCalendar" style="margin:0;">
+                    <div class="day-all ui-g">
+                        <div class="ui-g-4" *ngFor="let option of dayData">
+                            <div class="day-item">
+                                <div class="day-title" [ngStyle]="{'color':option.flag}">{{option.meetingName}}</div>
+                                <div class="day-body">
+                                    <div class="left">Subject:</div> <div class="left">{{option.meetingName}}</div>
+                                    <div class="left">Begin Time:</div> <div class="left">{{option.meetingTime}}</div>
+                                    <div class="left">Time:</div> <div class="left">{{option.minutes}} minutes</div>
+                                    <div class="left">End Time:</div> <div class="left">{{option.endTime}}</div>
+                                    <div class="left">Venue:</div> <div class="left">{{option.venue}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Set PQRR Date" [selected]="tabs[3]" leftIcon="fa-calendar-check-o">
+            <div class="body4">
+                <div class="ui-g top-content">
+                    <div class="ui-g-4">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;padding-left:1rem;">Project Name:</div>
+                        <div class="ui-g-8">
+                            <input (keyup)="checkEnterSearch($event)" id="input" type="text" pInputText [(ngModel)]="programCode" style="width:90%;">
+                        </div>
+                    </div>
+                    <div class="ui-g-4">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;">Approve Status:</div>
+                        <div class="ui-g-8">
+                            <p-dropdown class="dropdown" [options]="status" [(ngModel)]="selectedStatus"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="ui-g-2" style="padding-top:1rem;">
+                        <button pButton type="button" (click)="check()" label="Search"></button>
+                    </div>
+                </div>
+                <div class="body-table">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-inverse" style="background-color:#4B98DC;color:white">
+                            <tr>
+                                <th>No</th>
+                                <th>Subject</th>
+                                <th>Project Name</th>
+                                <th>Owner</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let option of PQRRtable;let i=index">
+                                <td>{{i+1}}</td>
+                                <td style="color:blue;cursor:pointer;" (click)="openPQRR(option.subject,option.qualityAgentId)">Set {{option.subject }} {{option.pqrrMilestoneName }} Date</td>
+                                <td>{{option.subject}}</td>
+                                <td>{{option.projectName}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="Submit PQRR Deliverables" [selected]="tabs[4]" leftIcon="fa-credit-card-alt">
+            <div class="body5">
+                <div class="ui-g top-content">
+                    <div class="ui-g-4">
+                        <div class="ui-g-5 txt" style="margin-top:0.3rem;padding-left:1rem;">Project Name:</div>
+                        <div class="ui-g-7">
+                            <p-dropdown class="dropdown" [options]="programCode1" [(ngModel)]="selectedCode"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="ui-g-4">
+                        <div class="ui-g-5 txt" style="margin-top:0.3rem;padding-left:1rem;">PQRR Milestone:</div>
+                        <div class="ui-g-7">
+                            <p-dropdown class="dropdown" [options]="milestone" [(ngModel)]="selectedMilestone"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="ui-g-2" style="padding-top:1rem;">
+                        <button pButton type="button" (click)="check1()" label="Search"></button>
+                    </div>
+                </div>
+                <div class="body-table">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-inverse" style="background-color:#4B98DC;color:white">
+                            <tr>
+                                <th>No</th>
+                                <th>Project Name</th>
+                                <th>PQRR Milestone</th>
+                                <th>Department</th>
+                                <th>Owner</th>
+                                <th>Upload Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let option of deliverablesTable;let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{option.programCode}}</td>
+                                <td>{{option.pqrrMilestoneName}}</td>
+                                <td>{{option.deptName}}</td>
+                                <td>{{this.ls.get('userName')}}</td>
+                                <td>{{option.uploadStatus}}</td>
+                                <td *ngIf="i>=0" style="color:blue;cursor:pointer;" (click)="turnOn(option)">Edit and upload deliverables</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- <p-footer class="ui-g foot">
+                <div class="ui-g-4"></div>
+                <button type="button" pButton (click)="save()" label="Save"></button>
+                <div class="ui-g-1"></div>
+                <button type="button" pButton label="Close"></button>
+            </p-footer> -->
+        </p-tabPanel>
+        <!-- <p-tabPanel header="CR/DN" leftIcon="fa-bath">
+            <div class="body6"></div>
+        </p-tabPanel> -->
+        <p-tabPanel header="Scorecard" [selected]="tabs[5]" leftIcon="fa-book">
+            <div class="body6">
+                <div *ngIf="scorecardStatus=='feedback'||scorecardStatus=='prepare'" class="ui-g top-content">
+                    <div class="ui-g-4">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;padding-left:1rem;">Program Code:</div>
+                        <div class="ui-g-8">
+                            <p-dropdown class="dropdown" [options]="prCode" [(ngModel)]="selectedPrCode"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="ui-g-4">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;padding-left:4rem;">Status:</div>
+                        <div class="ui-g-8">
+                            <p-dropdown class="dropdown" [options]="scoreStatus" [(ngModel)]="selectedScoreStatus"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="ui-g-2" style="padding-top:1rem;">
+                        <button pButton type="button" (click)="checkScorecard()" label="Search"></button>
+                    </div>
+                </div>
+                <div *ngIf="scorecardStatus=='feedback'||scorecardStatus=='prepare'">
+                    <!-- <table class="table table-bordered">
+                        <thead class="thead-inverse" style="background-color:#4B98DC;color:white">
+                            <tr>
+                                <th>No</th>
+                                <th>Subject</th>
+                                <th>Expiration Time</th>
+                                <th>Program Code</th>
+                                <th>Model Year</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of scorecardTable;let i=index">
+                                <td>{{i+1}}</td>
+                                <td *ngIf="scorecardStatus == 'feedback'" style="color:blue;cursor:pointer;" (click)="openScore(item)">Feedback {{item.pqrrMilestoneName}} Scorecard Status</td>
+                                <td *ngIf="scorecardStatus == 'prepare'" style="color:blue;cursor:pointer;" (click)="openScore(item)">Prepare {{item.pqrrMilestoneName}} Scorecard</td>
+                                <td>{{item.planDate}}</td>
+                                <td>{{item.programCode}}</td>
+                                <td>{{item.modelYear}}</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                    <p-dataTable [rows]="10" [value]="scorecardTable" class="data-table" [rowHover]=true scrollable="true" scrollHeight="28rem">
+                        <p-column field="id" header="No" styleClass="ui-grid-col-1"></p-column>
+                        <p-column header="Subject">
+                            <template *ngIf="scorecardStatus == 'feedback'" pTemplate="body" let-item="rowData">
+                                <div style="color:blue;cursor:pointer;" (click)="openScore(item)">Feedback <span>{{item.pqrrMilestoneName}}</span> Scorecard Status</div>
+                            </template>
+                            <template *ngIf="scorecardStatus == 'prepare'" pTemplate="body" let-item="rowData">
+                                <div style="color:blue;cursor:pointer;" (click)="openScore(item)">Prepare <span>{{item.pqrrMilestoneName}}</span> Scorecard</div>
+                            </template>
+                        </p-column>
+                        <p-column field="planDate" header="Expiration Time"></p-column>
+                        <p-column field="programCode" header="Program Code"></p-column>
+                        <p-column field="modelYear" header="Model Year"></p-column>
+                    </p-dataTable>
+                    <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+                </div>
+                <div *ngIf="scorecardStatus=='approval'">
+                <workflow (refreshFlag)="refreshFlag($event)" (ListCountOut)="scoreCardListCount($event)" *ngIf="selectedScoreCard" [wfType]="wfType"></workflow>
+                </div>
+            </div>
+        </p-tabPanel>
+        <!-- <p-tabPanel header="Problems" [selected]="tabs[6]">
+            <div class="body7"></div>
+        </p-tabPanel> -->
+    </p-tabView> 
+    <p-dialog class="dialog especialDialog" header="Program Information" [(visible)]="masterTimeSheet" [modal]="modal" width="1030" [responsive]="true">
+        <!-- <p-tabView class="tab-view">
+            <p-tabPanel header="Master Timesheet">
+                <p-tabView class="tab-view">
+                    <p-tabPanel header="Timesheet Data">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Element</th>
+                                    <th>Period(day)</th>
+                                    <th>Element Type</th>
+                                    <th>Plan Date</th>
+                                    <th>Week</th>
+                                    <th>Finish Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let option of timeSheetData;let i=index">
+                                    <td><span style="width:20px;height:20px;border-radius:50%;" [ngStyle]="{'background-color':'red'}"></span></td>
+                                    <td>{{option.element}}</td>
+                                    <td>{{option.period}}</td>
+                                    <td>{{option.elementType}}</td>
+                                    <td>{{option.planDate}}</td>
+                                    <td>{{option.week}}</td>
+                                    <td>{{option.finishDate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p-tabPanel>
+                    <p-tabPanel header="Delivables">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Element ID</th>
+                                    <th>Delivable Name</th>
+                                    <th>Owner</th>
+                                    <th>Customer</th>
+                                    <th>Plan Finish Date</th>
+                                    <th>Finish Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let option of DelivablesData;let i=index">
+                                    <td><span style="width:20px;height:20px;border-radius:50%;" [ngStyle]="{'background-color':'red'}"></span></td>
+                                    <td>{{option.elementId}}</td>
+                                    <td>{{option.delivableName}}</td>
+                                    <td>{{option.owner}}</td>
+                                    <td>{{option.customer}}</td>
+                                    <td>{{option.planFinishDate}}</td>
+                                    <td>{{option.finishDate}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p-tabPanel>
+                    <p-tabPanel header="Approve Log">
+                        <table class="table table-bordered">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Flow Step</th>
+                                    <th>Approver</th>
+                                    <th>Approve Date</th>
+                                    <th>Approve Status</th>
+                                    <th>Suggestion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let option of approveLogData;let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{option.flowStep}}</td>
+                                    <td>{{option.approver}}</td>
+                                    <td>{{option.approveDate}}</td>
+                                    <td>{{option.approveStatus}}</td>
+                                    <td>{{option.suggestion}}</td>
+                                </tr>
+                            </tbody>
+                        </table>   
+                    </p-tabPanel>
+                    <p-tabPanel header="Files">
+                        <table class="table table-bordered">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>File Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let option of filesData;let i=index">
+                                    <td>{{option.files}}</td>
+                                </tr>
+                            </tbody>
+                        </table>   
+                    </p-tabPanel>
+                    <p-tabPanel header="show picture">
+                        Content 3    
+                    </p-tabPanel>
+                </p-tabView>
+            </p-tabPanel>
+            <p-tabPanel header="Flow">
+                <div style="background-color:#F2F2F2;height:30px;line-height:30px;padding-left:1rem;">Approval Log</div>
+                <table class="table table-bordered">
+                    <thead style="background-color:#4B98DC;color:white;">
+                        <tr>
+                            <th>No</th>
+                            <th>Flow Step</th>
+                            <th>Approver</th>
+                            <th>Approve Date</th>
+                            <th>Approve Status</th>
+                            <th>Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of approvalLogTable;let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{option.flowStep}}</td>
+                            <td>{{option.approver}}</td>
+                            <td>{{option.approveDate}}</td>
+                            <td>{{option.approveStatus}}</td>
+                            <td>{{option.comment}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="card">
+                    <div class="title">Approval Flow Info</div>
+                    <div class="card-body">
+                        <div class="start">开始</div>
+                        <div class="wrap1">
+                            <hr class="line"/>
+                            <div class="triangle"></div>
+                        </div>
+                        <div class="department">
+                            <div class="title1">部门会签</div>
+                            <div class="body">PCM</div>
+                        </div>
+                        <div class="wrap2">
+                            <hr class="line"/>
+                            <div class="triangle"></div>
+                        </div>
+                        <div class="check1">
+                            <div class="title1">AVLE审批</div>
+                            <div  class="body">AVLE</div>
+                        </div>
+                        <div class="wrap3">
+                            <hr class="line"/>
+                            <div class="triangle"></div>
+                        </div>
+                        <div class="check2">
+                            <div class="title1">VLD审批</div>
+                            <div class="body">VLD</div>
+                        </div>
+                        <div class="wrap4">
+                            <hr class="line"/>
+                            <div class="triangle"></div>
+                        </div>
+                        <div class="over">结束</div>
+                    </div>
+                </div>
+                <div style="background-color:#F2F2F2;height:30px;line-height:30px;padding-left:1rem;">Approval Comments</div>
+                <div class="ui-g">
+                    <label style="margin:1rem;">Comments:</label>
+                    <div class="ui-g-8"><textarea pInputTextarea autoResize="autoResize" rows="5" style="width:100%;"></textarea></div>
+                </div>
+                <p-footer class="ui-g foot">
+                    <div class="ui-g-4"></div>
+                    <button type="button" pButton (click)="confirm()" label="Confirm"></button>
+                    <div class="ui-g-1"></div>
+                    <button type="button" pButton (click)="masterTimeSheet=false" label="return"></button>
+                </p-footer>
+            </p-tabPanel>
+        </p-tabView> -->
+        
+    </p-dialog>
+    <!-- PQRR里的弹框 -->
+    <p-dialog class="dialog" [header]="headerTitle" [(visible)]="PQRRplan" [modal]="true" width="810" [responsive]="true">
+        <table class="table-bordered flow-table">
+            <colgroup>
+                <col width="50">
+                <col width="150">
+                <col width="140">
+                <col width="120">
+                <col width="140">
+                <col width="150">
+                <col width="17">
+            </colgroup>
+            <thead style="background-color:#F2F2F2;color:black;">
+                <tr>
+                    <th style="text-align:center;">No</th>
+                    <th>PQRR Milestone</th>
+                    <th>Pre-Review Date</th>
+                    <th>PQRR Date</th>
+                    <th>Re-PQRR Date</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+        <div style="height:400px;overflow-y:auto;">
+            <table class="table-bordered flow-table">
+                <colgroup>
+                    <col width="50">
+                    <col width="150">
+                    <col width="140">
+                    <col width="120">
+                    <col width="140">
+                    <col width="150">
+                </colgroup>
+                <tbody>
+                    <tr *ngFor="let option of PQRRDate;let i=index;" [ngStyle]="{'background-color':option.qualityId==qualityId?'pink':none}">
+                        <td style="text-align:center;">{{i+1}}</td>
+                        <td>{{option.pqrrMilestoneName}}</td>
+                        <td>{{option.preReviewDate|date:"yyyy-MM-dd"}}</td>
+                        <td *ngIf="!option.pqrrDate">{{option.planDate|date:"yyyy-MM-dd"}}</td>
+                        <td *ngIf="option.pqrrDate">{{option.pqrrDate|date:"yyyy-MM-dd"}}</td>
+                        <td>{{option.rePqrrDate|date:"yyyy-MM-dd"}}</td>
+                        <td style="color:#6BB2F3;cursor:pointer;text-align:center;" (click)="openEdit(i,option.pqrrDate,option.preReviewDate,option.rePqrrDate)">Edit</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- <div style="height:400px;overflow-y:auto;">
+        <table class="table table-bordered">
+            <thead class="thead-inverse" style="background-color:#F2F2F2;color:black;">
+                <tr>
+                    <th>No</th>
+                    <th>PQRR Milestone</th>
+                    <th>PQRR Date</th>
+                    <th>Pre-Review Date</th>
+                    <th>Re-PQRR Date</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let option of PQRRDate;let i=index;" [ngStyle]="{'background-color':option.qualityId==qualityId?'pink':none}">
+                    <td>{{i+1}}</td>
+                    <td>{{option.pqrrMilestoneName}}</td>
+                    <td *ngIf="!option.pqrrDate">{{option.planDate|date:"yyyy-MM-dd"}}</td>
+                    <td *ngIf="option.pqrrDate">{{option.pqrrDate|date:"yyyy-MM-dd"}}</td>
+                    <td>{{option.preReviewDate|date:"yyyy-MM-dd"}}</td>
+                    <td>{{option.rePqrrDate|date:"yyyy-MM-dd"}}</td>
+                    <td style="color:#6BB2F3;cursor:pointer;text-align:center;" (click)="openEdit(i,option.pqrrDate,option.preReviewDate,option.rePqrrDate)">Edit</td>
+                </tr>
+            </tbody>
+        </table>
+        </div> -->
+        <!-- <p-footer class="ui-g foot" style="margin-bottom:0.5rem;">
+            <div class="ui-g-4"></div>
+            <button type="button" pButton (click)="storeData()" label="Confirm"></button>
+            <div class="ui-g-1"></div>
+            <button type="button" pButton (click)="PQRRplan=false" label="Cancel"></button>
+        </p-footer> -->
+    </p-dialog>
+    <!-- PQRR里的弹框的修改弹框 -->
+    <p-dialog class="dialog" header="Set PQRR Date" [(visible)]="edit" [modal]="true" width="400" [responsive]="true">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+                <label class="required">Pre-Review Date:</label>
+            </div>
+            <div class="ui-grid-col-8">
+                <!-- <input maxlength="50" pInputText type="text" [(ngModel)]="preReviewDate"/> -->
+                <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" [(ngModel)]="preReviewDate" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+                <label class="required">PQRR Date:</label>
+            </div>
+            <div class="ui-grid-col-8">
+                <!-- <input maxlength="50" pInputText type="text" [(ngModel)]="pqrrDate"/> -->
+                <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" [(ngModel)]="pqrrDate" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+                <label>Re-PQRR Date:</label>
+            </div>
+            <div class="ui-grid-col-8">
+                <!-- <input maxlength="50" pInputText type="text" [(ngModel)]="rePqrrDate"/> -->
+                <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" [(ngModel)]="rePqrrDate" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
+            </div>
+        </div>
+        <p-footer class="ui-g foot" style="margin-bottom:0.5rem;">
+            <div class="ui-g-4"></div>
+            <button type="button" pButton [disabled]="!(preReviewDate&&pqrrDate)" (click)="handover()" label="Confirm"></button>
+            <div class="ui-g-1"></div>
+            <button type="button" pButton (click)="edit=false" label="Return"></button>
+        </p-footer>
+    </p-dialog>
+    <!-- commit deliverables里的弹框 -->
+    <p-dialog class="dialog" header="Set Deliverable Status" [(visible)]="setStatus" [modal]="true" width="800" [responsive]="true">
+        <div style="margin-bottom:10px;max-height:300px;overflow-y:auto;">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-inverse" style="background-color:#F2F2F2;">
+                    <tr>
+                        <th>No</th>
+                        <th>Element ID</th>
+                        <th>Deliverable Name</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let option of Deliverables;let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{option.elementId}}</td>
+                        <td>{{option.delivName}}</td>
+                        <td>{{option.deptId}}</td>
+                        <td style="line-height:0;cursor:pointer;">
+                            <selectPicture (event)="pictureData($event)" [selectedValue]="option.status" (click)="pictureChange(i)"></selectPicture>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="max-height:150px;overflow-y:auto">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-inverse" style="background-color:#F2F2F2;">
+                    <tr>
+                        <th>Template File Name(Download)</th>
+                        <th>Deliverable File Name</th>
+                        <th> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let option of DeliverablesTable;let i=index">
+                        <td style="color:blue;cursor:pointer;" (click)="xiazai(option.attId)">{{option.fileName}}</td>
+                        <td>{{option.fileName}}</td>
+                        <td style="color:blue;cursor:pointer;">
+                            <span *ngIf="!option.programCode" (click)="gotoService(option.delivAgentId)">Upload</span>
+                            <span *ngIf="option.programCode" (click)="exportFile(option.deptName)">{{option.programCode}}</span>
+                            <li *ngIf="option.programCode" class="fa fa-times" (click)="removeName(i,option.deptName,option.delivAgentId)" style="color:red;"></li>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p-footer class="ui-g foot" style="margin:0.5rem 0;">
+            <div class="ui-g-4"></div>
+            <button type="button" pButton (click)="handStatus()" label="Confirm"></button>
+            <div class="ui-g-1"></div>
+            <button type="button" pButton (click)="setStatus=false" label="Cancel"></button>
+        </p-footer>
+    </p-dialog>
+    <!-- 导入文件弹框 -->
+    <p-dialog class="dialog" header="Import File" [(visible)]="files" [responsive]="true" showEffect="fade" [modal]="true">
+            <!-- accept="xlsm" -->
+        <p-fileUpload mode="basic" url="/bpd-proj/bpd/att/upload?attId={{attId}}&bussinessId={{delivAgentId1}}" name="file" maxFileSize="50000000"
+            (onUpload)="onBasicUpload($event)" ></p-fileUpload>
+    </p-dialog>
+    <!-- Scorecard里的弹框 -->
+    <p-dialog class="dialog" [header]="scoreTitle" [(visible)]="scoreBox" [modal]="true" width="800" [responsive]="true">
+        <div class="cardOne">
+            <div class="ui-g" style="margin:0;">
+                <!-- <div class="ui-g-1">Milestone:</div> -->
+                <!-- <div class="ui-g-2" style="padding:0.3rem;padding-left:1rem;">
+                    <input type="text" disabled=true pInputText [(ngModel)]="mileStone"/>
+                </div> -->
+                <div class="ui-g-2" style="padding-left:5rem;">Plan date:</div>
+                <div class="ui-g-2" style="padding:0.3rem;">
+                    <input type="text" disabled=true pInputText [(ngModel)]="planDate"/>    
+                </div>
+                <!-- <div class="ui-g-3" style="padding-left:4rem;">Reminder interval days:</div>
+                <div class="ui-g-2" style="padding:0.3rem;">
+                    <input *ngIf="scorecardStatus == 'feedback'" type="text" disabled=true pInputText [(ngModel)]="intervalDay"/>
+                    <input *ngIf="scorecardStatus == 'prepare'"type="number" pInputText [(ngModel)]="intervalDay"/>
+                </div> -->
+                <!-- <div class="ui-g-1" style="padding:0;margin:-0.4rem 0 0 0.5rem;">
+                    <input id="input" type="number" pInputText [(ngModel)]="reminderDay" min="0"> 
+                </div> -->
+            </div>
+            <!-- <div style="height:350px;overflow-y:auto;">
+                <table class="table table-bordered">
+                    <thead class="thead-inverse" style="background-color:#4B98DC;color:white">
+                        <tr>
+                            <th>No</th>
+                            <th>Metrics</th>
+                            <th>Metric group</th>
+                            <th>Target</th>
+                            <th *ngIf="scorecardStatus == 'feedback'">Status</th>
+                            <th>Department</th>
+                            <th>Owner</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of scoreData;let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{item.indexName}}</td>
+                            <td>{{item.metricGroup}}</td>
+                            <td>{{item.targetVolume}}</td>
+                            <td *ngIf="scorecardStatus == 'feedback'">{{item.statusVolume}}</td>
+                            <td>{{item.deptName}}</td>
+                            <td>{{item.ownerName}}</td>
+                            <td style="text-align:center;color:blue;cursor:pointer;" (click)="changeScorecard(item)">Edit</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div> -->
+            <p-dataTable [value]="scoreData" class="data-table" [rowHover]=true scrollable="true" scrollHeight="28rem">
+                <p-column field="id" header="No"></p-column>
+                <p-column field="indexName" header="Metrics"></p-column>
+                <p-column field="metricGroup" header="Metric group"></p-column>
+                <p-column field="targetVolume" header="Target"></p-column>
+                <p-column *ngIf="scorecardStatus == 'feedback'" field="statusVolume" header="Status"></p-column>
+                <p-column field="deptName" header="Department"></p-column>
+                <p-column field="ownerName" header="Owner"></p-column>
+                <p-column styleClass="ui-grid-col-1 align-center" header="">
+                    <template pTemplate="body" let-item="rowData">
+                       <span style="color:blue;cursor:pointer;" (click)="changeScorecard(item)">Edit</span>
+                    </template>
+                </p-column>
+            </p-dataTable>
+            <p-footer class="ui-g foot" style="margin-bottom:0.5rem;">
+                <div class="ui-g-4"></div>
+                <button type="button" pButton (click)="handScoreBox()" label="Confirm"></button>
+                <div class="ui-g-1"></div>
+                <button type="button" pButton (click)="scoreBox=false" label="Cancel"></button>
+            </p-footer>
+        </div>
+        <!-- <div class="cardTwo"></div> -->
+        <!-- <div class="cardThree"></div> -->
+    </p-dialog>
+    <!-- Scorecard里的弹框 中的修改弹框-->
+    <p-dialog class="dialog" header="Scorecard Target" [(visible)]="boxOfscoreBox" [modal]="true" width="600" [responsive]="true">
+        <div class="ui-g">
+            <div class="ui-g-2">
+                <label>Metrics</label>
+            </div>
+            <div class="ui-g-10">{{elsemetrics}}</div>
+            <div class="ui-g-2">
+                <label>Group</label>
+            </div>
+            <div class="ui-g-4">{{elsegroup}}</div>
+            <div class="ui-g-2">
+                <label>Department</label>
+            </div>
+            <div class="ui-g-4">{{elsedepartment}}</div>
+            <div class="ui-g-2">
+                <label>Owner</label>
+            </div>
+            <div *ngIf="scorecardStatus == 'feedback'" class="ui-g-4">{{elseownerName}}</div>
+            <div *ngIf="scorecardStatus == 'prepare'" class="ui-g-4">
+                <input id="input" type="text" readonly="true" pInputText [(ngModel)]="elseownerName" (click)="getUser()">
+            </div>
+            <div class="ui-g-2">
+                <label class="required" *ngIf="dataType != 4">Target</label>
+                <label class="required" *ngIf="dataType == 4">Target(%)</label>
+            </div>
+            <div class="ui-g-4" *ngIf="scorecardStatus == 'feedback'">{{targetVolume}}</div>
+            <div class="ui-g-4" *ngIf="scorecardStatus == 'prepare'">
+                <input *ngIf="dataType == 1" id="input" type="text" pInputText [(ngModel)]="targetVolumex" maxlength="100" [disabled]="changeTable.length>0">
+                <!-- <input *ngIf="(dataType == 2)||(dataType == 4)" type="number" placeholder="please input number" pInputText [(ngModel)]="targetVolumex" [disabled]="changeTable.length>0"> -->
+                <p-spinner *ngIf="(dataType == 2)||(dataType == 4)" [(ngModel)]="targetVolumex" placeholder="please input number" maxlength="20" [min]="0" [step]="1" [disabled]="changeTable?.length>0"></p-spinner>
+                <p-calendar *ngIf="dataType == 3" [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" [(ngModel)]="targetVolumex" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>       
+            </div>
+            <div class="ui-g-2" *ngIf="(scorecardStatus == 'feedback')&&(changeTable?.length<1)">
+                <label class="required">Status</label>
+            </div>
+            <div class="ui-g-4" *ngIf="(scorecardStatus == 'feedback')&&(changeTable?.length<1)">
+                <input *ngIf="dataType == 1" id="input" type="text" maxlength="100" pInputText [(ngModel)]="elseStatus">
+                <!-- <input *ngIf="(dataType == 2)||(dataType == 4)" id="input" type="number" placeholder="please input number" pInputText [(ngModel)]="elseStatus"> -->
+                <p-spinner *ngIf="(dataType == 2)||(dataType == 4)" [(ngModel)]="elseStatus" placeholder="please input number" maxlength="20" [min]="0" [step]="1"></p-spinner>
+                <p-calendar *ngIf="dataType == 3" [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" [(ngModel)]="elseStatus" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>                       
+            </div>
+        </div>
+        <button *ngIf="scorecardStatus == 'prepare'" type="button" pButton (click)="addStatu()" label="Add"></button>
+        <!-- (dataSource == 'FeedBack') -->
+        <table class="table table-bordered" *ngIf="scorecardStatus == 'prepare'">
+            <thead class="thead-inverse" style="background-color:#4B98DC;color:white;">
+                <tr>
+                    <th>Subject</th>
+                    <th *ngIf="scorecardStatus == 'prepare'">Target</th>
+                    <th *ngIf="scorecardStatus == 'feedback'">Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of changeTable">
+                    <td>{{item.subjectName}}</td>
+                    <td *ngIf="scorecardStatus == 'prepare'">{{item.subtargetVolume}}</td>
+                    <td *ngIf="scorecardStatus == 'feedback'">{{item.substatusVolume}}</td>
+                    <td style="text-align:center;color:blue;cursor:pointer;"><span (click)="editStatus(item)" style="margin-right:1rem;">Edit</span><span (click)="deleteStatus(item)">Delete</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-bordered" *ngIf="(scorecardStatus == 'feedback')&&(changeTable.length>0)">
+            <thead class="thead-inverse" style="background-color:#4B98DC;color:white;">
+                <tr>
+                    <th>Subject</th>
+                    <th>Target</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of changeTable">
+                    <td>{{item.subjectName}}</td>
+                    <td>{{item.subtargetVolume}}</td>
+                    <td>{{item.substatusVolume}}</td>
+                    <td style="text-align:center;color:blue;cursor:pointer;"><span (click)="editStatus(item)" style="margin-right:1rem;">Edit</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p-footer class="ui-g foot" style="margin-bottom:0.5rem;" *ngIf="scorecardStatus == 'prepare'">
+            <div class="ui-g-4"></div>
+            <button type="button" pButton [disabled]="(!targetVolumex)&&(changeTable.length<1)" (click)="handChangeBox()" label="Confirm"></button>
+            <!-- <button *ngIf="scorecardStatus == 'feedback'" type="button" pButton [disabled]="!elseStatus||(changeTable.length>0)" (click)="handChangeBox()" label="Confirm"></button> -->
+            <div class="ui-g-1"></div>
+            <button type="button" pButton (click)="boxOfscoreBox=false" label="Cancel"></button>
+        </p-footer>
+        <p-footer class="ui-g foot" style="margin-bottom:0.5rem;" *ngIf="(scorecardStatus == 'feedback')&&(changeTable.length<1)&&elseStatus">
+            <div class="ui-g-4"></div>
+            <button type="button" pButton [disabled]="!elseStatus||(changeTable.length>0)" (click)="handChangeBox()" label="Confirm"></button>
+            <div class="ui-g-1"></div>
+            <button type="button" pButton (click)="boxOfscoreBox=false" label="Cancel"></button>
+        </p-footer>
+    </p-dialog>
+    <!-- Scorecard里的弹框 中的修改弹框 中的修改弹框-->
+    <p-dialog class="dialog" header="Set Sub target" [(visible)]="boxInBox" [modal]="true" width="400" [responsive]="true">
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label>Subject</label>
+            </div>
+            <!-- <div class="ui-g-8">{{subjectElse}}</div> -->
+            <div class="ui-g-8"><input id="input" [disabled]=!addJudge type="text" pInputText [(ngModel)]="subjectElse"></div>
+            <div class="ui-g-4" *ngIf="scorecardStatus == 'prepare'">
+                <label>Target</label>
+            </div>
+            <!-- <div class="ui-g-8" *ngIf="scorecardStatus == 'prepare'">{{subTargetElse}}</div> -->
+            <div class="ui-g-8" *ngIf="scorecardStatus == 'prepare'">
+                <input *ngIf="dataType !=2 " id="input" type="text" pInputText [(ngModel)]="subTargetElse">
+                <input *ngIf="dataType == 2" id="input" type="number" placeholder="please input number" pInputText [(ngModel)]="subTargetElse">
+            </div>
+            <div class="ui-g-4" *ngIf="scorecardStatus == 'feedback'">
+                <label>Target</label>
+            </div>
+            <div class="ui-g-8" *ngIf="scorecardStatus == 'feedback'">
+                <input id="input" [disabled]=!addJudge type="text" pInputText [(ngModel)]="subTargetElse">
+            </div>
+            <div class="ui-g-4" *ngIf="scorecardStatus == 'feedback'">
+                <label class="required">Status</label>
+            </div>
+            <div class="ui-g-8" *ngIf="scorecardStatus == 'feedback'">
+                <input *ngIf="dataType !=2 " id="input" type="text" pInputText [(ngModel)]="statusElse">
+                <input *ngIf="dataType ==2 " id="input" type="number" pInputText placeholder="please input number" [(ngModel)]="statusElse">
+            </div>
+        </div>
+        <p-footer class="ui-g foot" style="margin-bottom:0.5rem;">
+            <div class="ui-g-4"></div>
+            <button *ngIf="scorecardStatus == 'prepare'" [disabled]="!subTargetElse" type="button" pButton (click)="handChangeStatu()" label="Confirm"></button>
+            <button *ngIf="scorecardStatus == 'feedback'" [disabled]="!statusElse" type="button" pButton (click)="handChangeStatu()" label="Confirm"></button>
+            <div class="ui-g-1"></div>
+            <button type="button" pButton (click)="boxInBox=false" label="Cancel"></button>
+        </p-footer>
+    </p-dialog>
+    <!-- search user 弹框 -->
+    <p-dialog class="dialog" header="Please Choose Your Users" [(visible)]="searchUser" width="800" [responsive]="true" [modal]="true">
+        <div class="ui-grid-col-12">
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-col-4 parameter-font" style="line-height:24px">Department :</div>
+                <div class="ui-grid-col-7">
+                    <input (keyup)="lookClickEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogDepartment" />
+                </div>
+                <div class="ui-grid-col-1"></div>
+            </div>
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-col-4 parameter-font" style="text-align: right;line-height: 24px">User Name:&nbsp;&nbsp;</div>
+                <div class="ui-grid-col-8">
+                    <input (keyup)="lookClickEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogUserName" />
+                </div>
+            </div>
+            <div class="ui-grid-col-2">
+                <button style="margin-left: 1rem;" pButton type="button" class="program-add" (click)="lookClick()" label="Search"></button>
+            </div>
+        </div>    
+        <div class="ui-grid">
+            <p-dataTable (onRowDblclick)="dbclick($event)" [rowHover]=true selectionMode="single" class="data-table" [value]="managerData" rows="10" scrollable="true" scrollHeight="35rem">
+                <p-column styleClass="ui-grid-col-1" field="userName" header="User Name"></p-column>
+                <p-column styleClass="ui-grid-col-1" field="userCode" header="User Code"></p-column>
+                <p-column styleClass="ui-grid-col-1" field="jobPosition" header="Job"></p-column>
+                <p-column styleClass="ui-grid-col-2" field="telephone" header="Telphone"></p-column>
+                <p-column styleClass="ui-grid-col-3" field="emailAddress" header="Email"></p-column>
+                <p-column styleClass="ui-grid-col-2" field="departmentName" header="Department"></p-column>
+                <p-column styleClass="ui-grid-col-1" field="masterName" header="Manager"></p-column>
+            </p-dataTable>
+            <p-paginator rows="{{managerDataRows}}" first="{{managerDataFirst}}" totalRecords="{{managerDataLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="managerPaginate($event)"></p-paginator>
+        </div>
+    </p-dialog>
+</div>
+<!-- Timesheet 里的弹框 -->
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

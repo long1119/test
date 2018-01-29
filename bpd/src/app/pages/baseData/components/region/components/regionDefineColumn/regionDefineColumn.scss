@@ -1,0 +1,13 @@
+@import '../../../../../sass/privateStyle';
+.region-define-column {
+    .add-button {
+        margin-bottom: 1rem;
+        background-color: $buttons;
+        width: 10%;
+    }
+    p-dataTable {
+        .table-align {
+            text-align: left;
+        }
+    }
+}

@@ -1,0 +1,35 @@
+@import '../../../sass/privateStyle';
+.so-list {
+    .button-content {
+        padding-bottom: 1rem;
+        &::after {
+            content: "";
+            display: table;
+            height: 0;
+            clear: both;
+        }
+        input {
+            width: 95%;
+        }
+        .drop-down {
+            width: 95%;
+            .ui-dropdown {
+                width: 100%;
+            }
+        }
+        &>div {
+            &>label {
+                display: block;
+                margin: .5rem;
+                text-align: center;
+            }
+        }
+    }
+    .dialog {
+        .drop-down {
+            &>div {
+                margin-bottom: 1rem;
+            }
+        }
+    }
+}

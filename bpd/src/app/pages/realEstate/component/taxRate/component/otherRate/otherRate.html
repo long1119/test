@@ -1,0 +1,152 @@
+<div class="other-rate-content"> 
+    <div *ngIf="localStorageAuthority" class="button-content">
+        <button pButton type="button" style="margin-top: 1rem;" class="program-add" (click)="saveOtherRateClick()" label="Save"></button>
+    </div>
+    <p-panel class="panel ui-grid" [toggleable]="true" header="Real Estate">
+        <p-panel class="panel panel-in-panel ui-grid-col-6" [toggleable]="true" header="facility">
+            <div class="inner-table-input ui-grid">
+                <div class="ui-grid-col-3"><label>Real Estate Tax :</label></div>
+                <div class="ui-grid-col-9">
+                    <input pInputText  (keyup)="dialogFacilityTax = inputRegex(dialogFacilityTax)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogFacilityTax" />%
+                </div>
+            </div>
+            <!-- <div *ngIf="localStorageAuthority" class="inner-button-content">
+                <button pButton type="button" class="program-add" (click)="addFacilityClick()" label="Add"></button>
+            </div>
+            <p-dataTable selectionMode="single" class="ui-grid data-table" [value]="facilityData" [rows]="10">
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="year" header="Occured Year No"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="weightValue" header="Occured Percentage"></p-column>
+                <p-column styleClass="ui-grid-col-1" header="">
+                    <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                        <span *ngIf="facilityData[idx].temporary" class="edit-span" (click)="deleteFacilityClick(idx,data)">Delete</span>
+                    </template>
+                </p-column>
+            </p-dataTable> -->
+        </p-panel>
+        <p-panel class="panel panel-in-panel ui-grid-col-6" [toggleable]="true" header="Rental">
+            <div class="inner-table-input ui-grid">
+                <div class="ui-grid-col-3"><label>Real Estate Tax :</label></div>
+                <div class="ui-grid-col-9">
+                    <input pInputText  (keyup)="dialogRentalTax = inputRegex(dialogRentalTax)" type="number" max="100" min="0" id="regioncode" [(ngModel)]="dialogRentalTax" />%
+                </div>
+            </div>
+            <!-- <div *ngIf="localStorageAuthority" class="inner-button-content">
+                <button pButton type="button" class="program-add" (click)="addRentalClick()" label="Add"></button>
+            </div>
+            <p-dataTable selectionMode="single" class="ui-grid data-table" [value]="rentalData" [rows]="10">
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="year" header="Occured Year No"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="weightValue" header="Occured Percentage"></p-column>
+                <p-column styleClass="ui-grid-col-1" header="">
+                    <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                        <span *ngIf="rentalData[idx].temporary" class="edit-span" (click)="deleteRentalClick(idx,data)">Delete</span>
+                    </template>
+                </p-column>
+            </p-dataTable> -->
+        </p-panel>
+    </p-panel>
+    <p-panel class="panel" [toggleable]="true" header="Land Usage Tax">
+        <div class="inner-input ui-grid">
+            <div class="ui-grid-col-2"><label class="required">Land Usage Tax :</label></div>
+            <div class="ui-grid-col-10">
+                <input pInputText  (keyup)="dialogLandUsageTax = inputRegex(dialogLandUsageTax)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogLandUsageTax" />
+                <label>CNY/sqm</label>
+            </div>
+        </div>
+    </p-panel>
+    <p-panel class="panel" [toggleable]="true" header="Deed Tax">
+        <div class="inner-input ui-grid">
+            <div class="ui-grid-col-2"><label class="required">Deep Tax :</label></div>
+            <div class="ui-grid-col-10">
+                <input pInputText  (keyup)="dialogDeepTax = inputRegex(dialogDeepTax)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogDeepTax" />%
+            </div>
+        </div>
+    </p-panel>
+    <p-panel class="panel" [toggleable]="true" header="LAT">
+        <div class="inner-input ui-grid"> <div class="ui-grid-col-2"><label class="required">Lat Tax :</label></div>
+            <div class="ui-grid-col-10">
+                <input pInputText  (keyup)="dialogLatTax = inputRegex(dialogLatTax)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogLatTax" />%
+            </div>
+        </div>
+    </p-panel>
+    <p-panel class="panel" [toggleable]="true" header="Samp Duty">
+        <div class="inner-input ui-grid">
+            <div class="ui-grid-col-2"><label class="required">Stamp Duty for RE :</label></div>
+            <div class="ui-grid-col-10">
+                <input pInputText  (keyup)="dialogStampRe = inputRegex(dialogStampRe)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogStampRe" />%
+            </div>
+        </div>
+        <div class="inner-input ui-grid">
+            <div class="ui-grid-col-2"><label class="required">Stamp Duty for Equip :</label></div>
+            <div class="ui-grid-col-10">
+                <input pInputText  (keyup)="dialogStampEquip = inputRegex(dialogStampEquip)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogStampEquip" />%
+            </div>
+        </div>
+        <div class="inner-input ui-grid">
+            <div class="ui-grid-col-2"><label class="required">Stamp Duty for PCL Ex :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText  (keyup)="dialogStampEx = inputRegex(dialogStampEx)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogStampEx" />%
+            </div>
+            <div class="ui-grid-col-2"><label class="required">Stamp Duty for Lease :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText  (keyup)="dialogStampLease = inputRegex(dialogStampLease)" (change)="inputRegex(dialogStampLease)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogStampLease" />%
+            </div>
+        </div>
+    </p-panel>
+    <p-panel class="panel" [toggleable]="true" header="Land Transaction Commission">
+        <div class="inner-input ui-grid">
+            <div class="ui-grid-col-2"><label class="required">Land Transaction Com :</label></div>
+            <div class="ui-grid-col-10">
+                <input pInputText  (keyup)="dialogLandCommission = inputRegex(dialogLandCommission)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogLandCommission" />%
+            </div>
+        </div>
+    </p-panel>
+    <p-panel class="panel" [toggleable]="true" header="PV Factor">
+        <div class="inner-input ui-grid">
+            <div class="ui-grid-col-2"><label class="required">Period(year) :</label></div>
+            <div class="ui-grid-col-10">
+                <input pInputText  (keyup)="dialogPeriod = inputRegex(dialogPeriod)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogPeriod" />%
+            </div>
+        </div>
+        <!-- <div class="inner-input ui-grid">
+            <div class="ui-grid-col-2"><label class="required">Per Year :</label></div>
+            <div class="ui-grid-col-10">
+                <input pInputText  (keyup)="dialogPerYear = inputRegex(dialogPerYear)" type="number" max="100" min="0" id="regionCode" [(ngModel)]="dialogPerYear" />%
+            </div>
+        </div> -->
+    </p-panel>
+    <!-- 添加界面 -->
+    <p-dialog class="dialog real-estate-modify" header="Real Estate {{modifyFlag}}" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label class="required" for="regionCode">Occured Year No :</label></div>
+                <div class="ui-grid-col-7"><input required type="number" max="100" min="0" maxlength="4" pInputText  (keyup)="dialogOccuredNo = inputRegex(dialogOccuredNo)" id="regionCode" [(ngModel)]="dialogOccuredNo" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label class="required" for="regionCode">Occured Percentage :</label></div>
+                <div class="ui-grid-col-7"><input required type="number" max="100" min="0" pInputText  (keyup)="dialogOccuredPercentage = inputRegex(dialogOccuredPercentage)" id="regionCode" [(ngModel)]="dialogOccuredPercentage" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="modifyEstateCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogOccuredPercentage || !dialogOccuredNo" pButton  (click)="modifyEstateSave()"
+                    label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="Delete Real Estate {{modifyFlag}}" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteEstateNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteEstateYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

@@ -1,0 +1,268 @@
+<div class="main-body">
+    <!-- to do task card -->
+    <div class="card card-inverse card-outline-info card1">
+        <div class="card-header">
+            To Do Task
+        </div>
+        <div class="card-block">
+            <div class="ui-g">
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #4285C0;">
+                        Approval Master Timesheet
+                        <div *ngIf="vehiclePortal.length>0" class="txt" (click)="open2()">{{vehiclePortal[5].TimeSheet}}</div>
+                        <div class="bottom" style="background-color: #2065A4;">
+                            Master Timesheet
+                        </div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg" (click)="open2()"></label>
+                            <!-- <nav>
+                                <a routerLink="/pages/vehicle-management" class="fa fa-arrow-circle-o-right fa-lg" style="color:white;"></a>
+                            </nav>
+                            <router-outlet></router-outlet> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #04BACE;">
+                        Approval NOD
+                        <div *ngIf="vehiclePortal.length>0" class="txt" (click)="open1()">{{vehiclePortal[6].Node}}</div>
+                        <div class="bottom" style="background-color: #0393A3;">NOD</div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg" (click)="open1()"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #2399A3;">
+                        Set PQRR Date
+                        <div *ngIf="vehiclePortal.length>0" class="txt" (click)="open4()">{{vehiclePortal[2].PQRR}}</div>
+                        <div class="bottom" style="background-color: #208A93;">PQRR</div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg" (click)="open4()"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #458B8B;">
+                        Commit Delivable
+                        <div *ngIf="vehiclePortal.length>0" class="txt" (click)="open5()">{{vehiclePortal[3].PQRRDelivable}}</div>
+                        <div class="bottom" style="background-color: #3A7676;">PQRR</div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg" (click)="open5()"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g">
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #4F9CF2;">
+                        Prepare Scorecard                        
+                        <div *ngIf="vehiclePortal.length>0" class="txt" (click)="open7()">{{vehiclePortal[0].ScoreCardPrepare}}</div>
+                        <div class="bottom" style="background-color: #1176E6;">
+                            Scorecard
+                        </div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg" (click)="open7()"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #4285C0;">
+                        Approval Scorecard
+                        <div *ngIf="vehiclePortal.length>0" class="txt" (click)="open8()">{{vehiclePortal[7].ScoreCard}}</div>
+                        <div class="bottom" style="background-color: #2065A4;">Scorecard</div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg" (click)="open8()"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #458B8B;">
+                        Feedback Scorecard status
+                        <div *ngIf="vehiclePortal.length>0" class="txt" (click)="open6()">{{vehiclePortal[1].ScoreCardFeedBack}}</div>
+                        <div class="bottom" style="background-color: #3A7676;">Scorecard</div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg" (click)="open6()"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #04BACE;">
+                        Meeting Notification
+                        <div *ngIf="vehiclePortal.length>0" class="txt" (click)="open3()">{{vehiclePortal[4].Meeting}}</div>
+                        <div class="bottom" style="background-color: #0393A3;">Meeting</div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg" (click)="open3()"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- quick short card -->
+    <div class="card card2">
+        <div class="card-header">
+            <span style="font-size:2rem;"></span>
+                <!-- <label class="fa fa-cog fa-lg right-icon"></label> -->
+        </div>
+        <div class="card-block" (drop)="drop(event)" (dragover)="allowDrop(event)">
+           <div *ngIf="mixedRouter.has('time-sheet')" class="item" draggable="true" (dragstart)="drag(event)" routerLink="/pages/time-sheet">
+               <img src="assets/img/programPortal/master.png">
+               <br><span class="handTitle">Master Timesheet</span>
+           </div>
+            <div *ngIf="mixedRouter.has('crdn-tracking')" class="item" draggable="true" (dragstart)="drag(event)" routerLink="/pages/crdn-tracking">
+                <img src="assets/img/programPortal/cr.png">
+                <br><span class="handTitle">CR/DN List</span>
+            </div>
+            <div *ngIf="mixedRouter.has('buget-template')" class="item" draggable="true" (dragstart)="drag(event)" routerLink="/pages/buget-template">
+                <img src="assets/img/programPortal/lifecycle.jpg">
+                <br><span class="handTitle">Lifecycle Plan</span>
+            </div>
+            <div *ngIf="mixedRouter.has('score-card')" class="item" draggable="true" (dragstart)="drag(event)" routerLink="pages/score-card">
+                <img src="assets/img/programPortal/radar.png">
+                <br><span class="handTitle">Score Card</span>
+            </div>
+            <div *ngIf="mixedRouter.has('nod')" class="item" draggable="true" (dragstart)="drag(event)" routerLink="/pages/nod">
+                <img src="assets/img/programPortal/people.png">
+                <br><span class="handTitle">NOD</span>
+            </div>
+            <div *ngIf="mixedRouter.has('meeting')" class="item" draggable="true" (dragstart)="drag(event)" routerLink="/pages/meeting">
+                <img src="assets/img/programPortal/lessue.png">
+                <br><span class="handTitle">Meeting</span>
+            </div>
+            <div *ngIf="mixedRouter.has('pet-member')" class="item" draggable="true" (dragstart)="drag(event)" routerLink="/pages/pet-member">
+                <img src="assets/img/programPortal/pet.png">
+                    <br><span class="handTitle">PET Member</span>
+            </div>
+            <div *ngIf="mixedRouter.has('so-list')" class="item" draggable="true" (dragstart)="drag(event)" routerLink="/pages/so-list">
+                <img src="assets/img/programPortal/so.jpg">
+                <br><span class="handTitle">S/O List</span>
+            </div>
+            <div class="item" draggable="true" (dragstart)="drag(event)" routerLink="/pages/share-page">
+                <img src="assets/img/programPortal/shared.png">
+                <br><span class="handTitle">Shared Documents</span>
+            </div>
+        </div>
+    </div>
+    <!-- project information card -->
+    <div class="card card3" *ngIf="projectInformationTable.length">
+        <div class="card-header">
+            <span style="font-size:2rem;">Project Information Board</span>
+            <!-- <label class="fa fa-cog fa-lg right-icon"></label> -->
+            <span style="margin:0 1rem 0 2rem;">Program Code:</span>
+            <input (keyup)="lookUpEnterSearch($event)" pInputText type="text" [(ngModel)]="programCode" style="color:black;padding:0.1rem;"/>
+            <span style="margin:0 1rem 0 2rem;">Model Year:</span>
+            <input (keyup)="lookUpEnterSearch($event)" pInputText type="text" [(ngModel)]="modelYear" style="color:black;padding:0.1rem;"/>
+            <button pButton type="button" (click)="lookUp()" label="Search" style="background-color: #F2F2F2;color: black;"></button>
+        </div>
+        <div class="card-block">
+            <table class="table table-bordered">
+                <thead class="thead-inverse" style="background-color:#F2F2F2;color:black;">
+                    <tr>
+                        <!-- <th>Status</th> -->
+                        <th style="width:200px;">Project Name</th>
+                        <th style="width:120px;">Classification</th>
+                        <!-- <th>Model Year</th> -->
+                        <!-- <th>Program Code</th> -->
+                        <!-- <th>Platform</th> -->
+                        <th style="text-align:center;">Project Schedule</th>
+                        <!-- <th>Project Status</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let option of projectInformationTable;let i=index">
+                        <!-- <td>
+                            <span class="status" [ngStyle]="{'background-color':giveColor(option.programStatus)}"></span>
+                        </td> -->
+                        <td style="color:#0000FF;cursor:pointer;text-align:left;"><span (click)="openProgram(option.modelYear,option.programCode,option.projectStauts)">{{option.projectName}}</span></td>
+                        <td>{{option.levelName}}</td>
+                        <!-- <td>{{option.modelYear}}</td> -->
+                        <!-- <td>{{option.programCode}}</td> -->
+                        <!-- <td>{{option.platform}}</td> -->
+                        <td style="line-height:inherit;">
+                            <div class="ui-g">
+                                <div class="ui-g-2 wrap" style="width:auto;"  *ngFor="let item of option.vehicleProjectOfMilestones">
+                                    <div class="box3">{{item.date}}</div>
+                                    <div class="box1" style="line-height:13px;color:white;" [ngStyle]="{'background-color':giveColor1(item.status)}"><span style="transform:scale(0.7,0.7);display:inline-block;">{{item.milestone}}</span></div>
+                                    <div class="box2" [ngStyle]="{'border-top-color':giveColor1(item.status)}"></div>
+                                </div>
+                                <!-- <div class="ui-g-2 wrap" style="width:auto;"  *ngIf="option.vehicleProjectOfMilestones.length==0">
+                                    <div class="box1" style="line-height:13px;color:white;" [ngStyle]="{'background-color':'gray'}"><span style="transform:scale(0.7,0.7);display:inline-block;">N/A</span></div>
+                                    <div class="box2" [ngStyle]="{'border-top-color':'gray'}"></div>
+                                </div> -->
+                            </div>
+                        </td>
+                        <!-- <td>{{option.projectStauts}}</td> -->
+                    </tr>
+                </tbody>
+            </table>
+            <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+        </div>
+    </div>
+    <!-- card1中的弹框 -->
+    <p-dialog class="dialog fuckDialog" [(visible)]="display" [modal]="true" width="1030" [responsive]="true">
+        <p-header>
+            <span style="font-size:1.25em;">To Do List</span><span (click)="shutDown()" class="fa fa-times cloneTime" aria-hidden="true" style="float:right"></span>
+        </p-header>
+        <vehicleManagement (refreshAgent)="refreshAgent($event)" (event)="getData($event)" *ngIf="fuck" [tabs]="tab" [scorecardStatus]="scoreStatus"></vehicleManagement>
+    </p-dialog>
+    <!-- card2 里的文档弹框 -->
+    <p-dialog class="dialog" header="Shared Documents" [(visible)]="showDocuments" [modal]="true" width="1000" [responsive]="true">
+        <div class="ui-g">
+            <div class="ui-g-1" style="margin:0;">File Name:</div>
+            <div class="ui-g-2" style="margin:0;">
+                <input (keyup)="checkUpEnterSearch($event)" id="input" type="text" pInputText [(ngModel)]="fileName"> 
+            </div>
+            <div class="ui-g-2" style="margin:0;">
+                <button pButton type="button" (click)="checkUp()" label="Search"></button>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <thead class="thead-inverse" style="background-color:#4B98DC;color:white;">
+                <tr>
+                    <th>No</th>
+                    <th>Upload User</th>
+                    <th>Upload Date</th>
+                    <th>File Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of documentTable;let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{item.uploadUser}}</td>
+                    <td>{{item.uploadDate}}</td>
+                    <td>{{item.fileName}}</td>
+                    <td>{{item.description}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </p-dialog>
+    <!-- card3中的弹框 -->
+    <p-dialog class="dialog fuckDialog" [(visible)]="showProgram" [modal]="true" width="1030" [responsive]="true">
+        <p-header>
+            <span style="font-size:1.25em;">Program Information</span><span (click)="cutDown()" class="fa fa-times cloneTime" aria-hidden="true" style="float:right"></span>
+        </p-header>
+        <programInformation [parentPrograms]="fromFather" *ngIf="fuck1"></programInformation> 
+    </p-dialog>
+    <!-- <p-dialog class="dialog" header="Project Information Board" [(visible)]="showElementConfig" model="model" width="800" [responsive]="true">
+        <table class="table table-bordered">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>Element Id</th>
+                    <th>Element Name</th>
+                    <th>Date</th>
+                    <th>Weeks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{1}}</td>
+                    <td>{{2}}</td>
+                    <td>{{3}}</td>
+                    <td>{{4}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </p-dialog> -->
+</div>

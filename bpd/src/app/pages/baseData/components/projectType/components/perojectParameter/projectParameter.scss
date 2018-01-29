@@ -1,0 +1,12 @@
+@import '../../../../../sass/privateStyle';
+.project-parameter-content {
+    padding-top:  1rem;
+    .search-dilalog {
+        .ui-dialog {
+            // margin-top: -14rem;
+        }
+        &>div {
+            width: 70%;
+        }
+    }
+}

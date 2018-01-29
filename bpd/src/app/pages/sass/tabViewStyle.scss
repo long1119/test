@@ -1,0 +1,65 @@
+.tab-view {
+	&>div {
+		margin-top: 1rem;
+		&>.ui-tabview-panels {
+                p-tabpanel {
+                    &>.ui-widget-content {
+                        padding: 0;
+                    }
+                }
+            }
+	}
+	.ui-tabview.ui-tabview-top {
+		&>.ui-tabview-nav {
+			border-bottom: 1px solid shade($ebontab, 15%);
+			background: transparent;
+			li {
+				background-color: shade($ebontab, 5%);
+				border-radius: 7% 7% 0 0; // width: 165px;
+				// padding: .1rem .5rem;
+				margin-right: 1rem;
+				&>:hover {
+					cursor: pointer;
+					background-color: $buttons;
+					border-radius: 7% 7% 0 0;
+					font-weight: 400;
+					color: #fff;
+					a {
+						color: #fff;
+					}
+				}
+				a {
+					text-align: center;
+					width: 100%;
+					&>:hover {
+						color: #fff;
+					}
+				}
+			}
+		}
+	}
+	.ui-tabview .ui-tabview-nav {
+		&>li:not(.ui-state-active):not(.ui-state-disabled) {
+			&>:hover {
+				color: #fff;
+				a {
+					color: #fff;
+				}
+			}
+		}
+		&>li.ui-state-active {
+			cursor: text;
+			background-color: $buttons;
+			border-radius: 7% 7% 0 0;
+			font-weight: 400;
+			a {
+				color: #fff;
+			}
+		}
+	}
+	.ui-tabview {
+		// .ui-tabview-panel {
+			background: transparent;
+		// }
+	}
+}

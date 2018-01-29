@@ -1,0 +1,239 @@
+<div class="nod-work-flow">
+    <div *ngIf="!addDisable" class="ui-grid-responsive ui-fluid">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="regionCode">Doc.Ctrl Number :</label>
+            </div>
+            <div class="ui-grid-col-9">
+                <input disabled pInputText [(ngModel)]="dialogDocCtrlNum" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label class="required" for="regionCode">NOD Type :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <!-- <p-dropdown disabled autoWidth="false" [options]="nodTypeOption" [(ngModel)]="selectedNodType" class="dropdown"></p-dropdown> -->
+                <input class="dialog-search-input" pInputText readonly id="regionType" [(ngModel)]="selectedRegionTypeName" />
+                <button [ngClass]="{'dialog-search-button': true}" disabled pButton type="button" class="previous-button" icon="fa-search"
+                    (click)="searchRegionTypeClick()"></button>
+            </div>
+            <div class="ui-grid-col-3">
+                <label for="regionCode">Project Name :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input disabled pInputText [(ngModel)]="dialogProjectName" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="regionCode">Engine Classificantion :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input disabled pInputText [(ngModel)]="dialogEngineeringClassificantion" />
+            </div>
+            <div class="ui-grid-col-3">
+                <label for="regionCode">Costbook Code :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input disabled pInputText [(ngModel)]="dialogProjectCode" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label class="required" for="regionType">Decision Date :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <p-calendar disabled [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd"
+                    styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectDecisionDate"></p-calendar>
+            </div>
+            <div class="ui-grid-col-3">
+                <label class="required" for="regionCode">Approved Investment :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input disabled pInputText [(ngModel)]="dialogApprovedInvestment" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="regionType">SORP :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <p-calendar disabled [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd"
+                    styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectSorpEopDate"></p-calendar>
+            </div>
+            <div class="ui-grid-col-3">
+                <label for="regionType">Vehicle Name :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input disabled pInputText id="regionType" [(ngModel)]="dialogVehicleName" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="regionType">EOP :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <p-calendar disabled [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd"
+                    styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectEopDate"></p-calendar>
+            </div>
+            <div class="ui-grid-col-3">
+                <label for="regionType">Manufacture Location :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input disabled pInputText id="regionType" [(ngModel)]="dialogManufactureLocation" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="regionType">LCA volume :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input disabled type="number" pInputText id="regionType" [(ngModel)]="dialogLcaVolume" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label class="required" for="regionGroup">Decision Description :</label>
+            </div>
+            <div class="ui-grid-col-10">
+                <textarea type="text" pInputTextarea disabled style="width:100%; height:7rem;" [(ngModel)]="dialogDescription"></textarea>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <pt-lineup-info style="width: 100%;" [ptLineupInfoEditable]="addDisable" [changeAdProjectCode]="changeAdProjectCode"></pt-lineup-info>
+        </div>
+    </div>
+    <div *ngIf="addDisable" class="ui-grid-responsive ui-fluid">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-1">
+                <button type="button" [(disabled)]="!selectedRegionTypeName || !selectDecisionDate || !dialogDescription || !dialogEngineeringClassificantion || !dialogApprovedInvestment"
+                    pButton (click)="informationModifySave()" label="Save"></button>
+            </div>
+        </div>
+        <div class="ui-grid-row" *ngIf="modifyFlag == 'editInformation'">
+            <div class="ui-grid-col-3">
+                <label for="regionCode">Doc.Ctrl Number :</label>
+            </div>
+            <div class="ui-grid-col-9">
+                <input disabled pInputText [(ngModel)]="dialogDocCtrlNum" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label class="required" for="regionCode">NOD Type :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input class="dialog-search-input" pInputText readonly id="regionType" [(ngModel)]="selectedRegionTypeName" />
+                <button [ngClass]="{'dialog-search-button': true}" pButton type="button" class="previous-button" icon="fa-search" (click)="searchRegionTypeClick()"></button>
+            </div>
+            <div class="ui-grid-col-3">
+                <label for="regionCode">Project Name :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input pInputText [(ngModel)]="dialogProjectName" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label class="required" for="regionCode">Engine Classifican :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input pInputText [(ngModel)]="dialogEngineeringClassificantion" />
+            </div>
+            <div class="ui-grid-col-3">
+                <label for="regionCode">Costbook Code :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input pInputText [(ngModel)]="dialogProjectCode" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label class="required" for="regionType">Decision Date :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd"
+                    styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectDecisionDate"></p-calendar>
+            </div>
+            <div class="ui-grid-col-3">
+                <label class="required" for="regionCode">Approved Investment :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input pInputText [(ngModel)]="dialogApprovedInvestment" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="regionType">SORP :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd"
+                    styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectSorpEopDate"></p-calendar>
+            </div>
+            <div class="ui-grid-col-3">
+                <label for="regionType">Vehicle Name :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input pInputText id="regionType" [(ngModel)]="dialogVehicleName" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="regionType">EOP :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd"
+                    styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectEopDate"></p-calendar>
+            </div>
+            <div class="ui-grid-col-3">
+                <label for="regionType">Manufacture Location :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input pInputText id="regionType" [(ngModel)]="dialogManufactureLocation" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label for="regionType">LCA volume :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input pInputText id="regionType" type="number" [(ngModel)]="dialogLcaVolume" />
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3">
+                <label class="required" for="regionGroup">Decision Description :</label>
+            </div>
+            <div class="ui-grid-col-10">
+                <textarea type="text" max-length="600" pInputTextarea style="width:100%; height:7rem;" [(ngModel)]="dialogDescription"></textarea>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <pt-lineup-info style="width:100%;" [ptLineupInfoEditable]="addDisable" [changeAdProjectCode]="changeAdProjectCode"></pt-lineup-info>
+        </div>
+    </div>
+    <!-- regiontype多选弹框 -->
+    <p-dialog class="dialog information-modify-dialog" header="Choose NOD Type" [(visible)]="regionTypeDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <p-dataTable class="ui-grid data-table project-info-table" [value]="regionTypeData" [(selection)]="selectedVersionData">
+                    <p-column [style]="{'width': '2.5rem'}" selectionMode="multiple">
+                        <template let-data="rowData" pTemplate="body">
+                            <span *ngIf="data.version"></span>
+                        </template>
+                    </p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-11" field="markName" header="NOD Type"></p-column>
+                </p-dataTable>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="regionTypeCancel()" label="Cancel"></button>
+                <button type="button" pButton (click)="regionTypeSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

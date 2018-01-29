@@ -1,0 +1,14 @@
+@import '../../../sass/privateStyle';
+.land-information {
+    .button-content {
+        margin:1rem 0;
+    }
+    .land-information-midify {
+        &>div {
+            width: 60%;
+        }
+        input {
+            width: 90%;
+        }
+    }
+}

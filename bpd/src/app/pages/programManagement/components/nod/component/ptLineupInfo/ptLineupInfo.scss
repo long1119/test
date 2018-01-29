@@ -1,0 +1,15 @@
+.pt-lineup-info {
+    z-index: 1001;
+    .dialog {
+        &>div {
+            width: 40%;
+            .ui-dialog-content {
+                z-index: 1010 !important;
+                height: auto;
+            }
+        }
+    }
+}
+ .ui-dialog-mask {
+        z-index: 999 !important;
+    }

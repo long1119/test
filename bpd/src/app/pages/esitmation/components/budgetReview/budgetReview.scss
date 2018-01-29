@@ -1,0 +1,430 @@
+@import '../../../sass/privateStyle';
+budget-review {
+	.topBar {
+		padding: 10px;
+		p-dropdown {
+		    display: inline-block;
+		    width: 150px;
+		    margin-left: 10px;
+		    margin-right: 10px;
+		}
+		.projectCodeSerch {
+			margin: 0 20px 0 10px;
+		}
+		.approvedInvestmentSerch {
+			margin-right: 10px;
+		}
+	}
+	.budgetTitle {
+		height: 35px;
+		text-align: center;
+		line-height: 35px;
+		font-weight: bold;
+		position: relative;
+		button {
+		    position: absolute;
+		    top: 50%;
+		    left: 20px;
+		    transform: translateY(-50%);
+		}
+		font-size: 14px;
+	}
+	.requiredNone {
+         //  width: 100%;
+         margin: -.8rem;
+         &:before {
+             padding-right: .3rem;
+             content: "*";
+             color: rgba(0,0,0,0);
+         }
+     }
+	.editBtn, .noEditBtn {
+	    margin-right: 10px;
+	    display: inline-block;
+	    text-align: center;
+	}
+	.editBtn, .delBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+	}
+	.noEditBtn {
+		color: #bfbdbd;
+	}
+	.margin0 {
+		margin-right: 0;
+	}
+	.navDiv {
+		margin-right: 10px;
+		border: 1px solid #e6e6e6;
+		.ui-panelmenu .ui-panelmenu-header.ui-state-active, .ui-panelmenu .ui-panelmenu-header.ui-state-active a {
+		    border-color: #a1c6f9;
+		    background: #a1c6f9;
+		    color: #000;
+		}
+		.navDivTitle {
+		    height: 35px;
+		    line-height: 35px;
+		    text-align: center;
+		    font-weight: bold;
+		    border: none;
+		}
+	}
+	.topBar2 {
+		button {
+			margin: 5px 10px;
+		}
+	}
+	.scrollTable {
+		width: 100%;
+		overflow: auto;
+		.ui-datatable table {
+		    table-layout: auto;
+		    thead tr {
+				display:block;
+			}
+			tbody {
+				display: block;
+				height: 30rem;
+				// overflow: auto;
+			}
+		}	
+	}
+	.scrollYTable {
+		width: 100%;
+		.ui-datatable table {
+		    thead tr {
+				display:block;
+			}
+			tbody {
+				display: block;
+				height: 30rem;
+				overflow: auto;
+			}
+		}
+	}
+	.w20 {
+		width: 35px;
+		min-width: 35px;
+		max-width: 35px;
+	}
+	.w50 {
+		width: 120px;
+		min-width: 120px;
+		max-width: 120px;
+	}
+	.w45 {
+		width: 75px;
+		min-width: 75px;
+		max-width: 75px;
+	}
+	.w40 {
+		width: 95px;
+		min-width: 95px;
+		max-width: 95px;
+	}
+	.w30 {
+		width: 60px;
+		min-width: 60px;
+		max-width: 60px;
+	}
+	.w80 {
+		width: 150px;
+		min-width: 150px;
+		max-width: 150px;
+	}
+	.w100 {
+		width: 200px;
+		min-width: 200px;
+		max-width: 200px;
+	}
+	.w200 {
+		width: 200px;
+		min-width: 200px;
+		max-width: 200px;
+	}
+	.w5 {
+		width: calc((100% - 35px)/5);
+		min-width: calc((100% - 35px)/5);
+		max-width: calc((100% - 35px)/5);
+	}
+	.fa-exclamation-circle:before {
+		color: red;
+	}
+	.green {
+		color: rgb(41,255,155);
+	}
+	.ui-fluid .ui-dropdown {
+	    width: 50% !important;
+	    float: right;
+	}
+	.ui-fluid .ui-inputtext {
+	    width: 50%;
+	    float: right;
+	}
+	.footer {
+		text-align: right;
+	    border-top: 1px solid #d0d0d0;
+	    padding-top: 10px;
+	}
+	.pdrop {
+		.ui-inputtext {
+			width: 100%;
+		}
+	}
+	.CBIdrop {
+		& > div {
+			width: 200px !important;
+		    line-height: 25px;
+	        margin-left: 5px;
+		    margin-top: -2px;
+		}
+		label {
+			height: 25px;
+		}
+	}
+	.tabView {
+		& > div {
+			margin-top: 30px;
+		}
+		.ui-tabview.ui-tabview-top>.ui-tabview-nav li {
+			background-color: #ebedf0;
+			border-radius: 5px 5px 0 0;
+			width: 165px;
+			margin-right: 10px;
+			a {
+				text-align: center;
+				width: 100%;
+			}
+			a:hover {
+				cursor: pointer;
+				background-color: rgb(190,203,216);
+				border-radius: 5px 5px 0 0;
+				font-weight: bold;
+			}
+		}
+		.ui-tabview .ui-tabview-nav > li.ui-state-active {
+			cursor: text;
+			background-color: rgb(190,203,216);
+			border-radius: 5px 5px 0 0;
+			font-weight: bold;
+		}
+		.ui-tabview .ui-tabview-panel {
+			min-height: 35rem;
+		}
+	}
+	.ui-datatable-scrollable-body {
+		overflow: scroll;
+	}
+	.CBIPanel {
+		& > div {
+			overflow: hidden;
+		}
+		.CBIname , .CBIcontent {
+			display: block;
+			border: 1px solid #e6e6e6;
+			float: left;
+			height: 3rem;
+			line-height: 3rem;
+		}
+		.CBIname {
+			width: 25%;
+			border-right: none;
+			border-bottom: none;
+		}
+		.CBIcontent {
+			width: calc(70% - 3px);
+			border-bottom: none;
+		}
+		.lastDiv {
+			border-bottom: 1px solid #e6e6e6;
+		}
+		.textIndent20 {
+			text-indent: 20px;
+		}
+		.borderRight {
+			border-right: 1px solid #e6e6e6 !important;
+		}
+	}
+	.ABMDialog {
+		.ui-dialog.ui-widget .ui-dialog-content {
+		    padding: 0 1em 1em 1em;
+		}
+	}
+	.budgetVersionDiv {
+		margin-left: 25px;
+		input {
+			width: 120px;
+		    margin: 10px 20px;
+		}
+		p-dropdown {
+		    display: inline-block;
+		    width: 120px;
+		    margin: 10px 20px;
+		}
+	}
+	.minHeight{
+		.ui-datatable {
+		    min-height: 30rem;
+		}
+	}
+	.editInput {
+		width: 100%;
+		height: 100%;
+		border: none;
+	    background: rgba(0,0,0,0);
+	}
+	.blue {
+		color: rgb(55,138,240);
+	}
+	.textIndent5 {
+		text-indent: 5px;
+	}
+	p-treetable {
+        .ui-treetable-tablewrapper {
+            height: 32rem;
+            overflow: auto;
+        }
+    }
+	.ui-tree-container > p-treenode > li > div {
+	  	border-color: #a1c6f9;
+	    background: #a1c6f9;
+	    color: #000;
+	    height: 2.5rem;
+	    line-height: 2.5rem;
+	}
+	.ui-tree-container > p-treenode > li > div > span:hover {
+		background: none !important;
+	}
+	.ui-tree-container > p-treenode > li > ul > p-treenode > li > div > span:hover {
+		background: none !important;
+		color: #000 !important;
+	}
+	.ui-tree-container > p-treenode > li > ul > p-treenode > li > div > span:active {
+		background: none !important;
+		color: #000 !important;
+	}
+	.ui-widget :active {
+	    outline: none;
+	}
+	p-treenode > li > div {
+		height: 2.2rem;
+	    line-height: 2.2rem;
+	}
+	.ui-tree .ui-tree-container {
+		overflow: hidden;
+	}
+	.ui-tree .ui-treenode-label {
+		width: auto;
+	}
+	.generalDialog {
+		.ui-dialog-titlebar {
+		    background: #4B98DC;
+		    color: #fff;
+		}
+		.ui-dialog-titlebar a {
+			color: #fff;
+		}
+		.ui-fluid .ui-inputtext {
+			width: 200px;
+		}
+		.ui-fluid .ui-dropdown {
+		    width: 200px !important;
+		}
+		.ui-inputgroup-addon {
+			width: 130px;
+			display: inline-block;
+		}
+	}
+	#pDropdown {
+		.ui-dropdown {
+			width: 200px !important;
+		}
+	}
+	.AssdropDown {
+		.ui-dropdown {
+			width: 113px !important;
+		}	
+	}
+	.ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+	.tree_menu {
+		max-height: 70rem;
+		border: 1px solid #d0d0d0;
+		overflow: auto;
+	}
+	#pTree {
+		.ui-widget-content {
+			border: none;
+		}
+	}
+	p-confirmDialog {
+		.ui-dialog.ui-widget .ui-dialog-titlebar {
+			background: #2399e5;
+			color: #fff;
+			a {
+				color: #fff;
+			}
+		}
+	 	.ui-dialog.ui-widget .ui-dialog-content {
+			padding: 1em 2em;
+		}
+	}
+	#frozenGrid {
+		.ui-datatable-unfrozen-view {
+			.ui-datatable-scrollable-header {
+			    margin-left: -150px;
+			}
+			.ui-datatable-scrollable-body {
+				margin-left: -150px;
+			}
+		}
+	}
+	.approveCalendar {
+		input {
+			margin-left: 26px;
+			width: 214px;
+		}
+	}
+	#changeDrop , #changeDrop2 {
+		& > div {
+			width: 60% !important;
+			& > label {
+				width: 100% !important;
+			}
+		}
+	}
+	#addBudgetDrop {
+		.ui-fluid .ui-dropdown {
+			width: 60% !important;
+			.ui-fluid .ui-inputtext {
+			    width: 100% !important;
+			}
+		}
+	}
+	#warnDia {
+		& > div {
+			.ui-dialog-content {
+				min-height: 6rem !important;
+			}
+		}
+	}
+	#messageDetail {
+		position: fixed;
+		background-color: #f5f5f5;
+		width: 200px;
+		min-height: 50px;
+		z-index: -999;
+	    box-shadow: 2px 2px 4px 4px #e6e6e6;
+	    padding: 5px;
+	    word-wrap: break-word;
+		word-break: break-all;
+	}
+	.dialog {
+		& > div {
+			.ui-dialog-content {
+				max-height: 55rem;
+			}
+		}
+	}
+}

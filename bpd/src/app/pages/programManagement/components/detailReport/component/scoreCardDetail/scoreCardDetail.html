@@ -1,0 +1,259 @@
+<div class="score-card-detail">
+    <p-dataTable [(selection)]="selectedNodInformation" selectionMode="single" class="ui-grid-row data-table" [value]="scoreCardDetailData">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="scoreCardDetailData[idx].pqrrMilestone">
+                    {{idx + 1}}
+                </span>
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" header="Subject">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <!--  *ngIf="scoreCardDetailData[idx]" -->
+                <span class="edit-span" (click)="showSubjectClick(idx,data)">{{data.subject}}</span>
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="pqrrMilestoneName" header="MileStore"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="userName" header="Release User"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="createDate" header="Release Date"></p-column>
+    </p-dataTable>
+    <p-paginator rows="10" totalRecords="{{scoreCardDetailPaginatorTotal}}" pageLinkSize="3" (onPageChange)="scoreCardDetailPaginate($event)"></p-paginator>
+    <!-- Subject 弹框 -->
+    <p-dialog class="dialog information-modify-dialog" header="Detail Report" [(visible)]="showSubjectDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid" *ngIf="dialogConfirm == 'Next'">
+            <div class="ui-grid-col-12 program-parameter-top" style="margin-top: 1rem;">
+                <div class="ui-grid-col-4">
+                    <div class="ui-grid-col-6 parameter-font">
+                        <label class="drop-down-label">Pre_Status_Version:</label>
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <p-dropdown (onChange)="preStatusVersionChange($event)" class="drop-down" autoWidth="false" [options]="preStatusVersionOption" [(ngModel)]="selectedPreStatusVersion"></p-dropdown>
+                    </div>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-grid-col-6 parameter-font" style="text-align: right;">
+                        <label class="drop-down-label">Ur_Status_Version:&nbsp;&nbsp;</label>
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <p-dropdown (onChange)="urStatusVersionChange($event)" class="drop-down" autoWidth="false" [options]="urStatusVersionOption" [(ngModel)]="selectedUrStatusVersion"></p-dropdown>
+                    </div>
+                </div>
+                <div class="ui-grid-col-2">
+                    <div style="width: 60%; float: right">
+                        <button pButton type="button" class="program-add" (click)="lookSummaryClick()" label="Search"></button>
+                    </div>
+                </div>
+                <div class="ui-grid-col-2">
+                    <div style="width: 60%; float: right">
+                        <button pButton type="button" class="program-add" (click)="exportSummaryReportClick()" label="Export"></button>
+                    </div>
+                </div>
+            </div>
+            <p-dataTable class="ui-grid-col-12 data-table" [value]="reportSummaryData" scrollable="true" scrollHeight="30rem">
+                <p-headerColumnGroup>
+                    <p-row>
+                        <p-column header="No"></p-column>
+                        <p-column header="Group"></p-column>
+                        <p-column header="Mertics"></p-column>
+                        <p-column header="CSO Target"></p-column>
+                        <p-column header="Revised Target"></p-column>
+                        <p-column header="{{selectedPreStatusName}}" colspan="2"></p-column>
+                        <p-column header="{{selectedUrStatusName}}" colspan="2"></p-column>
+                        <p-column header="Comments"></p-column>
+                    </p-row>
+                </p-headerColumnGroup>
+                <p-column>
+                    <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                        <span *ngIf="data.indexName">
+                            {{idx + 1}}
+                        </span>
+                    </template>
+                </p-column>
+                <p-column field="metricGroup"></p-column>
+                <p-column field="indexName"></p-column>
+                <p-column field="targetVolume"></p-column>
+                <p-column field="proposedTarget"></p-column>
+                <p-column field="valueOfMilestone1"></p-column>
+                <p-column>
+                    <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                        <!-- (click)="editSummaryReportStatus(idx,data,true)" -->
+                        <div style="padding: 1rem; cursor: pointer;">
+                            <div *ngIf="data.statusOfMilestone1 == 'Y'" style="width: 2rem; height: 2rem; border-radius: 50%; background-color: yellow; margin: 0 auto"></div>
+                            <div *ngIf="data.statusOfMilestone1 == 'G'" style="width: 2rem; height: 2rem; border-radius: 50%; background-color: green; margin: 0 auto"></div>
+                            <div *ngIf="data.statusOfMilestone1 == 'R'" style="width: 2rem; height: 2rem; border-radius: 50%; background-color: red; margin: 0 auto"></div>
+                        </div>
+                    </template>
+                </p-column>
+                <p-column field="valueOfMilestone2"></p-column>
+                <p-column>
+                    <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                        <div style="padding: 1rem; cursor: pointer;" (click)="editSummaryReportStatus(idx,data,flase)">
+                            <div *ngIf="data.statusOfMilestone2 == 'Y'" style="width: 2rem; height: 2rem; border-radius: 50%; background-color: yellow; margin: 0 auto"></div>
+                            <div *ngIf="data.statusOfMilestone2 == 'G'" style="width: 2rem; height: 2rem; border-radius: 50%; background-color: green; margin: 0 auto"></div>
+                            <div *ngIf="data.statusOfMilestone2 == 'R'" style="width: 2rem; height: 2rem; border-radius: 50%; background-color: red; margin: 0 auto"></div>
+                        </div>
+                    </template>
+                </p-column>
+                <p-column>
+                    <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                        <div *ngIf="data.statusDesc.length < 8" style="padding: 1rem; cursor: pointer;" (click)="editSummaryReportMemo(idx,data)">
+                            {{data.statusDesc}}
+                        </div>
+                        <div *ngIf="data.statusDesc.length > 7" pTooltip={{data.statusDesc}} tooltipPosition="top" style="padding: 1rem; cursor: pointer;" (click)="editSummaryReportMemo(idx,data)">
+                            {{data.statusDesc.slice(0, 5) + '...'}}
+                        </div>
+                    </template>
+                </p-column>
+
+            </p-dataTable>
+        </div>
+        <div class="ui-grid-responsive ui-fluid" *ngIf="dialogConfirm == 'Previous'">
+            <div class="ui-grid-row" style="margin-bottom: 0;">
+                <div class="ui-grid-col-1" style="margin-right: 1em;">
+                    <button pButton type="button" (click)="initialMetricsClick()" label="Initial"></button>
+                </div>
+                <div class="ui-grid-col-1">
+                    <button pButton type="button" (click)="exportInitialMetricsClick()" label="Export"></button>
+                </div>
+            </div>
+            <div class="ui-grid-row" style="margin-top: 0;">
+                <p-dataTable class="ui-grid data-table" [value]="scoreCardMetricsData" scrollable="true" scrollHeight="15rem">
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="" header="status">
+                        <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                            <div *ngIf="data.status == 'Y'" style="width: 1rem; height: 1rem; border-radius: 50%; background-color: yellow; margin: 0 auto"></div>
+                            <div *ngIf="data.status == 'R'" style="width: 1rem; height: 1rem; border-radius: 50%; background-color: red; margin: 0 auto"></div>
+                            <div *ngIf="data.status == 'G'" style="width: 1rem; height: 1rem; border-radius: 50%; background-color: red; margin: 0 auto"></div>
+                        </template>
+                    </p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-3" field="indexName" header="Metrix"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="targetVolume" header="Target"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="statusVolume" header="Actual Status"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" header="Deviation">
+                        <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                            <!-- <span *ngIf="data.targetVolume && data.statusVolume">{{data.targetVolume - data.statusVolume}}</span> -->
+                            <span>{{data.deviation}}</span>
+                        </template>
+                    </p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="dataFlag" header="Data Flag"></p-column>
+                    <p-column styleClass="ui-grid-col-2" header="">
+                        <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                            <span *ngIf="scoreCardMetricsData[idx].indexId" class="edit-span" (click)="metricDeleteClick(idx,data)">Delete</span>
+                        </template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+            <div class="ui-grid-row">
+                <div *ngIf="localStorageAuthority" class="button-content">
+                    <button pButton type="button" (click)="addItemClick()" label="Add"></button>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <p-dataTable class="data-table item-data-table" [value]="scoreCardItemData" scrollable="true" scrollHeight="15rem">
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-8" field="item" header="Action Plan"></p-column>
+                    <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-4" header="">
+                        <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                            <span *ngIf="data.decisionId" class="edit-span" (click)="deleteItemClick(idx,data)">Delete</span>
+                        </template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label>Risk assesment(Low/Medium/High) of getting green by SORP :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <div class="ui-grid-col-1">
+                        <p-radioButton class="radio-button" name="groupName" value="1" (onClick)="onRadioClick()" [(ngModel)]="selectedValue"></p-radioButton>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <label>Low</label>
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-radioButton class="radio-button" name="groupName" value="2" (onClick)="onRadioClick()" [(ngModel)]="selectedValue"></p-radioButton>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <label>Medium</label>
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <p-radioButton class="radio-button" name="groupName" value="3" (onClick)="onRadioClick()" [(ngModel)]="selectedValue"></p-radioButton>
+                    </div>
+                    <div class="ui-grid-col-3">
+                        <label>High</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="dialogCancel()" label="Cancel"></button>
+                <button type="button" *ngIf="dialogConfirmFlag && localStorageAuthority" pButton (click)="dialogConfirmSave()" label="Confirm"></button>
+                <button type="button" pButton (click)="dialogSave()" label="{{dialogConfirm}}"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 添加item弹框 -->
+    <p-dialog class="dialog" header="Detail Report" [(visible)]="addItemDialog">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label>Action Plan :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="150" pInputText id="regionCode" [(ngModel)]="dialogItem" />
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="itemAddCancel()" label="Cancel"></button>
+                <button type="button" pButton (click)="itemAddSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-dialog class="dialog" header="Set Status" [(visible)]="editSummaryReportStatusDialog" width="30%">
+        <div class="ui-g" style="padding: 3rem 0;">
+            <p-radioButton class="radio-button" style="margin-left:40px" name="Yellow" value="Y" label="Yellow" [(ngModel)]="authorizeRadio"></p-radioButton>
+            <p-radioButton class="radio-button" style="margin-left:40px" name="Red" value="R" label="Red" [(ngModel)]="authorizeRadio"></p-radioButton>
+            <p-radioButton class="radio-button" style="margin-left:40px" name="Green" value="G" label="Green" [(ngModel)]="authorizeRadio"></p-radioButton>
+            <p-radioButton class="radio-button" style="margin-left:40px" name="Green" value="W" label="White" [(ngModel)]="authorizeRadio"></p-radioButton>
+        </div>
+        <div class="footer">
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button pButton type="button" (click)="editSummaryReportStatusDialog=false" label="Cancel"></button>
+                <button pButton type="button" [(disabled)]="!authorizeRadio" (click)="editSummaryReportStatusSave()" label="Confirm"></button>
+            </div>
+        </div>
+    </p-dialog>
+    <p-dialog header="Set Comments" [(visible)]="editSummaryReportMemoDialog" width="30%" modal="modal" class="dialog">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-12">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon" style="width:90px;float:left;">Comments:</span>
+                    <textarea maxlength="100" style="width:300px;height:55px" type="text" pInputTextarea [(ngModel)]="dialogSummaryReportMemo"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button pButton type="button" (click)="editSummaryReportMemoDialog=false" label="Cancel"></button>
+                <!--  [(disabled)]="!dialogSummaryReportMemo" -->
+                <button pButton type="button" (click)="editSummaryReportMemoSave()" label="Confirm"></button>
+             </div>
+        </div>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="Detail Report" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete This Data?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteNo()" label="Cancel"></button>
+                <button type="button" pButton (click)="deleteYes()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

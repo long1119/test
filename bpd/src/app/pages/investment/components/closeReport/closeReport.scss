@@ -1,0 +1,60 @@
+.investmentStatusBody{
+    .thead-inverse{
+        background-color: #4B98DC;
+        color: white;
+    }
+    .bodyTwo{
+        height: 500px;
+        overflow-y: auto;
+        .head-title{
+          background-color: #4B98DC;
+          color: white;
+          // height: 40px;
+          padding-left: 1rem;
+          // line-height: 40px;
+        }
+        .show-data{
+          margin: 0.5rem 0;
+          .pie-card{
+            border-radius:5px 5px 0 0;
+            border: 1px solid #37A9E1;
+            padding: 0;
+            .pie-title{
+              background-color: #37A9E1;
+              color: white;
+              border-radius:5px 5px 0 0;
+              height: 30px;
+              line-height: 30px;
+            }
+          }
+        }
+    }
+      .table-bordered td{
+        border: 1px solid #D9D9D9 !important;
+        padding: 0.5rem;
+        height:36px;
+      }
+      .table-bordered thead{
+        background-color: #4B98DC;
+        color: white;
+      }
+      .table-bordered th{
+        border: 1px solid #D9D9D9 !important;
+        padding: 0.5rem;
+      }
+      .blue{
+        color:#6BB2F3;
+        text-align:center;
+        cursor:pointer;
+      }
+      .clickStyle{
+        background-color: #186BA0;
+        color: white;
+        .blue{
+          color: white;
+        }
+      }
+      .overStyle{
+        background-color: rgba(220,220,220,0.5);
+      }
+}

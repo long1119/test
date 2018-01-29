@@ -1,0 +1,62 @@
+<div class="header">
+    <button *ngIf="userRoot" pButton type="button" (click)="addBtn()" [label]="'Add'|i18nPips"></button>
+    {{'User Name'|i18nPips}}:<input (keyup)="searchEnterSearch($event)" type="text" name="userName" class="userName" [(ngModel)]="userNameSearch">
+    {{'Employee ID'|i18nPips}}:<input (keyup)="searchEnterSearch($event)" type="text" name="userName" class="userName" [(ngModel)]="employeeSearch">
+    {{'Department'|i18nPips}}:<input (keyup)="searchEnterSearch($event)" type="text" name="Department" class="Department" [(ngModel)]="DepartmentSearch">
+    <button pButton type="button" (click)="search()" [label]="'Search'|i18nPips"></button>
+</div>
+<p-dataTable [rows]="15" [value]="gridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="50rem">
+    <p-column field="id" [header]="'No' | i18nPips" styleClass="ui-grid-col-1 align-center"></p-column>
+    <p-column field="userName" [header]="'User Name' | i18nPips" styleClass="ui-grid-col-3"></p-column>
+   <!--  <p-column field="userCode" [header]="'User Code' | i18nPips" styleClass="ui-grid-col-2 align-center"></p-column> -->
+    <p-column field="employeeCode" [header]="'Employee ID' | i18nPips" styleClass="ui-grid-col-3 align-center"></p-column>
+    <p-column field="jobPosition" [header]="'Job' | i18nPips" styleClass="ui-grid-col-3 align-center"></p-column>
+    <p-column field="telephone" [header]="'Telephone'|i18nPips" styleClass="ui-grid-col-3 align-center"></p-column>
+    <p-column field="emailAddress" [header]="'Email'|i18nPips" styleClass="ui-grid-col-3 align-center"></p-column>
+    <p-column field="departmentName" [header]="'Department'|i18nPips" styleClass="ui-grid-col-3"></p-column>
+    <p-column field="masterName" [header]="'Manager'|i18nPips" styleClass="ui-grid-col-3 align-center"></p-column>
+    <p-column *ngIf="userRoot" [header]="''|i18nPips" styleClass="ui-grid-col-2 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" (click)="editBtn(item)">{{'Set Role'|i18nPips}}</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[15,30,45]" (onPageChange)="paginate($event)"></p-paginator>
+<p-dialog header="Slelect Role" width="650" minHeight=500 [closable]="false" [responsive]="true" modal="modal" [(visible)]="setStatusDisplay" class="setStatusDia">
+    <div class="header">
+        Role Name:<input type="text" name="RoleName" class="userName" [(ngModel)]="roleNameSearch" (keyup)="roleSearchEnterSearch($event)">
+        Role Type:<p-dropdown autoWidth="false" [options]="roleTypeSearchStore" [(ngModel)]="roleTypeSearch" id="roleTypeDrop" appendTo="body"></p-dropdown>
+        <button pButton type="button" (click)="roleSearch()" label="Search"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="roleStore" class="data-table" scrollable="true" scrollHeight="30rem">
+        <p-column header="No" styleClass="ui-grid-col-2">
+            <template pTemplate="body" let-item="rowData">
+                <span class="noSpan">{{item.id}}</span>
+                <input class="noInput" type="checkbox" *ngIf="item.id" (change)="checkbox(item)" name="checkbox" [checked]="item.isChecked">
+            </template>
+        </p-column>
+        <p-column field="roleName" header="Role Name" styleClass="ui-grid-col-8"></p-column>
+        <p-column field="roleType" header="Role Type" styleClass="ui-grid-col-3"></p-column>
+    </p-dataTable>
+    <div class="footer">
+        <button pButton type="button" (click)="saveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="cancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Add HR User" width="950" [responsive]="true" modal="modal" [(visible)]="addDisplay" class="dialog">
+    <div class="header">
+        User Name:<input type="text" class="userName" (keyup)="hrSearchEnterSearch($event)" [(ngModel)]="userNameHrSearch">
+        Employee ID:<input type="text" class="userName" (keyup)="hrSearchEnterSearch($event)" [(ngModel)]="employeeHrSearch">
+    </div>
+    <p-dataTable [rows]="10" [value]="hrUserStore" [rowHover]=true class="data-table" scrollable="true" scrollHeight="30rem" (onRowDblclick)="dbclick($event)">
+        <p-column field="id" [header]="'No' | i18nPips" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="userName" [header]="'User Name' | i18nPips" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="employeeCode" [header]="'Employee ID' | i18nPips" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="jobPosition" [header]="'Job' | i18nPips" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="telephone" [header]="'Telephone'|i18nPips" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="emailAddress" [header]="'Email'|i18nPips" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="departmentName" [header]="'Department'|i18nPips" styleClass="ui-grid-col-2"></p-column>
+    </p-dataTable>
+    <p-paginator rows="{{hrGridStoreRows}}" first="{{hrGridStoreFirst}}" totalRecords="{{hrGridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="hrPaginate($event)"></p-paginator>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

@@ -1,0 +1,116 @@
+@import '../../sass/privateStyle';
+kanban-pic {
+	.tableKanban {
+		text-align: center;
+		th {
+			text-align: center;
+			height: 30px;
+			width: 100px;
+		}
+		.th2 {
+			td {
+				width: 100px;
+				height: 30px;
+			}
+		}
+	}
+	.gridTable {
+    	width: 100%;
+    	text-align: center;
+        tbody {
+            tr {
+                height: 70px;
+                text-align: center;
+            }
+        }
+    	td {
+    		border: 1px solid #e6e4e4;
+    		text-align: center;
+    		height: 70px;
+            max-width: 100px;
+    		// background-color: #cbdeef;
+    	}
+    	th {
+    		background-color: #153857;
+    		text-align: center;
+    		color: #fff;
+		    border: 1px solid #d0d0d0;
+    	}
+    	thead {
+    		tr {
+                height: 36px;
+                text-align: center;
+    			th {
+    				white-space: nowrap;
+    				padding: 0 10px;
+    				min-width: 200px;
+    			}
+    		}
+    	}
+     }
+     .tdBack {
+     	background-color: #cbdeef;
+     }
+     .AFI {
+     	width: 40px;
+     	height: 20px;
+     	background-color: blue;
+     	position: absolute;
+     	top: 90px;
+     	left: 415px;
+     	z-index: 5;
+     }
+     .AFIDIV {
+     	width: 22px;
+     	height: 16px;
+     	transform: rotate(23deg) skew(137deg);
+     	background: blue;
+     	position: absolute;
+     	top: 12px;
+     	left: 9px;
+     }
+     .AFISPAN {
+     	color: #fff;
+     	position: absolute;
+     	top: 3px;
+     	left: 50%;
+     	transform: translateX(-50%);
+     	z-index: 10;
+     	font-size: 12px;
+     }
+     .AFITime {
+        position: absolute;
+        top: -15px;
+        font-size: 12px;
+        font-weight: bold;
+        width: 46px;
+        text-align: center;
+        left: -3px;
+     }
+     .AFIEngine {
+        position: absolute;
+        top: 28px;
+        font-size: 12px;
+        font-weight: bold;
+        color: chocolate;
+        transform: scale(0.8);
+        min-width: 60px;
+        left: -10px;
+        max-width: 60px;
+        text-align: center;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 2;
+     }
+     .line {
+     	height: 2px;
+     	width: 200px;
+     	background-color: #000;
+     	position: absolute;
+     	top: 101px;
+     	left: 415px;
+     	z-index: 1;
+     }
+}

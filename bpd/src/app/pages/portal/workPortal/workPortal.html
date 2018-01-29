@@ -1,0 +1,137 @@
+<!-- <p-growl [value]="msgs" sticky="sticky"></p-growl>
+
+<form [formGroup]="userform" (ngSubmit)="onSubmit(userform.value)">
+    <p-panel header="Validate">
+        <div class="ui-grid ui-grid-responsive ui-grid-pad ui-fluid" style="margin: 10px 0px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    First Name *:
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText type="text" formControlName="firstname" placeholder="Required"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['firstname'].valid && userform.controls['firstname'].dirty">
+                        <i class="fa fa-close"></i>
+                        Firstname is required
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Last Name *:
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText type="text" formControlName="lastname" placeholder="Required"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['lastname'].valid&&userform.controls['lastname'].dirty">
+                        <i class="fa fa-close"></i>
+                        Lastname is required
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Password *:
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText type="password" formControlName="password" placeholder="Required - Min(6)"/>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['password'].valid&&userform.controls['password'].dirty">
+                        <i class="fa fa-close"></i>
+                        <span *ngIf="userform.controls['password'].errors['required']">Password is required</span>
+                        <span *ngIf="userform.controls['password'].errors['minlength']">Must be longer than 6 characters</span>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Description:
+                </div>
+                <div class="ui-grid-col-6">
+                    <textarea pInputTextarea type="text" formControlName="description"></textarea>
+                </div>
+                <div class="ui-grid-col-4"></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    Gender *:
+                </div>
+                <div class="ui-grid-col-6">
+                    <p-dropdown [options]="genders" formControlName="gender" [autoWidth]="false"></p-dropdown>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-message ui-messages-error ui-corner-all" *ngIf="!userform.controls['gender'].valid&&userform.controls['gender'].dirty">
+                        <i class="fa fa-close"></i>
+                        Gender is required
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"></div>
+                <div class="ui-grid-col-6">
+                    <button pButton type="submit" label="Submit" [disabled]="!userform.valid"></button>
+                </div>
+                <div class="ui-grid-col-4"></div>
+            </div>
+        </div>
+    </p-panel>
+</form> -->
+<div style="background:url(assets/img/app/profile/background.png) no-repeat;z-index: 2000;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background-size:cover;">
+    <div>
+        <div style="font-size:32px;text-align:center;margin-top:100px;color:#fff">SGM-EPPM</div>
+        <div style="border:1px solid rgba(255,255,255,0.4);width:500px;margin:100px auto;    background-color: rgba(255,255,255,0.5);border-radius:5px">
+            <div style="text-align:center;font-size:22px;margin:30px;">欢迎登陆</div>
+            <div style="text-align:center;margin-top:50px;">
+                <span style="font-size:14px;font-weight:bold;">帐&nbsp;&nbsp;&nbsp;&nbsp;号：</span>
+                <input (keyup)="gotoEnterLogIn($event)" style="width:360px;height:40px" type="text" pInputText [(ngModel)]="InvestmentUser">
+            </div>
+            <div style="text-align:center;margin-top:20px;">
+                <span style="font-size:14px;font-weight:bold;">密&nbsp;&nbsp;&nbsp;&nbsp;码：</span>
+                <input style="width:360px;height:40px" type="password" pInputText>
+            </div>
+            <div style="text-align:center;margin-top:50px;margin-bottom:15px;">
+                <button style="width:420px;height:40px" pButton type="button" label="Login" (click)="goto()"></button>
+            </div>
+            <div style="margin-bottom:95px;">
+                <span style="float:left;margin-left:45px">注册</span>
+                <span style="float:right;margin-right:45px">忘记密码？</span>
+            </div>
+        </div>
+    </div>
+    <p-dialog class="dialog" header="Please Choose Your Users" [(visible)]="searchUser" width="800" [responsive]="true" [modal]="true">
+    <div class="ui-grid-col-12" style="margin:10px;">
+        <div class="ui-grid-col-5">
+            <div class="ui-grid-col-4 parameter-font" style="line-height:24px">Department :</div>
+            <div class="ui-grid-col-7">
+                <input (keyup)="lookClickEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogDepartment" />
+            </div>
+            <div class="ui-grid-col-1"></div>
+        </div>
+        <div class="ui-grid-col-5">
+            <div class="ui-grid-col-4 parameter-font" style="text-align: right;line-height: 24px">User Name:&nbsp;&nbsp;</div>
+            <div class="ui-grid-col-8">
+                <input (keyup)="lookClickEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogUserName" />
+            </div>
+        </div>
+        <div class="ui-grid-col-2">
+            <button style="margin-left: 1rem;" pButton type="button" class="program-add" (click)="lookClick()" label="Search"></button>
+        </div>
+    </div>    
+    <div class="ui-grid">
+        <p-dataTable (onRowDblclick)="dbclick($event)" [rowHover]=true selectionMode="single" class="data-table" [value]="managerData" rows="10" scrollable="true" scrollHeight="35rem">
+            <p-column styleClass="ui-grid-col-1" field="userName" header="User Name"></p-column>
+            <p-column styleClass="ui-grid-col-1" field="userCode" header="User Code"></p-column>
+            <p-column styleClass="ui-grid-col-1" field="jobPosition" header="Job"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="telephone" header="Telphone"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="emailAddress" header="Email"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="departmentName" header="Department"></p-column>
+            <p-column styleClass="ui-grid-col-1" field="masterName" header="Manager"></p-column>
+        </p-dataTable>
+        <p-paginator rows="{{managerDataRows}}" first="{{managerDataFirst}}" totalRecords="{{managerDataLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="managerPaginate($event)"></p-paginator>
+    </div>
+</p-dialog>
+</div>
+<p-growl baseZIndex=3000 styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

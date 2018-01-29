@@ -1,0 +1,53 @@
+.calendar-input {
+    width: 100%;
+    &>span {
+        width: 100% !important;
+        &>input {
+            width: 100% !important; // .ui-fluid {
+            //     width: 100%;
+            // }
+        }
+    } // .ui-calendar {
+    //     width: 100%;
+    // }
+}
+
+.calendar-icon-input {
+    width: 100%;
+    &>span {
+        width: 90%;
+        &>input {
+            width: 100% !important; // .ui-fluid {
+            //     width: 100%;
+            // }
+        }
+    }
+    button {
+        &>.ui-button-icon-only {
+            margin-left: -.8rem;
+        }
+    } // .ui-calendar {
+    //     width: 100%;
+    // }
+}
+
+p-calendar {
+    &>span {
+        &>.ui-datepicker {
+            width: auto;
+            z-index: 100000;
+            th:first-child,
+            th:last-child {
+                color: red;
+            }
+            tr {
+                td:first-child,
+                td:last-child {
+                    .ui-state-default {
+                        color: red;
+                    }
+                }
+            }
+        }
+    }
+}

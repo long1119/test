@@ -1,0 +1,183 @@
+<div *ngIf="step == 1">
+    <div class="topBar">
+        Project Type:<p-dropdown autoWidth="false" [options]="projectTypeSerchStore" [(ngModel)]="projectTypeSerch" appendTo="body"></p-dropdown>
+        Costbook Code:<input type="text" (keyup)="projectCodeEnterSearch($event)" pInputText [(ngModel)]="projectCodeSerch" class="projectCodeSerch">
+        <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+        <p-checkbox style="float:right" [(ngModel)]="checked" binary="true" (onChange)="checkedChange()"></p-checkbox>
+    </div>
+    <p-dataTable [rows]="15" [value]="gridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="50rem">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="projectCode" header="Costbook Code" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="projectName" header="Costbook Name" styleClass="ui-grid-col-2 align-left"></p-column>
+        <p-column field="projectTypeName" header="Project Type" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="approveInvestmentDate" header="Approved Date" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="approveInvestment" header="Approved Investment (MRMB)" styleClass="ui-grid-col-3 align-right">
+            <template pTemplate="body" let-item="rowData">
+                <span>{{item.approveInvestment | ammountPips}}</span>
+            </template>
+        </p-column>
+        <p-column field="inevstmentCharavter" header="Investment Character" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="userName" header="Investment Manager" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="projectStatus" header="Status" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column header="" styleClass="ui-grid-col-2 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id" class="editBtn" (click)="toStep2Btn(item)">View</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[15,30,45]" (onPageChange)="paginate($event)"></p-paginator>
+</div>
+<div *ngIf="step == 2">
+    <div class="topBar">
+        Region Category:<input (keyup)="sapItemEnterSearch($event)" type="text" pInputText [(ngModel)]="regionCategorySearch" class="projectCodeSerch">
+        SAP Item Name:<input (keyup)="sapItemEnterSearch($event)" type="text" pInputText [(ngModel)]="sapItemName" class="projectCodeSerch">
+        SAP WBSCode:<input (keyup)="sapItemEnterSearch($event)" type="text" pInputText [(ngModel)]="sapWbsCode" class="projectCodeSerch">
+        Budget Version:
+        <p-dropdown autoWidth="false" [options]="budgetVersionValueStore" [(ngModel)]="budgetVersionValue" appendTo="body"></p-dropdown>
+        <button pButton type="button" (click)="step2LookUpBtn()" label="Search"></button>
+    </div>
+    <div class="topBar">
+        <button *ngIf="userRoot" [(disabled)]="haveData" pButton type="button" (click)="step2ExportBtn()" label="Export"></button>
+        <button *ngIf="userRoot" [(disabled)]="haveData" pButton type="button" (click)="step2ImportBtn()" label="Import"></button>
+        <button *ngIf="userRoot" [(disabled)]="haveData" pButton type="button" (click)="ExportSAPBtn()" label="Export SAP"></button>
+        <button pButton type="button" (click)="switchProjBtn()" label="Switch Project"></button>
+        <!-- <button pButton type="button" (click)="switchVersionBtn()" label="Switch Bgt Version"></button> -->
+    </div>
+    <div class="step2Title">{{selectedStore.projectCode}}</div>
+    <div>
+        <p-dataTable [value]="wbsStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="40rem" frozenWidth="421px" unfrozenWidth="calc(100% - 421px)">
+            <p-column field="regionCategoryNameBrief" header="Region Category" [style]="{'width':'100px'}" frozen="true" styleClass="align-left">
+                <template pTemplate="body" let-item="rowData">
+                    <span (mouseover)="mouseover($event,item.regionCategoryName)" (mouseout)="mouseup()">{{item.regionCategoryNameBrief}}</span>
+                </template>
+            </p-column>
+            <p-column field="sapWbsCode" header="WBS L7 Code (ERC)" [style]="{'width':'200px'}" frozen="true"></p-column>
+            <p-column field="sapWbsDescriptionBrief" header="Description" [style]="{'width':'120px'}" frozen="true" styleClass="align-left">
+                <template pTemplate="body" let-item="rowData">
+                    <span (mouseover)="mouseover($event,item.sapWbsDescription)" (mouseout)="mouseup()">{{item.sapWbsDescriptionBrief}}</span>
+                </template>
+            </p-column>
+            <p-column field="sapCurrentBudget" header={{totalAmount}} [style]="{'width':'120px'}" styleClass="align-right">
+                <template pTemplate="body" let-item="rowData">
+                    <span>{{item.sapCurrentBudget | ammountPips}}</span>
+                </template>
+            </p-column>
+            <p-column field="sapReleasedBudget" header={{ReleasedBudget}} [style]="{'width':'120px'}" styleClass="align-right">
+                <template pTemplate="body" let-item="rowData">
+                    <span>{{item.sapReleasedBudget | ammountPips}}</span>
+                </template>
+            </p-column>
+            <p-column field="sapPrCommitted" header={{PRCommitted}} [style]="{'width':'120px'}" styleClass="align-right">
+                <template pTemplate="body" let-item="rowData">
+                    <span>{{item.sapPrCommitted | ammountPips}}</span>
+                </template>
+            </p-column>
+            <p-column field="sapPoCommitted" header={{POCommitted}} [style]="{'width':'120px'}" styleClass="align-right">
+                <template pTemplate="body" let-item="rowData">
+                    <span>{{item.sapPoCommitted | ammountPips}}</span>
+                </template>
+            </p-column>
+            <p-column field="sapActualCost" header={{ActualCost}} [style]="{'width':'120px'}" styleClass="align-right">
+                <template pTemplate="body" let-item="rowData">
+                    <span>{{item.sapActualCost | ammountPips}}</span>
+                </template>
+            </p-column>
+            <p-column field="sapTotalCost" header={{TotalCost}} [style]="{'width':'120px'}" styleClass="align-right">
+                <template pTemplate="body" let-item="rowData">
+                    <span>{{item.sapTotalCost | ammountPips}}</span>
+                </template>
+            </p-column>
+            <p-column field="sapBalanceReleaseedBudget" header={{BalRelBud}} [style]="{'width':'120px'}" styleClass="align-right">
+                <template pTemplate="body" let-item="rowData">
+                    <span>{{item.sapBalanceReleaseedBudget | ammountPips}}</span>
+                </template>
+            </p-column>
+            <!-- <p-column field="" header="Accumulated PR" [style]="{'width':'200px'}"></p-column> -->
+            <!-- <p-column field="" header="Accumulated PO" [style]="{'width':'200px'}"></p-column> -->
+            <p-column field="sapBudgetForecast" header={{Forecast}} [style]="{'width':'120px'}" styleClass="align-right">
+                <template pTemplate="body" let-item="rowData">
+                    <span>{{item.sapBudgetForecast | ammountPips}}</span>
+                </template>
+            </p-column>
+            <p-column field="sapForecastRemark" header="Forecast Remark" [style]="{'width':'120px'}"></p-column>
+            <p-column field="sapCloseActual" header={{CloseActual}} [style]="{'width':'120px'}" styleClass="align-right">
+                <template pTemplate="body" let-item="rowData">
+                    <span>{{item.sapCloseActual | ammountPips}}</span>
+                </template>
+            </p-column>
+            <p-column field="costBookCode" header="WBS L7 Code (EPPM)" [style]="{'width':'200px'}"></p-column>
+            <p-column field="planBudget" header="Plan Budget" [style]="{'width':'120px'}"></p-column>
+        </p-dataTable>
+        <p-paginator rows="{{wbsStoreRows}}" first="{{wbsStoreFirst}}" totalRecords="{{wbsStoreLen}}" pageLinkSize="3" (onPageChange)="wbsPaginate($event)"></p-paginator>
+    </div>
+    <p-dialog class="dialog" header="{{selectedStore.projectCode}} Review Exporting To SAP' Data" [(visible)]="ExportSAPDialog" width="850">
+        <div class="topBar">
+            WBS ID:<input type="text" (keyup)="wbsDescriptionEnterSearch($event)" pInputText [(ngModel)]="WbsIdDialog" class="projectCodeSerch">
+            WBS Description:<input (keyup)="wbsDescriptionEnterSearch($event)" type="text" pInputText [(ngModel)]="WbsDescriptionDialog" class="projectCodeSerch">
+            <button pButton type="button" (click)="dialogLookUpBtn()" label="Search"></button>
+            <button pButton type="button" (click)="dialogExportBtn()" label="Export"></button>
+        </div>
+        <p-dataTable class="ui-grid-row data-table" [value]="SAPData" [rows]="10" scrollable="true" scrollHeight="30rem">
+            <p-column styleClass="ui-grid-col-5" field="costBookCode" header="WBS ID">
+            </p-column>
+            <p-column styleClass="ui-grid-col-5" field="wbsDescription" header="WBS Description"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="planBudget" header="Current Cost (CNY)"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="applicant" header="Applicant"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="costCenter" header="Req. C.C."></p-column>
+            <p-column styleClass="ui-grid-col-3" field="companyCode" header="Company Code"></p-column>
+        </p-dataTable>
+        <p-paginator rows="10" totalRecords="{{SAPgridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="SAPpaginate($event)"></p-paginator>
+    </p-dialog>
+    <p-dialog class="dialog" header="Select Investment Project" [(visible)]="selectInvestmentDialog" width="850">
+        <div class="topBar">
+            Project Type:<p-dropdown autoWidth="false" [options]="switchProjprojectTypeSerchStore" [(ngModel)]="switchProjprojectTypeSerch" appendTo="body"></p-dropdown>
+            Costbook Code:<input (keyup)="projectCodeDialogEnterSearch($event)" type="text" pInputText [(ngModel)]="switchProjprojectCodeSerch" class="projectCodeSerch">
+            <button pButton type="button" (click)="switchProjdialogLookUpBtn()" label="Search"></button>
+        </div>
+        <p-dataTable class="ui-grid-row data-table" [value]="switchProjData" [rows]="10" (onRowDblclick)="dbclick($event)" [rowHover]=true scrollable="true" scrollHeight="30rem">
+            <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="projectCode" header="Costbook Code">
+            </p-column>
+            <p-column styleClass="ui-grid-col-3" field="projectName" header="Costbook Name"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="projectTypeName" header="Project Type"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="levelName" header="Classification"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="categoryName" header="Category"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="approveInvestmentDate" header="Approved Date"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="approveInvestment" header="Approved Investment (MRMB)"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="inevstmentCharavter" header="Investment Character"></p-column>
+            <!-- <p-column styleClass="ui-grid-col-3" field="projectStatus" header="Status"></p-column> -->
+        </p-dataTable>
+        <p-paginator rows="10" totalRecords="{{SPgridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="SPpaginate($event)"></p-paginator>
+    </p-dialog>
+    <p-dialog class="dialog" header="Forecast/Close Actual Import" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <p-fileUpload mode="basic" name="file" url="{{uploadURL}}" accept="xlsm" maxFileSize="1000000"
+            (onUpload)="onBasicUpload($event)"></p-fileUpload>
+    </p-dialog>
+    <!-- 信息提示页 -->
+    <p-dialog class="dialog" header="Forecast/Close Actual Import" [(visible)]="messageDialog">
+        <p-dataTable class="ui-grid-row data-table" [value]="messageData" scrollable="true" scrollHeight="30rem">
+            <p-column styleClass="ui-grid-col-3" field="colIndex" header="Col" [sortable]="true">
+            </p-column>
+            <p-column styleClass="ui-grid-col-3" field="rowIndex" header="Row" [sortable]="true"></p-column>
+            <p-column styleClass="ui-grid-col-6" field="errorInfo" header="Error Info" [sortable]="true"></p-column>
+        </p-dataTable>
+    </p-dialog>
+    <p-dialog class="dialogLittle" header="Select Budget Version" [(visible)]="selectVersionDialog" width="450">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-12">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon">Budget Version:</span>
+                    <p-dropdown autoWidth="false" [options]="budgetVersionValueStore" [(ngModel)]="budgetVersionValue" appendTo="body"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <button pButton type="button" (click)="selectVersionSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+            <button pButton type="button" (click)="selectVersionCancelBtn()" label="Cancel"></button>
+        </div>
+    </p-dialog>
+</div>
+<div id="messageDetail"></div>
+<p-growl styleClass="message-class" [(value)]="msgs" life="3000"></p-growl>

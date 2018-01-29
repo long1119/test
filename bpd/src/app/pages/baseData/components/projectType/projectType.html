@@ -1,0 +1,34 @@
+<div class="ui-grid project-type-content">
+    <p-dataTable class="ui-grid-row data-table" [value]="investmentData" selectionMode="single" (onRowClick)="handleRowClick($event)" [(selection)]="selectedInvestment">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                {{idx + 1}}
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="projectTypeName" header="Project Type Name"></p-column>
+        <!-- <p-column styleClass="ui-grid-col-3" field="projectType" header="Project Type Code"></p-column> -->
+        <p-column styleClass="ui-grid-col-5" field="description" header="Description"></p-column>
+    </p-dataTable>
+    <!-- <div class="content-changes">
+        <button pButton type="button" [ngClass]="{'project-change': true}" (click)="categoryClick()" label="Project Category"></button>
+        <button pButton type="button" [ngClass]="{'project-change': true}" (click)="levelClick()" label="Project Level"></button>
+        <button pButton type="button" [ngClass]="{'project-change': true}" (click)="parameterClick()" label="Investment Parameter"></button>
+    </div> -->
+    <p-tabView class="tab-view" (onChange)="changeTab($event)">
+        <p-tabPanel *ngIf="!arFlag && !vehicleFlag" header="Project Category" [selected]="categorySelected">
+            <project-category [projectType]="projectType" [projectTypeName]="projectTypeName" *ngIf="projectCategory"></project-category>
+        </p-tabPanel>
+        <p-tabPanel *ngIf="!arFlag && !realFacilityFlag " header="Project Level" [selected]="levelSelected">
+            <project-level [projectType]="projectType" [projectTypeName]="projectTypeName" *ngIf="projectLevel"></project-level>
+        </p-tabPanel>
+        <p-tabPanel *ngIf="!facilityFlag" header="Investment Parameter" [selected]="regionSelected">
+            <project-parameter [projectType]="projectType" [projectTypeName]="projectTypeName" *ngIf="projectParameter"></project-parameter>
+        </p-tabPanel>
+        <p-tabPanel *ngIf="arFlag" header="AR Template Upload" [selected]="arTemplateSeletcted">
+            <ar-template-upload [projectType]="projectType" [projectTypeName]="projectTypeName" *ngIf="arTemplateUpLoad"></ar-template-upload>
+        </p-tabPanel>
+        <p-tabPanel *ngIf="facilityFlag" header="PT Reference Info" [selected]="facilityTempalteSelected">
+            <project-type-program [projectType]="projectType" [projectTypeName]="projectTypeName" *ngIf="programUpload"></project-type-program>
+        </p-tabPanel>
+    </p-tabView>
+</div>

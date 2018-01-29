@@ -1,0 +1,223 @@
+
+<div class="investmentStatusBody">
+    <div class="ui-g">
+        <div class="ui-g-1" style="padding-top:0.8rem;">Project Type:</div>
+        <div class="ui-g-2">
+            <p-dropdown [options]="projectTypes" [(ngModel)]="selectedType"></p-dropdown>
+        </div>
+        <div class="ui-g-1" style="padding-top:0.8rem;">Project Code:</div>
+        <div class="ui-g-2">
+            <input (keyup)="projectCodeEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCode"> 
+        </div>
+        <div class="ui-g-1">
+            <button pButton type="button" (click)="check()" label="Search"></button>
+        </div>
+        <div class="ui-g-4"></div>
+        <div class="ui-g-1">
+            <p-checkbox style="float:right" [(ngModel)]="checked" binary="true" (onChange)="checkedChange()"></p-checkbox>
+        </div>
+    </div>
+    <p-dataTable [rows]="10" [value]="projectTable" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="projectCode" header="Project Code" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="projectName" header="Project Name" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="projectTypeName" header="Project Type" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="sorp" header="SORP" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="approveInvestment" header="Approved Investment (RMB)" styleClass="ui-grid-col-3 align-right"></p-column>
+        <p-column field="investmentCharacter" header="Investment Character" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="userName" header="Investment Manager" styleClass="ui-grid-col-2"></p-column>
+        <!-- <p-column field="projectStatus" header="Status" styleClass="ui-grid-col-2"></p-column> -->
+        <p-column header="" styleClass="ui-grid-col-2 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id" class="blue" (click)="openBox(item.projectCode,item.adProjectCode,item.projectType,item.projectManager)">Preview Report</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+    <p-dialog class="dialog" [header]="closeReport" [(visible)]="showReport" model="model" width="1000" [responsive]="true">
+        <div class="ui-g">
+                <button pButton type="button" (click)="export()" label="Export"></button>
+                <button pButton type="button" (click)="switch()" label="Switch Project"></button>
+                <button *ngIf="projectManagerCode == userCode" pButton type="button" (click)="tijiao()" label="Commit"></button>
+                <span style="margin:0.5rem;">Version:</span>
+            <div style="display:inline-block;width:150px;margin:0;">
+                 <p-dropdown [options]="budgetVersions" [(ngModel)]="selectedVersion" (onChange)="changeVersion()"></p-dropdown>
+            </div>
+        </div>
+        <table class="table-bordered">
+            <colgroup>
+                <col width="100">
+                <col width="110">
+                <col width="130">
+                <col width="110">
+                <col width="110">
+                <col width="130">
+                <col width="100">
+                <col width="140">
+                <col width="17">
+            </colgroup>
+            <thead>
+            <tr>
+                <th style="text-align:center;">AREA</th>
+                <th style="text-align:center;">区域</th>
+                <th style="text-align:center;">Approved Budget<br>批准预算(RMB)</th>
+                <th style="text-align:center;">Current Budget<br>当前预算(RMB)</th>
+                <th style="text-align:center;">Total Cost<br>使用金额(RMB)</th>
+                <th style="text-align:center;">Balance<br>余额(RMB)</th>
+                <th style="text-align:center;">Percent<br>使用百分比</th>
+                <th style="text-align:center">Remarks<br>备注</th>
+                <th *ngIf="reportTable.length>10"></th>
+            </tr>
+            </thead>
+        </table>
+        <div style="width:950px;max-height:400px;overflow-y:auto;">
+            <table class="table-bordered">
+                <colgroup>
+                    <col width="100">
+                    <col width="110">
+                    <col width="130">
+                    <col width="110">
+                    <col width="110">
+                    <col width="130">
+                    <col width="100">
+                    <col width="140">
+                </colgroup>
+                <tbody>
+                    <tr *ngFor="let option of reportTable;let i=index">
+                        <td style="text-align:center;">{{option.regionCategoryNameEnglish}}</td>
+                        <td style="text-align:center;">{{option.regionCategoryNameChinese}}</td>
+                        <td style="text-align:right;">{{option.apprBudget|number:'1.2-2'}}</td>
+                        <td style="text-align:right;">{{option.currentBudget|number:'1.2-2'}}</td>
+                        <td style="text-align:right;">{{option.totalCost|number:'1.2-2'}}</td>
+                        <td style="text-align:right;">{{option.toBeSpend|number:'1.2-2'}}</td>
+                        <td style="text-align:right;">{{option.releasedBudget}}<span *ngIf="option.releasedBudget>=0">%</span></td>
+                        <td style="text-align:center;">
+                            <input type="text" *ngIf="option.regionCategoryNameEnglish" maxlength="100" pInputText [(ngModel)]="option.subject" (blur)="handRemark(option)"> 
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- <p-dataTable [rows]="10" [value]="reportTable" class="data-table" [rowHover]=true [editable]="true" (onEditComplete)="handRemark($event)" scrollHeight="30rem">
+            <p-column field="regionCategoryNameEnglish" header="AREA"></p-column>
+            <p-column field="regionCategoryNameChinese" header="区域"></p-column>
+            <p-column [field]="apprBudget|number:'1.2-2'" header="Approved Budget 批准预算" styleClass="align-right"></p-column>
+            <p-column field="totalCost|number:'1.2-2'" header="Total Cost 使用金额" styleClass="align-right"></p-column>
+            <p-column field="currentBudget|number:'1.2-2'" header="Balance 余额" styleClass="align-right"></p-column>
+            <p-column field="releasedBudget" header="Percent 使用百分比" styleClass="align-right"></p-column>
+            <p-column field="subject" header="Remarks 备注" [editable]="true"></p-column>
+        </p-dataTable> -->
+    </p-dialog>
+    <p-dialog class="dialog" header="Select Investment Project" [(visible)]="selectInvestmentDialog" width="1100">
+        <div class="ui-g">
+            <div class="ui-g-1" style="padding-top:0.8rem;font-size:0.8rem;">Project Type:</div>
+            <div class="ui-g-2">
+                <p-dropdown [options]="projectTypes" [(ngModel)]="selectedType"></p-dropdown>
+            </div>
+            <div class="ui-g-1" style="padding-top:0.8rem;font-size:0.8rem;">Project Code:</div>
+            <div class="ui-g-2">
+                <input (keyup)="projectCodeEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCode"> 
+            </div>
+            <div class="ui-g-1">
+                <button pButton type="button" (click)="check()" label="Search"></button>
+            </div>
+        </div>
+        <!-- <div style="width:1058px;">
+            <table class="table-bordered">
+                <colgroup>
+                    <col width="30">
+                    <col width="88">
+                    <col width="167">
+                    <col width="140">
+                    <col width="92">
+                    <col width="69">
+                    <col width="83">
+                    <col width="82">
+                    <col width="82">
+                    <col width="140">
+                    <col width="67">
+                    <col width="17">
+                </colgroup>
+                <thead>
+                        <tr>
+                            <th style="vertical-align:middle;">No</th>
+                            <th style="vertical-align:middle;">Project Code</th>
+                            <th style="vertical-align:middle;">Project Name</th>
+                            <th style="vertical-align:middle;">Project Type</th>
+                            <th style="vertical-align:middle;">Classification</th>
+                            <th style="vertical-align:middle;">Category</th>
+                            <th style="vertical-align:middle;">SORP</th>
+                            <th style="text-align:center;">Approved<br>Investment<br>(MRMB)</th>
+                            <th style="text-align:center;">Investment<br>Character</th>
+                            <th style="text-align:center;">Investment<br>Manager</th>
+                            <th style="vertical-align:middle;">Status</th>
+                            <th></th>
+                        </tr>
+                </thead>
+            </table>
+        </div>
+        <div style="width:1058px;">
+            <div style="max-height:380px;overflow-y:auto;margin:0;">
+                <table class="table-bordered">
+                    <colgroup>
+                        <col width="30">
+                        <col width="88">
+                        <col width="167">
+                        <col width="140">
+                        <col width="92">
+                        <col width="69">
+                        <col width="83">
+                        <col width="82">
+                        <col width="82">
+                        <col width="140">
+                        <col width="67">
+                        <col width="17">
+                    </colgroup>
+                    <tbody>
+                        <tr *ngFor="let option of projectTable;let i=index" (dblclick)="returnNeed(option.adProjectCode,option.projectCode,option.projectType,option.projectManager)" style="cursor:pointer;">
+                            <td>{{i+1}}</td>
+                            <td>{{option.projectCode}}</td>
+                            <td>{{option.projectName}}</td>
+                            <td>{{option.projectTypeName}}</td>
+                            <td>{{option.levelName}}</td>
+                            <td>{{option.categoryName}}</td>
+                            <td>{{option.sorp}}</td>
+                            <td>{{option.approveInvestment}}</td>
+                            <td>{{option.investmentCharacter}}</td>
+                            <td>{{option.userName}}</td>
+                            <td>{{option.projectStatus}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+        </div> -->
+        <p-dataTable [rows]="10" [value]="projectTable" class="data-table" [rowHover]=true (onRowDblclick)="returnNeed($event)" scrollable="true" scrollHeight="30rem">
+            <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+            <p-column field="projectCode" header="Project Code" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="projectName" header="Project Name" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="projectTypeName" header="Project Type" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="sorp" header="SORP" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="approveInvestment" header="Approved Investment (RMB)" styleClass="ui-grid-col-3 align-right"></p-column>
+            <p-column field="investmentCharacter" header="Investment Character" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="userName" header="Investment Manager" styleClass="ui-grid-col-2"></p-column>
+            <!-- <p-column field="projectStatus" header="Status" styleClass="ui-grid-col-2"></p-column> -->
+        </p-dataTable>
+        <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+    </p-dialog>
+    <!-- 是否提交弹框 -->
+    <p-dialog class="dialog" header="confirm Bomb box" [(visible)]="jack">
+            do you want to commit ?
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                    <button type="button" pButton icon="fa-close"(click)="jack=false" label="No"></button>
+                    <button type="button" pButton icon="fa-check" (click)="cando()" label="Yes"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

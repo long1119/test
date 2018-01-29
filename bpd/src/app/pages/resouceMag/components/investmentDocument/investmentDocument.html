@@ -1,0 +1,49 @@
+<p-tabView class="tabView" (onChange)="handleChange($event)">
+    <p-tabPanel header="Region Budget Report">
+        <div class="topBar">
+            Costbook Code:<input (keyup)="searchEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCodeSearch" class="searchInput">
+            Region Category:<input (keyup)="searchEnterSearch($event)" type="text" pInputText [(ngModel)]="regionCategorySearch" class="searchInput">
+            File Name:<input (keyup)="searchEnterSearch($event)" type="text" pInputText [(ngModel)]="fileNameSearch" class="searchInput">
+            <button pButton type="button" (click)="searchBtn()" label="Search"></button>
+        </div>
+        <p-dataTable [rows]="15" [value]="gridStore" class="data-table" scrollable="true" scrollHeight="45rem" [rowHover]=true>
+            <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+            <p-column field="projectCode" header="Costbook Code" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="projectName" header="Costbook Name" styleClass="ui-grid-col-4 align-left"></p-column>
+            <p-column field="budgetVersion" header="Budget Version" styleClass="ui-grid-col-2 align-left"></p-column>
+            <p-column field="regionCategoryName" header="Region Category" styleClass="ui-grid-col-2 align-left"></p-column>
+            <p-column field="regionName" header="Region" styleClass="ui-grid-col-2 align-left"></p-column>
+            <p-column field="uploadTime" header="Upload Date" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="uploadUserName" header="Upload User" styleClass="ui-grid-col-2 align-left"></p-column>
+            <p-column header="File Name" styleClass="ui-grid-col-4 align-left">
+                <template pTemplate="body" let-item="rowData">
+                    <span *ngIf="item.id" class="editBtn" (click)="fileClickBtn(item)">{{item.fileFullName}}</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+        <p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[15,30,45]" (onPageChange)="gridPaginate($event)"></p-paginator>
+    </p-tabPanel>
+    <p-tabPanel header="Project Budget Report">
+            <div class="topBar">
+                Costbook Code:<input (keyup)="searchEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCodeSearch" class="searchInput">
+                File Name:<input (keyup)="searchEnterSearch($event)" type="text" pInputText [(ngModel)]="fileNameSearch" class="searchInput">
+                <button pButton type="button" (click)="searchBtn()" label="Search"></button>
+            </div>
+           <p-dataTable [rows]="15" [value]="gridStore" class="data-table" scrollable="true" scrollHeight="45rem" [rowHover]=true>
+                <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                <p-column field="projectCode" header="Costbook Code" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="projectName" header="Costbook Name" styleClass="ui-grid-col-4 align-left"></p-column>
+                <p-column field="budgetVersion" header="Budget Version" styleClass="ui-grid-col-2 align-left"></p-column>
+                <p-column field="uploadTime" header="Upload Date" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="uploadUserName" header="Upload User" styleClass="ui-grid-col-2 align-left"></p-column>
+                <p-column header="File Name" styleClass="ui-grid-col-4 align-left">
+                    <template pTemplate="body" let-item="rowData">
+                        <span *ngIf="item.id" class="editBtn" (click)="fileClickBtn(item)">{{item.fileFullName}}</span>
+                    </template>
+                </p-column>
+            </p-dataTable>
+        <p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[15,30,45]" (onPageChange)="gridPaginate($event)"></p-paginator>
+    </p-tabPanel>
+</p-tabView>
+
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

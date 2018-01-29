@@ -1,0 +1,182 @@
+<div class="ui-grid region">
+    <div class="button-content ui-grid">
+        <div *ngIf="localStorageAuthority" style="float: left;">
+            <button pButton type="button" [ngClass]="{'content-add': true}" (click)="addClick()" label="Add"></button>
+        </div>
+        <div style="margin-top: .25rem; margin-left: 1rem; width: 14rem; float: left;">
+            <label class="required" for="regionType">Region Type Name (En):</label>
+        </div>
+        <div style="margin-left: 1rem; width: 16rem; float: left;">
+            <input maxlength="36" (keyup)="regionGroupEnterSearch($event)" pInputText id="regionType" [(ngModel)]="dialogRegionType" />
+        </div>
+        <div style="margin-top: .25rem; margin-left: 1rem; width: 12rem; float: left;">
+            <label class="required" for="regionType">Region Group Name:</label>
+        </div>
+        <div style="margin-left: 1rem; width: 16rem; float: left;">
+            <input maxlength="36" (keyup)="regionGroupEnterSearch($event)" pInputText id="regionType" [(ngModel)]="dialogRegionGroup" />
+        </div>
+        <div style="padding-left: 1rem; float: left;">
+            <button pButton type="button" [ngClass]="{'content-add': true}" (click)="searchClick()" label="Search"></button>
+        </div>
+    </div>
+    <p-dataTable (onRowClick)="onRowClick($event)" selectionMode="single" class="ui-grid-row data-table" [value]="baseData" scrollable="true"
+        scrollHeight="18rem" [(selection)]="selectedRegionCategory">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                {{idx + 1}}
+            </template>
+        </p-column>
+        <!-- <p-column styleClass="ui-grid-col-3" field="regionCategoryCode" header="Region Type Code"></p-column> -->
+        <p-column styleClass="ui-grid-col-3" field="regionCategoryNameEnglish" header="Region Type Name(En)"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="regionCategoryNameChinese" header="Region Type Name(Ch)"></p-column>
+        <p-column styleClass="ui-grid-col-2" field="regionGroupName" header="Region Group"></p-column>
+        <p-column styleClass="ui-grid-col-2" field="catFlag" header="Vendor Tooling Caterory"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                <span class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- <div class="content-changes">
+        <button pButton type="button" [ngClass]="{'region-add': true}" (click)="codeClick()" label="Region"></button>
+        <button pButton type="button" [ngClass]="{'region-add': true}" (click)="parameterClick()" label="Project Parameter"></button>
+        <button pButton type="button" [ngClass]="{'region-add': true}" (click)="templateClick()" label="Buget Template"></button>
+    </div> -->
+    <p-tabView class="tab-view" (onChange)="changeTab($event)">
+        <p-tabPanel header="Region Code">
+            <region-code [changeCatFlag]="changeCatFlag" [changeCategoryName]="changeCategoryName" [changeName]="changeName" [changeCode]="changeCode" [regionVendors]="regionVendors" [changeCategoryCode]="changeCategoryCode"
+                *ngIf="regionCode"></region-code>
+        </p-tabPanel>
+        <p-tabPanel header="Investment Parameter">
+            <region-parameter [changeCode]="changeCode" [changeCategoryCode]="changeCategoryCode" *ngIf="regionParameter"></region-parameter>
+        </p-tabPanel>
+        <p-tabPanel header="Region Template">
+            <region-template [changeCategoryCode]="changeCategoryCode" [selectedRegionCategory]="selectedRegionCategory" *ngIf="regionTemplate"></region-template>
+        </p-tabPanel>
+        <p-tabPanel header="Region Define Column">
+            <region-define-column [changeCategoryCode]="changeCategoryCode" *ngIf="regionDefineColumn"></region-define-column>
+        </p-tabPanel>
+    </p-tabView>
+
+    <!-- 添加界面 -->
+    <p-dialog class="dialog" header="Region Category" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="regionCode">Region Type Code :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="36" pInputText id="regionCode" [(ngModel)]="dialogTypeCode" /></div>
+            </div> -->
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionType">Region Type Name(En) :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" required pInputText id="regionType" [(ngModel)]="dialogTypeNameEnglish" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionType">Region Type Name(Ch) :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" required pInputText id="regionType" [(ngModel)]="dialogTypeNameChinese" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionGroup">Virtual Category :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="dialogStyle" [(ngModel)]="dialogStyleData"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionGroup">Region Group :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="dialogGroup" [(ngModel)]="dialogGroupData"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="addCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogGroupData || !dialogTypeNameEnglish || !dialogTypeNameChinese" pButton (click)="addSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 编辑页面 -->
+    <p-dialog class="dialog" header="Region Category" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="regionCode">Region Type Code :</label></div>
+                <div class="ui-grid-col-8"><input disabled pInputText id="regionCode" [(ngModel)]="dialogTypeCode" /></div>
+            </div> -->
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionType">Region Type Name(En) :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" pInputText id="regionType" [(ngModel)]="dialogTypeNameEnglish" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionType">Region Type Name(Ch) :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" pInputText id="regionType" [(ngModel)]="dialogTypeNameChinese" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionGroup">Vertual Category :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="dialogStyle" [(ngModel)]="dialogStyleData"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionGroup">Region Group :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="dialogGroup" [(ngModel)]="dialogGroupData"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="editCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogGroupData || !dialogTypeNameEnglish || !dialogTypeNameChinese" pButton (click)="editSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="Region Categoty" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete This Data?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteNo()" label="No"></button>
+                <button type="button" pButton (click)="deleteYes()" label="Yes"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除确认弹框 -->
+    <p-dialog class="dialog" header="Region Categoty" [(visible)]="deleteIdentificationDialog">
+        <div>
+            Are You Sure To Delete This Data?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteIdentificationNo()" label="No"></button>
+                <button type="button" pButton (click)="deleteIdentificationYes()" label="Yes"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

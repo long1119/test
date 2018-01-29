@@ -1,0 +1,364 @@
+
+<div class="investmentSummaryBody">
+    <div class="ui-g">
+        <div class="ui-g-1" style="padding-top:0.8rem;">Project Type:</div>
+        <div class="ui-g-2">
+            <p-dropdown [options]="projectTypes" [(ngModel)]="selectedType"></p-dropdown>
+        </div>
+        <div class="ui-g-1" style="padding-top:0.8rem;">Project Code:</div>
+        <div class="ui-g-2">
+            <input (keyup)="checkEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCode" style="width:90%;"> 
+        </div>
+        <div class="ui-g-1">
+            <button pButton type="button" (click)="check()" label="Search"></button>
+        </div>
+        <div class="ui-g-2"></div>
+        <div class="ui-g-2">
+            <button pButton type="button" (click)="gotoSummary1()" label="AR Project"></button>
+        </div>
+        <div class="ui-g-1">
+            <p-checkbox style="float:right" [(ngModel)]="checked" binary="true" (onChange)="checkedChange()"></p-checkbox>
+        </div>
+    </div>
+    <p-dataTable [rows]="10" [value]="projectTable" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="projectCode" header="Project Code" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="projectName" header="Project Name" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="projectTypeName" header="Project Type" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="approveInvestmentDate" header="Approved Date" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="approveInvestment" header="Approved Investment (RMB)" styleClass="ui-grid-col-3 align-right"></p-column>
+        <p-column field="inevstmentCharavter" header="Investment Character" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="userName" header="Investment Manager" styleClass="ui-grid-col-2"></p-column>
+        <!-- <p-column field="projectStatus" header="Status" styleClass="ui-grid-col-2"></p-column> -->
+        <p-column header="" styleClass="ui-grid-col-2 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id" class="blue" (click)="gotoSummary(item.projectCode,item.adProjectCode)">View</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+    <!-- <table class="table table-bordered">
+        <thead class="thead-inverse">
+            <tr>
+                <th style="vertical-align:middle;">No</th>
+                <th style="vertical-align:middle;">Project Code</th>
+                <th style="vertical-align:middle;">Project Name</th>
+                <th style="vertical-align:middle;">Project Type</th>
+                <th style="vertical-align:middle;">Classification</th>
+                <th style="vertical-align:middle;">Category</th>
+                <th style="vertical-align:middle;">Approved Date</th>
+                <th style="text-align:center;">Approved<br>Investment<br>(MRMB)</th>
+                <th style="text-align:center;">Investment<br>Character</th>
+                <th style="text-align:center;">Investment<br>Manager</th>
+                <th style="vertical-align:middle;">Status</th>
+                <th style="vertical-align:middle;"></th>
+            </tr>
+        </thead>
+        <tbody (mouseout)="outTable()">
+            <tr *ngFor="let option of projectTable;let i=index" [ngClass]="{'clickStyle':i==flag,'overStyle':i==flag2}" (click)="gotoClick(i)" (mouseover)="gotoCover(i)">
+                <td>{{i+1}}</td>
+                <td>{{option.projectCode}}</td>
+                <td>{{option.projectName}}</td>
+                <td>{{option.projectTypeName}}</td>
+                <td>{{option.levelName}}</td>
+                <td>{{option.categoryName}}</td>
+                <td>{{option.approveInvestmentDate}}</td>
+                <td>{{option.approveInvestment}}</td>
+                <td>{{option.inevstmentCharavter}}</td>
+                <td>{{option.projectManager}}</td>
+                <td>{{option.projectStatus}}</td>
+                <td class="blue" (click)="gotoSummary(option.projectCode,option.adProjectCode)">view</td>
+            </tr>
+        </tbody>
+    </table> -->
+    <!-- <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator> -->
+    <p-dialog class="dialog" header="Investment Summary" [(visible)]="showSummary" model="model" width="1000" [responsive]="true">
+        <div class="wrap-body">
+            <div class="head-title ui-g" style="margin:0;">
+                <span style="margin:auto 0;">
+                    {{prjCode}} Investment Summary   
+                </span>
+                <div class="ui-g-3">
+                    <div class="ui-g-6" style="padding-left:1rem;padding-top:0.9rem;">Budget Version:</div>
+                    <div class="ui-g-6" style="padding:0.2rem;padding-top:0.6rem;">
+                        <p-dropdown [options]="version" [(ngModel)]="selectedVersion"></p-dropdown>
+                    </div>
+                </div>
+                <div class="ui-g-3" *ngIf="summaryReport">
+                    <div class="ui-g-6" style="padding-left:4rem;padding-top:0.9rem;">Currency:</div>
+                    <div class="ui-g-6" style="padding:0.2rem;padding-top:0.6rem;">
+                        <p-dropdown [options]="currency" [(ngModel)]="selectedCurrency"></p-dropdown>
+                    </div>
+                </div>
+                <button pButton type="button" (click)="checkSummary()" label="Search" style="background-color:#F2F2F2;color:black;height:30px;margin-top:1rem;"></button>
+                <button pButton type="button" (click)="switchProject()" label="Switch Project" style="background-color:#F2F2F2;color:black;height:30px;margin-top:1rem;"></button>
+                <button *ngIf="!poRate" pButton type="button" (click)="export()" label="Export" style="background-color:#F2F2F2;color:black;height:30px;margin-top:1rem;"></button>
+            </div>
+            <div style="margin:0.5rem 0;">
+                <button [ngStyle]="{'background-color':summaryReport==true?'gray':'#2399E5'}" pButton type="button" (click)="gotoOne()" label="Summary Report"></button>
+                <button [ngStyle]="{'background-color':paymentCashflow==true?'gray':'#2399E5'}" pButton type="button" (click)="gotoTwo()" label="Payment Cashflow"></button>
+                <button [ngStyle]="{'background-color':poRate==true?'gray':'#2399E5'}" pButton type="button" (click)="gotoThree()" label="PO Rate(FX)"></button>
+            </div>
+            <table class="table table-bordered" *ngIf="summaryReport">
+                <thead style="background-color:#c8c8c8;color:black;">
+                    <tr>
+                        <th>Region Category</th>
+                        <th>Category Name</th>
+                        <th *ngFor="let option of investGroupList;let i=index" style="text-align:center;">{{option}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let option of summaryTable;let i=index">
+                        <td>{{option.regionCatagory}}</td>
+                        <td>{{option.categoryName}}</td>
+                        <td *ngFor="let title of investGroupList;let j=index" style="text-align:right;">{{option[title]|number:'1.2-2'}}</td>
+                    </tr>
+                    <tr *ngIf="totalSum1.length>0">
+                        <td>Misc</td>
+                        <td>不可预见费</td>
+                        <td *ngFor="let item of totalPercent1" style="text-align:right;">{{item|number:'1.2-2'}}</td>
+                    </tr>
+                    <tr *ngIf="totalSum1.length>0">
+                        <td>Total</td>
+                        <td>总计</td>
+                        <td *ngFor="let item of totalSum1;let i=index" style="text-align:right;">{{item|number:'1.2-2'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered" *ngIf="paymentCashflow">
+                <thead style="background-color:#c8c8c8;color:black;">
+                    <tr>
+                        <th>Property Group Name</th>
+                        <th *ngFor="let item of titleData" style="text-align:center;">{{item}}</th>
+                        <th style="text-align:center;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of paymentCashflowTable">
+                        <td [ngClass]="{'tableDifferentiate':(item.PropertyGroupName=='Capital')||(item.PropertyGroupName=='Expense')||(item.PropertyGroupName=='Total')}" class="center">{{item.PropertyGroupName}}</td>
+                        <td class="right" *ngFor="let option of titleData">{{item[option]|number:'1.2-2'}}</td>
+                        <td class="right">{{item.total|number:'1.2-2'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered" *ngIf="poRate">
+                <thead style="background-color:#c8c8c8;color:black;">
+                    <tr>
+                        <th>Budget Version Name</th>
+                        <th style="text-align:center;">Investment Group Name</th>
+                        <th style="text-align:center;">USD Exchange Rate</th>
+                        <th style="text-align:center;">FX Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of poRateTable">
+                        <td>{{item.budgetVersionName}}</td>
+                        <td style="text-align:center;">{{item.investmentGroupName}}</td>
+                        <td style="text-align:center;">{{item.usdExchangeRate}}</td>
+                        <td style="text-align:center;">{{item.fxName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </p-dialog> 
+    <p-dialog class="dialog" header="Select Investment Project" [(visible)]="selectInvestmentDialog" width="1060">
+        <div class="ui-g">
+            <div class="ui-g-1" style="padding-top:0.8rem;margin:0;font-size:0.8rem;">Project Type:</div>
+            <div class="ui-g-2" style="margin:0;">
+                <p-dropdown [options]="projectTypes" [(ngModel)]="selectedType"></p-dropdown>
+            </div>
+            <div class="ui-g-1" style="padding-top:0.8rem;margin:0;font-size:0.8rem;">Project Code:</div>
+            <div class="ui-g-2" style="margin:0;">
+                <input (keyup)="checkEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCode" style="width:90%;"> 
+            </div>
+            <div class="ui-g-2" style="margin:0;">
+                <button pButton type="button" (click)="check()" label="Search"></button>
+            </div>
+        </div>
+        <div style="width:1021px;margin:0 auto;">
+            <table class="table-bordered">
+                <colgroup>
+                    <col width="34">
+                    <col width="90">
+                    <col width="173">
+                    <col width="130">
+                    <col width="92">
+                    <col width="66">
+                    <col width="120">
+                    <col width="98">
+                    <col width="98">
+                    <col width="98">
+                    <!-- <col width="60"> -->
+                    <col width="17">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <td style="vertical-align:middle;">No</td>
+                        <td style="vertical-align:middle;">Project Code</td>
+                        <td style="vertical-align:middle;">Project Name</td>
+                        <td style="vertical-align:middle;">Project Type</td>
+                        <td style="vertical-align:middle;">Classification</td>
+                        <td style="vertical-align:middle;">Category</td>
+                        <td style="vertical-align:middle;">Approved Date</td>
+                        <td style="text-align:center;">Approved<br>Investment<br>(RMB)</td>
+                        <td style="text-align:center;">Investment<br>Character</td>
+                        <td style="text-align:center;">Investment<br>Manager</td>
+                        <!-- <td style="vertical-align:middle;">Status</td> -->
+                        <td></td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div style="width:1016px;">
+            <div style="height:350px;overflow-y:auto;margin:0 auto;">
+                <table class="table-bordered table-hover">
+                    <colgroup>
+                        <col width="34">
+                        <col width="90">
+                        <col width="173">
+                        <col width="130">
+                        <col width="92">
+                        <col width="66">
+                        <col width="120">
+                        <col width="98">
+                        <col width="98">
+                        <col width="98">
+                        <!-- <col width="60"> -->
+                    </colgroup>
+                    <tbody>
+                        <tr *ngFor="let option of projectTable;let i=index" (dblclick)="returnNeed(option.adProjectCode,option.projectCode)" style="cursor:pointer;">
+                            <td>{{i+1}}</td>
+                            <td>{{option.projectCode}}</td>
+                            <td>{{option.projectName}}</td>
+                            <td>{{option.projectTypeName}}</td>
+                            <td>{{option.levelName}}</td>
+                            <td>{{option.categoryName}}</td>
+                            <td>{{option.approveInvestmentDate}}</td>
+                            <td style="text-align:right;">{{option.approveInvestment}}</td>
+                            <td>{{option.inevstmentCharavter}}</td>
+                            <td>{{option.userName}}</td>
+                            <!-- <td>{{option.projectStatus}}</td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+        </div>
+        <!-- <table class="table table-bordered table-hover">
+            <thead class="thead-inverse">
+                <tr>
+                    <th style="vertical-align:middle;">No</th>
+                    <th style="vertical-align:middle;">Project Code</th>
+                    <th style="vertical-align:middle;">Project Name</th>
+                    <th style="vertical-align:middle;">Project Type</th>
+                    <th style="vertical-align:middle;">Classification</th>
+                    <th style="vertical-align:middle;">Category</th>
+                    <th style="vertical-align:middle;">Approved Date</th>
+                    <th style="text-align:center;">Approved<br>Investment<br>(MRMB)</th>
+                    <th style="text-align:center;">Investment<br>Character</th>
+                    <th style="text-align:center;">Investment<br>Manager</th>
+                    <th style="vertical-align:middle;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let option of projectTable;let i=index" (dblclick)="returnNeed(option.adProjectCode,option.projectCode)" style="cursor:pointer;">
+                    <td>{{i+1}}</td>
+                    <td>{{option.projectCode}}</td>
+                    <td>{{option.projectName}}</td>
+                    <td>{{option.projectTypeName}}</td>
+                    <td>{{option.levelName}}</td>
+                    <td>{{option.categoryName}}</td>
+                    <td>{{option.approveInvestmentDate}}</td>
+                    <td>{{option.approveInvestment}}</td>
+                    <td>{{option.inevstmentCharavter}}</td>
+                    <td>{{option.projectManager}}</td>
+                    <td>{{option.projectStatus}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator> -->
+    </p-dialog>
+    <p-dialog class="dialog" header="Investment Summary" [(visible)]="showSummary1" model="model" width="1000" [responsive]="true">
+    <div class="wrap-body">
+        <div style="max-height:300px;">
+            <div class="head-title ui-g" style="margin:0;">
+                <div class="ui-g-3">
+                    <div class="ui-g-4" style="padding-top:0.9rem;">AR Year:</div>
+                    <div class="ui-g-6" style="padding:0.2rem;padding-top:0.6rem;">
+                        <p-dropdown [options]="years" [(ngModel)]="selectedYear"></p-dropdown>
+                    </div>
+                </div>
+                <div class="ui-g-3">
+                    <div class="ui-g-4" style="padding-top:0.9rem;">Currency:</div>
+                    <div class="ui-g-6" style="padding:0.2rem;padding-top:0.6rem;">
+                        <p-dropdown [options]="currency" [(ngModel)]="selectedCurrency1"></p-dropdown>
+                    </div>
+                </div>
+                <button pButton type="button" (click)="checkSummary1()" label="Search" style="background-color:#F2F2F2;color:black;height:30px;margin-top:1rem;"></button>
+                <button pButton type="button" (click)="export1()" label="Export" style="background-color:#F2F2F2;color:black;height:30px;margin-top:1rem;"></button>
+            </div>
+            <table class="table table-bordered">
+                <thead style="background-color:#c8c8c8;color:black;">
+                    <tr>
+                        <th style="text-align:left;">Region Category</th>
+                        <th>Category Name</th>
+                        <th *ngFor="let item of investGroupList8" style="text-align:center;">{{item}}</th>
+                        <!-- <th>Sub-Total</th>
+                        <th>% of Total</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let option of summaryTable8">
+                        <td style="text-align:left;">{{option.regionCatagory}}</td>
+                        <td>{{option.categoryName}}</td>
+                        <td *ngFor="let item of investGroupList8.slice(0,-1)" style="text-align:right;">{{option[item]|number:'1.2-2'}}</td>
+                        <td *ngFor="let item of investGroupList8.slice(-1)" style="text-align:right;">{{option[item]}}</td>
+                    </tr>
+                    <tr *ngIf="totalSum8.length>0">
+                        <td style="text-align:left;">Total</td>
+                        <td>总计</td>
+                        <td *ngFor="let item of totalSum8.slice(0,-1)" style="text-align:right;">{{item|number:'1.2-2'}}</td>
+                        <td *ngFor="let item of totalSum8.slice(-1)" style="text-align:right;">{{item+'%'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p-panel [toggleable]="true" [style]="{'margin-top':'10px','max-height':'300px','overflow-y':'auto'}">
+            <p-header id="elseDropDown">
+                <span style="color:#4B98DC;margin-right:1rem;">AR Breakdown</span>
+                <!-- <span style="margin:1rem;">Currency:</span>
+                <p-dropdown [options]="currency" [(ngModel)]="selectedCurrency2" (onChange)="switchCurrency()"></p-dropdown> -->
+                <button pButton type="button" (click)="export2()" label="Export" style="margin-left:2rem;"></button>
+            </p-header>
+            <table class="table table-bordered">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th style="text-align:left;">Region Category</th>
+                        <th>Category Name</th>
+                        <th style="text-align:center;">Current Year</th>
+                        <th style="text-align:center;">Last Year</th>
+                        <!-- <th>Remark</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of arBreakdownTable">
+                        <td style="text-align:left;">{{item.regionCatagory}}</td>
+                        <td>{{item.categoryName}}</td>
+                        <td style="text-align:right;">{{item['当年']}}</td>
+                        <td style="text-align:right;">{{item['上一年']}}</td>
+                        <!-- <td>{{item.remark}}</td> -->
+                    </tr>
+                    <tr *ngIf="arBreakdownTable.length>0">
+                        <td style="text-align:left;">Total</td>
+                        <td>总计</td>
+                        <td style="text-align:right;">{{arSum1x}}</td>
+                        <td style="text-align:right;">{{arSum2x}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </p-panel>
+    </div>
+    </p-dialog> 
+</div>

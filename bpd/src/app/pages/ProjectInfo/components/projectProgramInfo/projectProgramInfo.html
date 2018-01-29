@@ -1,0 +1,220 @@
+<div class="topBar">
+    <!-- <button pButton type="button" (click)="setStatusBtn()" label="Set Status"></button> -->
+    Program Code:<input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="programCodeSerch" class="searchInput">
+    <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+</div>
+<p-dataTable [rows]="10" [value]="gridStore" class="data-table" [rowHover]=true (onRowClick)="programGridRowClick($event)" selectionMode="single" [(selection)]="selectedStore" scrollable="true" scrollHeight="40rem" frozenWidth="201px" unfrozenWidth="calc(100% - 201px)">
+    <p-column field="id" header="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; No &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" [style]="{'width':'50px'}" styleClass="align-center" frozen="true"></p-column>
+    <p-column field="programCode" header="Program Code" styleClass="align-center" [style]="{'width':'150px'}" frozen="true"></p-column>
+    <div style="width:0px;overflow:hidden">
+       <p-column field="projManagerStr" header="PM" styleClass="align-left" [style]="{'width':'220px'}" frozen="true"></p-column>
+       <p-column field="assignor" header="Assigner" styleClass="align-center" [style]="{'width':'100px'}" frozen="true"></p-column>
+    </div>
+    <p-column field="modelPlatform" header="Platform" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+    <p-column field="brandName" header="Brand" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+    <p-column field="bodyStyle" header="Body Style" styleClass="align-center" [style]="{'width':'90px'}"></p-column>
+    <p-column field="sorp" header="SORP" styleClass="align-center" [style]="{'width':'120px'}"></p-column>
+    <p-column field="eop" header="EOP" styleClass="align-center" [style]="{'width':'120px'}"></p-column>
+    <p-column field="lcaVolume" header="LCA Volume" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+    <p-column field="lifecycleVolume" header="Lifecycle Volume" styleClass="align-center" [style]="{'width':'100px'}">
+        <template pTemplate="body" let-item="rowData">
+            <span>{{item.lifecycleVolume | ammountPips:true}}</span>
+        </template>
+    </p-column>
+    <p-column field="segmentMarket" header="Segment Market" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+    <p-column field="segmentMarketShare" header="Segment Market Share %" styleClass="align-center" [style]="{'width':'80px'}"></p-column>
+    <p-column field="projManagerStrBrif" header="PM" styleClass="align-left" [style]="{'width':'220px'}">
+        <template pTemplate="body" let-item="rowData">
+            <span (mouseover)="mouseover($event,item)" (mouseout)="mouseup()">{{item.projManagerStrBrif}}</span>
+        </template>
+    </p-column>
+    <p-column field="assignor" header="Assigner" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+    <p-column *ngIf="userRoot || setLCARoot" header="" styleClass="align-center" [style]="{'width':'100px'}">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" style="margin-right:0" class="editBtn" (click)="editBtn(item)">Edit</span>
+            <!-- <span *ngIf="item.id && userRoot" class="editBtn" (click)="notificateBtn(item)">Notificate</span> -->
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator totalRecords="{{gridStoreLen}}" rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>
+<p-tabView class="tabView">
+    <p-tabPanel header="Model Year Project">
+        <p-dataTable [rows]="10" [value]="modelStore" class="data-table" [rowHover]=true>
+            <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+            <p-column field="projectCode" header="Costbook Code" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="modelYear" header="Model Year" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="projectSummary" header="Brief Introduction" styleClass="ui-grid-col-4"></p-column>
+            <p-column field="userName" header="PPM" styleClass="ui-grid-col-2"></p-column>
+        </p-dataTable>
+        <!-- <p-paginator rows="10" totalRecords="100" pageLinkSize="3"></p-paginator> -->
+    </p-tabPanel>
+</p-tabView>
+<!-- 修改状态 -->
+<p-dialog header="Set Program Status" [(visible)]="statusDisplay" width="380" [responsive]="true" modal="modal" class="dialog">
+    <div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-11">
+                <div class="ui-inputgroup">
+                    <p-radioButton class="radio-button" name="groupname" value="val1" [(ngModel)]="radioSelectedValue" label="Close" style="margin-right:110px;margin-left:15px;"></p-radioButton>
+                    <p-radioButton class="radio-button" name="groupname" value="val2" [(ngModel)]="radioSelectedValue" label="Cancel"></p-radioButton>
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-11">
+                <div class="ui-inputgroup">
+                    <div class="required">Memo:</div>
+                    <textarea style="height:100px;width:100%;" type="text" pInputTextarea [(ngModel)]="memo" maxlength="100"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <button pButton type="button" (click)="statusSaveChangeBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!memo"></button>
+            <button pButton type="button" (click)="statusCancelBtn()" label="Cancel"></button>
+        </div>
+    </div>
+</p-dialog>
+<!-- 添加项目 -->
+<p-dialog header="Program Info" [(visible)]="display" width="800" minHeight=800 [responsive]="true" modal="modal" class="dialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-5">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Program Code:</span>
+                <input type="text" pInputText maxlength="8" [(ngModel)]="programCode" (blur)="projectCodeCheck()" disabled="true">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Program Type:</span> 
+                <input type="text" pInputText disabled="true" value="整车"> 
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-5">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon"> Platform:</span>
+                <input type="text" pInputText [(ngModel)]="platform" disabled="true">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Brand:</span>
+                <input type="text" pInputText [(ngModel)]="brand" disabled="true">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-5">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Segment Market:</span>
+                <input type="text" pInputText [(ngModel)]="segmentMarket" [disabled]="!setLCARoot" maxlength="10">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Segment Market Share %:</span>
+                <input type="number" pInputText [(ngModel)]="segmentMarketShare" [disabled]="!setLCARoot" min="1" (keydown)="msgservice.checkNumValue($event,100)">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-5">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">SORP:</span>
+                <p-calendar readonlyInput="true" [(ngModel)]="sorp" dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" (onSelect)="sorpBlur()" disabled="true" appendTo="body"></p-calendar>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">EOP:</span>
+                <p-calendar [minDate]="minDate" readonlyInput="true" [(ngModel)]="eop" dateFormat="yy-mm-dd" [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" disabled="true" appendTo="body"></p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-5">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">LCA Volume/Year:</span>
+                <input type="number" pInputText [(ngModel)]="lca" min="1" [disabled]="!setLCARoot" (keydown)="msgservice.checkNumValue($event,999999999)">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Lifecycle Volume:</span>
+                <input type="number" min="1" pInputText [(ngModel)]="lifeCycle" [disabled]="!setLCARoot" (keydown)="msgservice.checkNumValue($event,999999999)">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-5">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Body Style:</span>
+                <input type="text" pInputText [(ngModel)]="bodyStyle" disabled="true">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Classification:</span>
+                <input type="text" pInputText [(ngModel)]="Classfication" disabled="true">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup" style="height:50px;">
+                <span class="ui-inputgroup-addon" style="position:absolute;left:0;">Competitor:</span>
+                <textarea type="text" pInputTextarea style="width:79.3%;position:absolute;right:0;height:50px;" [(ngModel)]="competitor" disabled="true"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid" *ngIf="userRoot">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required" style="float:left;margin-top:10px;">Program Manager:</span>
+                <p-dataGrid [value]="selectUserStore" class="dataView">
+                    <template let-items pTemplate="item">
+                        <div class="dataViewContainer">
+                            <div>{{items.userName}}
+                                <i class="fa fa-close" (click)="delUser(items)" style="cursor:pointer"></i>
+                            </div>
+                        </div>
+                    </template>
+                </p-dataGrid>
+                <button type="button" (click)="getUser()" style="float:left;margin-top:5px">Select</button>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="footer">
+            <!-- <button *ngIf="userRoot" pButton type="button" (click)="confirmAndNotificateBtn()" label="Confirm and Notificate" style="margin-right:10px"></button> -->
+            <button *ngIf="userRoot || setLCARoot" pButton type="button" (click)="confirmBtn()" label="Confirm and Notificate" style="margin-right:10px"></button>
+            <button pButton type="button" (click)="cancelBtn()" label="Cancel"></button>
+        </div>
+    </p-footer>
+</p-dialog>
+<p-dialog class="dialog" header="Please Choose Manager" [(visible)]="searchDialog" [responsive]="true" [modal]="true">
+    <div class="topBar">
+        Department:<input (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="dialogDepartment" class="searchInput">
+        User Name:<input (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="dialogUserName" class="searchInput">
+        Employee ID:<input (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="dialogEmployeeCode" class="searchInput">
+        <button pButton type="button" (click)="managerlookClick()" label="Search"></button>
+    </div>
+    <div class="ui-grid" style="padding:5px">
+        <p-dataTable (onRowDblclick)="dbclick($event)" [rowHover]=true class="data-table" [value]="managerData" rows="10" scrollable="true" scrollHeight="30rem">
+            <p-column styleClass="ui-grid-col-2" field="userName" header="User Name"></p-column>
+            <p-column field="employeeCode" header="Employee ID" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="jobPosition" header="Job"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="telephone" header="Telphone"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="emailAddress" header="Email"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="departmentName" header="Department"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="masterName" header="Manager"></p-column>
+        </p-dataTable>
+        <p-paginator rows="{{managerDataRows}}" first="{{managerDataFirst}}" totalRecords="{{managerDataLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="managerPaginate($event)"></p-paginator>
+    </div>
+</p-dialog>
+<div id="messageDetail"></div>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+<p-confirmDialog></p-confirmDialog>

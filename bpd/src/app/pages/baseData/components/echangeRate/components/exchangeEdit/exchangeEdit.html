@@ -1,0 +1,19 @@
+<div class="exchange-edit-content">
+    <button pButton type="button" class="exchange-exit" (click)="flagClick()" label="Exit"></button>
+    <button pButton type="button" class="exchange-exit" (click)="exportClick()" label="Export"></button>
+    <div class="exchange-table">
+        <div class="real-table">
+            <!-- [paginator]="true" [rows]="10" -->
+            <p-dataTable class="data-table" [value]="baseData">
+                <p-column header="NO">
+                    <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                        <span *ngIf="data.currencyCode">{{idx + 1}}</span>
+                    </template>
+                </p-column>
+                <p-column field="currencyName" header="Currency Name"></p-column>
+                <p-column styleClass="currency" field="currencyCode" header="Currency Code"></p-column>
+                <p-column styleClass="years" *ngFor="let list of listData" field="{{list}}" header="{{list}}"></p-column>
+            </p-dataTable>
+        </div>
+    </div>
+</div>

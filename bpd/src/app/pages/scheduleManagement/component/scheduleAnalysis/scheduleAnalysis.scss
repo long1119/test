@@ -1,0 +1,45 @@
+@import '../../../sass/privateStyle';
+.schedule-analysis {
+    .button-tab {
+        margin: 1rem 0;
+    }
+    .project-comparision-dialog {
+        &>div {
+            width: 70%;
+        }
+    }
+    .select-element-dialog {
+        &>div {
+            width: 70%;
+        }
+    }
+    .table-layout {
+        width: 100%;
+        overflow: auto;
+        .myTable {
+            margin-top: 1rem;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+            text-align: center;
+            width: 100%;
+            table-layout: auto;
+            thead {
+                th {
+                    color: #fff;
+                    text-align: center;
+                    height: 3rem;
+                    padding: 0 3rem;
+                    border: 1px solid #ddd;
+                }
+                background-color: $table-head;
+            }
+            tbody {
+                td {
+                    border: 1px solid #ddd;
+                    height: 3rem;
+                }
+            }
+        }
+    }
+}

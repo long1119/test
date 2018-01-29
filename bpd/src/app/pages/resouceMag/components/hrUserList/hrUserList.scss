@@ -1,0 +1,59 @@
+@import '../../../sass/privateStyle';
+hrUserList {
+	.commonTab {
+		.ui-datatable thead tr {
+			height: 40px;
+		    border: 1px solid #d6d6d6;
+		}
+		.ui-datatable .ui-datatable-thead > tr > th, .ui-datatable .ui-datatable-tfoot > tr > td {
+			border: none;
+		}
+		.ui-datatable .ui-datatable-thead > tr > th, .ui-datatable .ui-datatable-tfoot > tr > td, .ui-datatable .ui-datatable-data > tr > td {
+			height: 30px;
+		}
+	}
+	.editBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+		text-align: center;
+	}
+	.align-center {
+		text-align: center;
+	}
+	.align-right {
+		text-align: right;
+	}
+	.Department, .userName {
+		margin-right: 10px;
+		margin-left: 10px;
+		height: 25px;
+	}
+	.header {
+		padding: 10px 0;
+		font-weight: bold;
+	}
+	.footer {
+		text-align: right;
+	    margin-right: 40px;
+	    margin-top: 15px;
+	    button {
+	    	height: 30px;
+	    	width: 75px;
+	    }
+	}
+	.noSpan {
+		width: 50%;
+		display: inline-block;
+		text-align: right;
+		margin-right: 15px;
+	}
+	.setStatusDia {
+		.ui-widget-header {
+			background: linear-gradient(to bottom, #4B98DC 0%, #4B98DC 100%);
+		    color: #fff;
+		}
+	}
+	.ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+}

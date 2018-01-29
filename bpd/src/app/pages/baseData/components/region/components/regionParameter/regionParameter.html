@@ -1,0 +1,76 @@
+<div class="ui-grid project-parameter-content">
+    <button *ngIf="localStorageAuthority" [disabled]="!changeCategoryCode" pButton type="button" [ngClass]="{'content-add': true}" (click)="searchClick()"
+        label="Add"></button>
+    <p-dataTable class="ui-grid-row data-table" [value]="baseChoosedData" [paginator]="true" rows="10">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="baseChoosedData[idx].regionCatAssumeId">
+                        {{idx + 1}}
+                </span>
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="investmentAssumeIndexName" header="Parameter Name"></p-column>
+        <p-column styleClass="ui-grid-col-4" field="indexDataType" header="Date Type"></p-column>
+        <p-column styleClass="ui-grid-col-4" field="investmentAssumeCategoryNam" header="Parameter Group"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="baseChoosedData[idx].regionCatAssumeId" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-dialog class="dialog dialog-project-parameter" header="Project Parameter" [(visible)]="searchDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div class="ui-grid-col-12 program-parameter-top" style="margin-top: 1rem;">
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-col-4 parameter-font">Parameter Group:</div>
+                <div class="ui-grid-col-7">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="parameterGroupOption" [(ngModel)]="selectedParameterGroup"></p-dropdown>
+                </div>
+                <div class="ui-grid-col-1"></div>
+            </div>
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-col-4 parameter-font" style="text-align: right;">Parameter Name:&nbsp;&nbsp;</div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" (keyup)="parameterNameEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogDescription" />
+                </div>
+            </div>
+            <div class="ui-grid-col-2">
+                <button style="margin-left: 1rem;" pButton type="button" class="program-add" (click)="lookClick()" label="Search"></button>
+            </div>
+        </div>
+        <p-dataTable class="ui-grid-row" [ngClass]="{'data-table': true}" [value]="baseData" scrollable="true" scrollHeight="30rem" [(selection)]="selectedParameter"
+            dataKey="vin">
+            <p-column styleClass="ui-grid-col-1" header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                    <span *ngIf="baseData[idx].investAssumeIndexId">
+                        {{idx + 1}}
+                    </span>
+                </template>
+            </p-column>
+            <p-column selectionMode="multiple"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="investAssumeIndexName" header="Parameter Name"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="indexDataType" header="Date Type"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="investAssumeCatName" header="Parameter Group"></p-column>
+        </p-dataTable>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="searchCancle()" label="Cancel"></button>
+                <button type="button" pButton  (click)="searchSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- delete dialog -->
+    <p-dialog class="dialog delete-dialog" header="Region Parameter" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+        <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

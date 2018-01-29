@@ -1,0 +1,919 @@
+[
+
+    {
+        "routerLink": "/pages/work-protal",
+        "label": "Protal",
+        "selected": false,
+        "expanded": true,
+        "children": [{
+                "path": "work-portal",
+                "data": {
+                    "menu": {
+                        "title": "Work Protal",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "investment-portal",
+                "data": {
+                    "menu": {
+                        "title": "Investment Portal",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "program-portal",
+                "data": {
+                    "menu": {
+                        "title": "Program Portal",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            }
+        ]
+
+    },
+    {
+        "routerLink": "/pages/pet-member",
+        "label": "Program",
+        "selected": false,
+        "expanded": true,
+        "children": [{
+                "path": "pet-member",
+                "data": {
+                    "menu": {
+                        "title": "Pet Member",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "nod",
+                "data": {
+                    "menu": {
+                        "title": "Nod",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "meeting",
+                "data": {
+                    "menu": {
+                        "title": "Meeting",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "so-list",
+                "data": {
+                    "menu": {
+                        "title": "S&O List",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "score-card",
+                "data": {
+                    "menu": {
+                        "title": "ScoreCard",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "scorecard-status",
+                "data": {
+                    "menu": {
+                        "title": "Scorecard Status",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "project-scorecard",
+                "data": {
+                    "menu": {
+                        "title": "Project Scorecard",
+                         "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "detail-report",
+                "data": {
+                    "menu": {
+                        "title": "Detail Report",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "analysis-report",
+                "data": {
+                    "menu": {
+                        "title": "Analysis Report",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            }
+
+        ]
+
+    },
+    {
+        "routerLink": "/pages/time-sheet",
+        "label": "Schdule",
+        "selected": false,
+        "expanded": true,
+        "children": [{
+                "path": "time-sheet",
+                "data": {
+                    "menu": {
+                        "title": "Master Timesheet",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "lanch-plan",
+                "data": {
+                    "menu": {
+                        "title": "Lanch Plan",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "schedule-analysis",
+                "data": {
+                    "menu": {
+                        "title": "Analysis",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "launch-plan",
+                "data": {
+                    "menu": {
+                        "title": "Launch Plan",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            }
+
+        ]
+
+    },
+
+    {
+        "routerLink": "/pages/program-info",
+        "label": "Project Info",
+        "children": [{
+                "path": "program-info",
+                "data": {
+                    "menu": {
+                        "title": "Program Info",
+                        "icon": "ion-android-car",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "project-program-info",
+                "data": {
+                    "menu": {
+                        "title": "Program Project",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "vehicle-project",
+                "data": {
+                    "menu": {
+                        "title": "Vehicle Project",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "power-train-project",
+                "data": {
+                    "menu": {
+                        "title": "Power Train Project",
+                        "icon": "ion-android-menu",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "ar-project",
+                "data": {
+                    "menu": {
+                        "title": "Ar Project",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "building-project",
+                "data": {
+                    "menu": {
+                        "title": "Building Project",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "model-year",
+                "data": {
+                    "menu": {
+                        "title": "Model Year",
+                        "icon": "ion-gear-a",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "project-member",
+                "data": {
+                    "menu": {
+                        "title": "Project Member",
+                        "icon": "ion-gear-a",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "currency-translation",
+                "data": {
+                    "menu": {
+                        "title": "Currency Translation",
+                        "icon": "ion-android-car",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            }
+        ]
+    }, {
+        "routerLink": "/pages/previous-esitmation",
+        "label": "Esitmation",
+        "children": [{
+            "path": "previous-esitmation",
+            "data": {
+                "menu": {
+                    "title": "Previous Esitmation",
+                    "icon": "ion-android-laptop",
+                    "selected": false,
+                    "expanded": false,
+                    "order": 0
+                }
+            }
+        }, {
+            "path": "budgeting",
+            "data": {
+                "menu": {
+                    "title": "budgeting",
+                    "icon": "ion-android-laptop",
+                    "selected": false,
+                    "expanded": false,
+                    "order": 0
+                }
+            }
+        }, {
+            "path": "budget-review",
+            "data": {
+                "menu": {
+                    "title": "budget review",
+                    "icon": "ion-android-laptop",
+                    "selected": false,
+                    "expanded": false,
+                    "order": 0
+                }
+            }
+        }, {
+            "path": "cost-book",
+            "data": {
+                "menu": {
+                    "title": "Cost Book",
+                    "icon": "ion-android-laptop",
+                    "selected": false,
+                    "expanded": false,
+                    "order": 0
+                }
+            }
+        }]
+    },
+    {
+        "routerLink": "/pages/tax-rate",
+        "label": "Real Estate",
+        "children": [{
+                "path": "tax-rate",
+                "data": {
+                    "menu": {
+                        "title": "Tax Rate",
+                        "icon": "ion-android-home",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "land-information",
+                "data": {
+                    "menu": {
+                        "title": "Land Information",
+                        "icon": "ion-edit",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 100
+                    }
+                }
+            },
+            {
+                "path": "rent-buy-analysis",
+                "data": {
+                    "menu": {
+                        "title": "Rent Buy Analysis",
+                        "icon": "ion-gear-a",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 250
+                    }
+                }
+            },
+            {
+                "path": "rental-record",
+                "data": {
+                    "menu": {
+                        "title": "Rental Record",
+                        "icon": "ion-gear-a",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 250
+                    }
+                }
+            },
+            {
+                "path": "land-purchase-record",
+                "data": {
+                    "menu": {
+                        "title": "Land Purchase Record",
+                        "icon": "ion-gear-a",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 250
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "routerLink": "/pages/buget-template",
+        "label": "Base Data",
+        "children": [{
+                "path": "buget-template",
+                "data": {
+                    "menu": {
+                        "title": "Budget Template",
+                        "icon": "ion-android-home",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "project-type",
+                "data": {
+                    "menu": {
+                        "title": "Project Type",
+                        "icon": "ion-edit",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 100
+                    }
+                }
+            },
+            {
+                "path": "investment-wbs",
+                "data": {
+                    "menu": {
+                        "title": "Investment Wbs",
+                        "icon": "ion-gear-a",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 250
+                    }
+                }
+            },
+            {
+                "path": "echange-rate",
+                "data": {
+                    "menu": {
+                        "title": "Echange Rate",
+                        "icon": "ion-gear-a",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 250
+                    }
+                }
+            },
+            {
+                "path": "investment-property",
+                "data": {
+                    "menu": {
+                        "title": "Investment Property",
+                        "icon": "ion-gear-a",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 250
+                    }
+                }
+            },
+            {
+                "path": "region",
+                "data": {
+                    "menu": {
+                        "title": "Region",
+                        "icon": "ion-stats-bars",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 200
+                    }
+                }
+            },
+            {
+                "path": "region-group",
+                "data": {
+                    "menu": {
+                        "title": "RegionGroup",
+                        "icon": "ion-stats-bars",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 200
+                    }
+                }
+            },
+            {
+                "path": "plant-code",
+                "data": {
+                    "menu": {
+                        "title": "Plant Code",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 300
+                    }
+                }
+            },
+            {
+                "path": "investment-paramenters",
+                "data": {
+                    "menu": {
+                        "title": "Investment Paramenters",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 300
+                    }
+                }
+            },
+            {
+                "path": "gvdp-template",
+                "data": {
+                    "menu": {
+                        "title": "GVDP Template",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 300
+                    }
+                }
+            },
+            {
+                "path": "score-card-metrics",
+                "data": {
+                    "menu": {
+                        "title": "Scord Card Target",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 300
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "routerLink": "/pages/pqrr-summary",
+        "label": "PQRR",
+        "selected": false,
+        "expanded": true,
+        "children": [{
+                "path": "pqrr-summary",
+                "data": {
+                    "menu": {
+                        "title": "My PQRR",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },{
+                "path": "pqrr-submit",
+                "data": {
+                    "menu": {
+                        "title": "PQRR Status",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            }, {
+                "path": "deliverable-bill",
+                "data": {
+                    "menu": {
+                        "title": "Deliverable Bill",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "deliverable-tpl",
+                "data": {
+                    "menu": {
+                        "title": "Deliverable Template",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            }
+        ]
+
+    },
+    {
+        "routerLink": "/pages/user",
+        "label": "Resource",
+        "selected": false,
+        "expanded": true,
+        "children": [{
+                "path": "user",
+                "data": {
+                    "menu": {
+                        "title": "User",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "user2",
+                "data": {
+                    "menu": {
+                        "title": "User",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "role",
+                "data": {
+                    "menu": {
+                        "title": "Role",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "issue-management",
+                "data": {
+                    "menu": {
+                        "title": "Issue Management",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "document-management",
+                "data": {
+                    "menu": {
+                        "title": "Document",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "investment-document",
+                "data": {
+                    "menu": {
+                        "title": "Investment Document",
+                        "icon": "ion-android-laptop",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            }
+        ]
+
+    },
+    {
+        "routerLink": "/pages/region-budget",
+        "label": "Investment",
+        "selected": false,
+        "expanded": true,
+        "children": [{
+                "path": "region-budget",
+                "data": {
+                    "menu": {
+                        "title": "Region Budget",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "project-budget",
+                "data": {
+                    "menu": {
+                        "title": "Project Budget",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "cost-book",
+                "data": {
+                    "menu": {
+                        "title": "Cost Book",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "bench-mark",
+                "data": {
+                    "menu": {
+                        "title": "Bench Mark",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "investment-summary",
+                "data": {
+                    "menu": {
+                        "title": "Investmet Summary",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "investment-status",
+                "data": {
+                    "menu": {
+                        "title": "Investmet Status",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                } 
+            },
+            {
+                "path": "close-report",
+                "data": {
+                    "menu": {
+                        "title": "Close Report",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                } 
+            },
+            {
+                "path": "prpo",
+                "data": {
+                    "menu": {
+                        "title": "PRPO",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                } 
+            },
+            {
+                "path": "summary-report",
+                "data": {
+                    "menu": {
+                        "title": "Summary Report",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                } 
+            },
+            {
+                "path": "crdn",
+                "data": {
+                    "menu": {
+                        "title": "CR/pages/DN",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "crdn-tracking",
+                "data": {
+                    "menu": {
+                        "title": "CR/pages/DN Tracking List",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "red-zone",
+                "data": {
+                    "menu": {
+                        "title": "RedZone",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            }
+        ]
+
+    },
+    {
+        "routerLink": "/pages/authority",
+        "label": "System",
+        "selected": false,
+        "expanded": true,
+        "children": [{
+                "path": "authority",
+                "data": {
+                    "menu": {
+                        "title": "Authority",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": true,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "system-log",
+                "data": {
+                    "menu": {
+                        "title": "System Log",
+                        "icon": "fa fa-university",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            },
+            {
+                "path": "investment-log",
+                "data": {
+                    "menu": {
+                        "title": "Investment Log",
+                        "icon": "ion-android-person",
+                        "selected": false,
+                        "expanded": false,
+                        "order": 0
+                    }
+                }
+            }
+
+        ]
+
+    }
+
+
+
+]

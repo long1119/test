@@ -1,0 +1,10 @@
+@import '../../sass/privateStyle';
+.select-user-work-flow {
+    &>div {
+        .ui-dialog-content {
+            min-height: 10rem;
+            max-height: 50rem;
+            overflow: auto;
+        }
+    }
+}

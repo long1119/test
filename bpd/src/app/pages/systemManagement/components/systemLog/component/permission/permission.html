@@ -1,0 +1,73 @@
+<div class="permission-content">
+<!--   selectionMode="{{selectionMode}}"-->
+    <p-treeTable [(selection)]="selectedPermission" (onNodeSelect)="nodeSelect($event)" [value]="permissionData" selectionMode="{{selectionMode}}"
+        class="tree-table permission-tree-table" (onNodeUnselect)="nodeSelect($event)">
+        <p-header>
+            <span>Permission  Information</span>
+            <!-- <button type="button" pButton (click)="editAuthorization()" label="Editable"></button> -->
+            <button *ngIf="localStorageAuthority" type="button" pButton (click)="saveAuthorization()" label="Save Authorization"></button>
+            <!-- <button type="button" pButton (click)="saveAuthorization()" label="Save Authorization"></button> -->
+        </p-header>
+        <!-- <p-column [style]="{'width':'38px'}" selectionMode="checkbox"></p-column> -->
+        <p-column field="ename" header="Authority Item"></p-column>
+        <p-column field="cname" header="权限项"></p-column>
+        <!--  *ngIf="localStorageAuthority" -->
+        <p-column *ngIf="localStorageAuthority" class="align-center" header="Authority Range">
+        <!-- <p-column class="align-center" header="Authority Range"> -->
+            <template let-col let-data="rowData" pTemplate="body">
+                <!-- Config Authroty Range -->
+                <!--  {{data.data.dataPermNames == null || data.data.dataPermNames == "" ? "Config Authroty Range" : data.data.dataPermNames}} -->
+                <!--  -->
+                <span *ngIf="isDateFlag(data.data.permMenuSign)" class="edit-span" (click)="authorityClick($event,data)">Config Authority Range</span>
+            </template>
+        </p-column>
+    </p-treeTable>
+    <p-dialog class="dialog dialog-delete" header="{{selectedManagement}} Config" [(visible)]="magementDialog">
+        <div class="ui-grid">
+            <div class="ui-grid-col-1 management-radio-button">
+                <!-- <p-radioButton class="radio-button" name="selfgroupName" value="sgm01" (onClick)="onRadioClick()" [(ngModel)]="selectedValue"></p-radioButton> -->
+                <p-checkbox name="selfCheckboxName" (onChange)="onSelfCheckboxChange($event)" value="sgm01" [(ngModel)]="selectedValue"></p-checkbox>
+            </div>
+            <label class="ui-grid-col-2">Project No Limited(项目不受限制)</label>
+            <div class="ui-grid-col-11" *ngIf="showSpecialFlag == 'Special Region'">
+                <div class="ui-grid-col-1 management-radio-button">
+                    <p-radioButton class="radio-button" name="groupName" value="sgm04" (onClick)="onRadioClick()" [(ngModel)]="selectedSelfValues"></p-radioButton>
+                    <!-- <p-checkbox name="checkboxName" (onChange)="onSelfCheckboxChange($event)" value="sgm01" [(ngModel)]="selectedSelfValues"></p-checkbox> -->
+                </div>
+                <label class="ui-grid-col-2">Region No Limit(区域不受限制)</label>
+                <div class="ui-grid-col-1 management-radio-button">
+                    <p-radioButton class="radio-button" name="groupName" value="sgm05" (onClick)="onRadioClick()" [(ngModel)]="selectedSelfValues"></p-radioButton>
+                    <!-- <p-checkbox name="checkboxName" (onChange)="onSelfCheckboxChange($event)" value="sgm02" [(ngModel)]="selectedSelfValues"></p-checkbox> -->
+                </div>
+                <label class="ui-grid-col-2">Customer Region(特定区域控制方式)</label>
+            </div>
+        </div>
+        <div class="ui-grid" *ngIf="setPersonalAuthority && (showSpecialFlag == 'Special Region' || showSpecialFlag == 'Special Platform')">
+            <h4>{{showSpecialFlag}}</h4>
+            <ul class="ui-grid-col-4">
+                <li class="checkBox" *ngFor="let managementCheckBox of managementCheckBoxsOne; let index;">
+                    <p-checkbox name="checkboxName" (onChange)="onCheckboxChange($event)" value="{{managementCheckBox.value}}" [(ngModel)]="selectedValues"></p-checkbox> {{managementCheckBox.label}}
+                </li>
+            </ul>
+            <ul class="ui-grid-col-4">
+                <li class="checkBox" *ngFor="let managementCheckBox of managementCheckBoxsTwo; let index;">
+                    <p-checkbox name="checkboxName" (onChange)="onCheckboxChange($event)" value="{{managementCheckBox.value}}" [(ngModel)]="selectedValues"></p-checkbox> {{managementCheckBox.label}}
+                </li>
+            </ul>
+            <ul class="ui-grid-col-4">
+                <li class="checkBox" *ngFor="let managementCheckBox of managementCheckBoxsThree; let index;">
+                    <p-checkbox name="checkboxName" (onChange)="onCheckboxChange($event)" value="{{managementCheckBox.value}}" [(ngModel)]="selectedValues"></p-checkbox> {{managementCheckBox.label}}
+                </li>
+            </ul>
+
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="authorityCancel()" label="Cancel"></button>
+                <button type="button" pButton  (click)="authoritySave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

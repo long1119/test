@@ -1,0 +1,20 @@
+<p-dialog class="dialog select-user-work-flow" header="Set User" [(visible)]="selectUserDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div *ngFor="let memberData of memberDatas" class="ui-grid-row">
+                <label class="ui-grid-col-6">{{memberData.role}} :</label>
+                <div *ngIf="memberData.user.length != 1" class="ui-grid-col-6">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="memberData.user" [(ngModel)]="memberData.selectedUser"></p-dropdown>
+                </div>
+                <div *ngIf="memberData.user.length == 1" class="ui-grid-col-6">
+                    <p-dropdown disabled class="drop-down" autoWidth="false" [options]="memberData.user" [(ngModel)]="memberData.selectedUser"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="selectUserCancel()" label="Cancel"></button>
+                <button type="button" pButton (click)="selectUserSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>

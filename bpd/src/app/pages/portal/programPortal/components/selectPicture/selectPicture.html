@@ -1,0 +1,27 @@
+<div class="box" *ngIf="basic2" (click)="gotoParent()">
+    <div class="wrapPicture ui-g" *ngIf="selectedValue==1||selectedValue==0">
+        <div class="ui-g-4" *ngIf="radio">
+            <p-radioButton class="radio-button" name="groupname" value=1 (onClick)="transform()" [(ngModel)]="selectedValue"></p-radioButton> 
+        </div>
+        <div class="ui-g-8" (click)="newlife()">
+            <div class="circle"></div>
+        </div>
+    </div>
+    <div class="wrapPicture ui-g" *ngIf="selectedValue==2||selectedValue==0">
+        <div class="ui-g-4" *ngIf="radio">
+            <p-radioButton class="radio-button" name="groupname" value=2 (onClick)="transform()" [(ngModel)]="selectedValue"></p-radioButton> 
+        </div>
+        <div class="ui-g-8" (click)="newlife()">
+            <div class="sanjiao"></div> 
+        </div>
+    </div> 
+    <div class="wrapPicture ui-g" *ngIf="selectedValue==3||selectedValue==0">
+        <div class="ui-g-4" *ngIf="radio">
+            <p-radioButton class="radio-button" name="groupname" value=3 (onClick)="transform()" [(ngModel)]="selectedValue"></p-radioButton> 
+        </div>
+        <div class="ui-g-8" (click)="newlife()">
+            <i class="fa fa-times fa-2x cross" aria-hidden="true"></i>
+        </div> 
+    </div>
+</div>
+<span (click)="putOn()" *ngIf="basic1" style="color:blue;display:inline-block;margin-top:13px;">Set</span>

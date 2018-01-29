@@ -1,0 +1,394 @@
+<div class="ui-grid nod-information-content">
+    <div *ngIf="localStorageAuthority" class="button-tab">
+        <!-- [(disabled)]="!changeAdProjectCode" -->
+        <button pButton type="button" [(disabled)]="!changeAdProjectCode" (click)="informationAddClick()" label="Add"></button>
+        <!--  || !managerFlag -->
+        <button pButton type="button" [(disabled)]="!selectedNodeId || !managerFlag || !commitFlag" (click)="informationCommitClick()" label="Submit"></button>
+        <button pButton type="button" [(disabled)]="!changeAdProjectCode || !selectedNodeId" (click)="informationExportClick()" label="Export"></button>
+    </div>
+    <div *ngIf="!localStorageAuthority" class="button-tab">
+        <button pButton type="button" [(disabled)]="!changeAdProjectCode || !selectedNodeId" (click)="informationExportClick()" label="Export"></button>
+    </div>
+    <p-dataTable [(selection)]="selectedNodInformation" selectionMode="single" class="ui-grid-row data-table" [value]="nodInformationData" (onRowClick)="onNodInformationRowClick($event)">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="nodInformationData[idx].nodeId">
+                    {{idx + 1}}
+                </span>
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="projectCode" header="Costbook Code"></p-column>
+        <p-column styleClass="ui-grid-col-3" header="NOD Type">
+            <template let-data="rowData" pTemplate="body">
+                <span>{{data.nameArray}}</span>
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="sequence" header="Sequence"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-3" header="Doc.Control Number">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="nodInformationData[idx].nodeId" class="edit-span" (click)="showDetailClick(idx,data)">{{data.docControlNumber + "-" + data.nameArray}}</span>
+            </template>
+        </p-column>
+        <!-- <p-column styleClass="ui-grid-col-3" field="approvalDate" header="Approval Date"></p-column> -->
+        <p-column styleClass="ui-grid-col-3" field="approveInvestment" header="Approved Investment"></p-column>
+        <p-column styleClass="ui-grid-col-2" field="status" header="Status"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <div *ngIf="data.status === 'Not Approved'">
+                    <span *ngIf="nodInformationData[idx].nodeId" class="no-edit-span">Download</span>
+                    <span *ngIf="nodInformationData[idx].nodeId" class="edit-span" (click)="informationEditClick(idx,data)">Edit</span>
+                    <span *ngIf="nodInformationData[idx].nodeId" class="edit-span" (click)="informationDeleteClick(idx,data)">Delete</span>
+                </div>
+                <div *ngIf="data.status !== 'Not Approved'">
+                    <span *ngIf="nodInformationData[idx].nodeId" class="edit-span" (click)="informationDownloadClick(idx,data)">Download</span>
+                    <span *ngIf="nodInformationData[idx].nodeId" class="no-edit-span">Edit</span>
+                    <span *ngIf="nodInformationData[idx].nodeId" class="no-edit-span">Delete</span>
+                </div> 
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-paginator rows="10" totalRecords="{{nodInformationPaginatorTotal}}" pageLinkSize="3" (onPageChange)="nodInformationPaginate($event)"></p-paginator>
+    <!-- 编辑界面 -->
+    <p-dialog class="dialog information-modify-dialog" header="NOD Edit" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row" *ngIf="modifyFlag == 'editInformation'">
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Doc.Ctrl Number :</label>
+                </div>
+                <div class="ui-grid-col-10">
+                    <input disabled pInputText [(ngModel)]="dialogDocCtrlNum" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionCode">NOD Type :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <!-- 单选下拉框 -->
+                    <!-- <p-dropdown autoWidth="false" [options]="nodTypeOption" [(ngModel)]="selectedNodType" class="dropdown"></p-dropdown> -->
+                    <!-- 多选弹窗 -->
+                    <input class="dialog-search-input" pInputText readonly id="regionType" [(ngModel)]="selectedRegionTypeName" />
+                    <button [ngClass]="{'dialog-search-button': true}" pButton type="button" class="previous-button" icon="fa-search" (click)="searchRegionTypeClick()"></button>
+                </div>
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionCode">Project Name :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input maxlength="100" pInputText [(ngModel)]="dialogProjectName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionCode">Engine Classifican :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input maxlength="25" pInputText [(ngModel)]="dialogEngineeringClassificantion" />
+                </div>
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionCode">Costbook Code :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input maxlength="8" pInputText [(ngModel)]="dialogProjectCode" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionType">Decision Date :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd" styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectDecisionDate"></p-calendar>
+                </div>
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionCode">Approved Investment :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input maxlength="25" pInputText [(ngModel)]="dialogApprovedInvestment" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionType">SORP :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd" styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectSorpEopDate"></p-calendar>
+                </div>
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionType">Vehicle Name :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input maxlength="25" pInputText id="regionType" [(ngModel)]="dialogVehicleName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionType">EOP :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd" styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectEopDate"></p-calendar>
+                </div>
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionType">Manufacture Location:</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input maxlength="20" pInputText id="regionType" [(ngModel)]="dialogManufactureLocation" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label for="regionType">LCA Volume :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input (keydown)="messageService.checkNumValue($event, 99999999)" pInputText id="regionType" [(ngModel)]="dialogLcaVolume" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionGroup">Decision Description :</label>
+                </div>
+                <div class="ui-grid-col-10">
+                    <textarea type="text" maxlength="1000" pInputTextarea style="width:100%; height:7rem;" [(ngModel)]="dialogDescription"></textarea>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <pt-lineup-info style="width:100%;" [ptLineupInfoEditable]="ptLineupInfoEditable" [changeAdProjectCode]="changeAdProjectCode"></pt-lineup-info>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="informationModifyCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!selectedRegionTypeName || !selectDecisionDate || !dialogDescription || !dialogEngineeringClassificantion || !dialogApprovedInvestment || !dialogProjectName || !dialogProjectCode || !dialogVehicleName || !dialogManufactureLocation"
+                    pButton  (click)="informationModifySave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 展示单条数据 -->
+    <p-dialog class="dialog information-modify-dialog" header="Show Detail" [(visible)]="showDetailDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Doc.Ctrl Number :</label>
+                </div>
+                <div class="ui-grid-col-10">
+                    <input disabled pInputText [(ngModel)]="dialogDocCtrlNum" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionCode">NOD Type :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <!-- <p-dropdown disabled autoWidth="false" [options]="nodTypeOption" [(ngModel)]="selectedNodType" class="dropdown"></p-dropdown> -->
+                    <input class="dialog-search-input" pInputText readonly id="regionType" [(ngModel)]="selectedRegionTypeName" />
+                    <button [ngClass]="{'dialog-search-button': true}" disabled pButton type="button" class="previous-button" icon="fa-search" (click)="searchRegionTypeClick()"></button>
+                </div>
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Project Name :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled pInputText [(ngModel)]="dialogProjectName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Engine Classificantion :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled pInputText [(ngModel)]="dialogEngineeringClassificantion" />
+                </div>
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Costbook Code :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled pInputText [(ngModel)]="dialogProjectCode" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionType">Decision Date :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled pInputText id="regionType" [(ngModel)]="selectDecisionDate" />
+                </div>
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionCode">Approved Investment :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled pInputText [(ngModel)]="dialogApprovedInvestment" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label for="regionType">SORP :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled pInputText id="regionType" [(ngModel)]="selectSorpEopDate" />
+                </div>
+                <div class="ui-grid-col-2">
+                    <label for="regionType">Vehicle Name :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled pInputText id="regionType" [(ngModel)]="dialogVehicleName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label for="regionType">EOP :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled pInputText id="regionType" [(ngModel)]="selectEopDate" />
+                </div>
+                <div class="ui-grid-col-2">
+                    <label for="regionType">Manufacture Location :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled pInputText id="regionType" [(ngModel)]="dialogManufactureLocation" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label for="regionType">LCA volume :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled type="number" pInputText id="regionType" [(ngModel)]="dialogLcaVolume" />
+                </div>
+            </div> 
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionGroup">Decision Description :</label>
+                </div>
+                <div class="ui-grid-col-10">
+                    <textarea type="text" pInputTextarea disabled style="width:100%; height:7rem;" [(ngModel)]="dialogDescription"></textarea>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <pt-lineup-info style="width: 100%;" [ptLineupInfoEditable]="ptLineupInfoEditable" [changeAdProjectCode]="changeAdProjectCode"></pt-lineup-info>
+            </div>
+            <!-- <div class="ui-grid-row">
+                    <p-dataTable class="ui-grid-row data-table" [value]="nodLogInformationData">
+                        <p-header>Nod Log</p-header>
+                        <p-column styleClass="ui-grid-col-1" header="NO">
+                            <template let-idx="rowIndex" pTemplate="body">
+                                <span *ngIf="nodLogInformationData[idx].nodeId">
+                                    {{idx + 1}}
+                                </span>
+                            </template>
+                        </p-column>
+                        <p-column styleClass="ui-grid-col-3" field="decisionDate" header="Decision Date"></p-column>
+                        <p-column styleClass="ui-grid-col-3" header="Node Code">
+                            <template let-data="rowData">
+                                <span>{{data.docControlNumber + "-" + data.nameArray}}</span>
+                            </template>
+                        </p-column>
+                        <p-column styleClass="ui-grid-col-3" field="decisionDescription" header="Decision Description"></p-column>
+                    </p-dataTable>
+                    <p-paginator rows="5" totalRecords="{{nodLogPaginatorTotal}}" pageLinkSize="3" (onPageChange)="nodLogPaginate($event)"></p-paginator>
+            </div> -->
+        </div>
+    </p-dialog>
+    <!-- regiontype多选弹框 -->
+<p-dialog class="dialog information-modify-dialog" header="Choose NOD Type" [(visible)]="regionTypeDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <p-dataTable class="ui-grid data-table project-info-table" [value]="regionTypeData" [(selection)]="selectedVersionData">
+                    <p-column [style]="{'width': '2.5rem'}" selectionMode="multiple">
+                        <template let-data="rowData" pTemplate="body">
+                            <span *ngIf="data.version"></span>
+                        </template>
+                    </p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-11" field="markName" header="NOD Type"></p-column>
+                </p-dataTable>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="regionTypeCancel()" label="Cancel"></button>
+                <button type="button" pButton  (click)="regionTypeSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 提交页面 -->
+    <p-dialog class="dialog" header="Commit NOD" [(visible)]="commitDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label>Description :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <textarea type="text" pInputTextarea style="width:95%; height:7rem;" [(ngModel)]="dialogSubmitDescription"></textarea>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="submitCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogSubmitDescription" pButton (click)="submitSave()" label="Direct Approve"></button>
+                <button type="button" (click)="submitFlowSave()" pButton label="WorkFlow Approve"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-dialog class="dialog" header="Commit NOD" [(visible)]="realSubmitDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <p-fileUpload mode="basic" name="file" url="/bpd-proj/bpd/att/upload?attId={{uuId}}&bussinessId={{selectedNodeId}}" accept="xlsm" maxFileSize="50000000"
+            (onBeforeUpload)="onBasicBeforeUpload($event)" (onSelect)="onBasicSelect($event)" (onUpload)="onBasicUpload($event)"></p-fileUpload>
+    </p-dialog>
+    <p-dialog class="dialog" header="Download File" *ngIf="downloadFileDialog" [(visible)]="downloadFileDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-9">
+
+                </div>
+                <div class="ui-grid-col-3">
+                    <button type="button" pButton  (click)="downloadFileClick()" label="Download"></button>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label for="regionType">File Name :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText readonly id="regionType" [(ngModel)]="uploadedFileData.fileName"/>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label for="regionType">Create User :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText readonly id="regionType" [(ngModel)]="uploadedFileData.createUserName"/>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label for="regionType">Create Time :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText readonly id="regionType" [(ngModel)]="uploadedFileData.createTime"/>
+                </div>
+            </div>
+        </div>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="NOD Information" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete This Data?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="informationDeleteNo()" label="No"></button>
+                <button type="button" pButton  (click)="informationDeleteYes()" label="Yes"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-dialog class="dialog search-dialog" header="Set Approve User" [(visible)]="setPetMemberDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div>
+            Please Set Approve User Of {{setPetMemberMessage}} First!
+        </div>
+    </p-dialog>
+    <select-user-work-flow [changeMemberMessage]="changeMemberMessage" (userRoleOut)="mapRecive($event)"></select-user-work-flow>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

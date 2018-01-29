@@ -1,0 +1,17 @@
+@import '../../sass/privateStyle';
+.user-select {
+    width: 100%;
+    &>div {
+        .data-table {
+            width: 100% !important;
+            margin: 0;
+            &>div {
+                width: 100%;
+                margin: 0;
+            }
+        }
+    }
+    .button-content {
+        margin-bottom: 1rem;
+    }
+}

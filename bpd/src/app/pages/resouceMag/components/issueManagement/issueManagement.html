@@ -1,0 +1,266 @@
+<div class="topBar">
+    <button *ngIf="userRoot" pButton type="button" (click)="addBtn()" label="Add"></button>
+     Program Code:<input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="programCodeSerch" class="searchInput">
+     Issue:<input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="IssueSerch" class="searchInput">
+     Issue Type:<p-dropdown autoWidth="false" [options]="issueTypeValueStore" [(ngModel)]="issueTypeSerch" appendTo="body"></p-dropdown>
+     Status:<p-dropdown autoWidth="false" [options]="statusStore" appendTo="body" [(ngModel)]="status"></p-dropdown>
+    <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+    <button pButton type="button" (click)="exportBtn()" label="Export"></button>
+</div>
+<p-dataTable [rows]="15" [value]="gridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="50rem">
+    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+    <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="issueDate" header="Issue Date" styleClass="ui-grid-col-2"></p-column>
+    <p-column field="issueItemBrief" header="Issue" styleClass="ui-grid-col-2 align-left">
+        <template pTemplate="body" let-item="rowData">
+            <span (mouseover)="mouseover($event,item.issueItem)" (mouseout)="mouseup()">{{item.issueItemBrief}}</span>
+        </template>
+    </p-column>
+    <p-column field="issueType" header="Issue Type" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="issueActionBrief" header="Decision Action" styleClass="ui-grid-col-2 align-left">
+        <template pTemplate="body" let-item="rowData">
+            <span (mouseover)="mouseover($event,item.issueAction)" (mouseout)="mouseup()">{{item.issueActionBrief}}</span>
+        </template>
+    </p-column>
+    <p-column field="userName" header="Initiator" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="ownerName" header="Owner" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="issueClosedDate" header="Target Date" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="finishiDate" header="Actual Close Date" styleClass="ui-grid-col-2"></p-column>
+    <p-column styleClass="ui-grid-col-1 align-center" header="Status">
+        <template pTemplate="body" let-item="rowData">
+            <i *ngIf="item.issueStatus == 3" class="fa fa-circle green"></i>
+            <i *ngIf="item.issueStatus == 2" class="fa fa-play yellow"></i>
+            <i *ngIf="item.issueStatus == 1" class="fa fa-close red"></i>
+        </template>
+    </p-column>
+    <p-column *ngIf="userRoot || closeRoot" header="" styleClass="ui-grid-col-3 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="closeRoot && item.id && !item.finishiDate" class="editBtn" (click)="closeBtn(item)">Close</span>
+            <span *ngIf="userRoot && item.id && !item.finishiDate" class="editBtn" (click)="editBtn(item)">Edit</span>
+            <span *ngIf="userRoot && item.id && !item.finishiDate" class="editBtn" (click)="delBtn(item)">Delete</span>
+            <span *ngIf="closeRoot && item.id && item.finishiDate" class="noEditBtn">Close</span>
+            <span *ngIf="userRoot && item.id && item.finishiDate" class="noEditBtn">Edit</span>
+            <span *ngIf="userRoot && item.id && item.finishiDate" class="noEditBtn">Delete</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[15,30,45]" (onPageChange)="gridPaginate($event)"></p-paginator>
+
+<p-dialog header="Issue" [(visible)]="display" width="600" [responsive]="true" modal="modal" class="dialogLittle">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Program:</span>
+                <button type="button" (click)="getProgram()" style="float:right;margin:5px 0 0 5px;width:50px;height:20px">Select</button>
+                <input type="text" pInputText readonly="true" [(ngModel)]="programValue" style="width:66.5%;">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Issue:</span>
+                <input type="text" pInputText [(ngModel)]="issueValue" maxlength="100">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Issue Type:</span>
+                <p-dropdown autoWidth="false" [options]="issueTypeValueStore" [(ngModel)]="issueTypeValue" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Issue Date:</span>
+                <p-calendar [(ngModel)]="issueDate" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}"></p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon" style="height:80px;line-height:80px;">Description/Action:</span>
+                <textarea type="text" pInputTextarea style="height:80px;" maxlength="500" [(ngModel)]="actionValue"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon" style="float:left;margin-top:10px;">Owner:</span>
+                <p-dataGrid [value]="selectUserStore" class="dataView">
+                    <template let-items pTemplate="item">
+                        <div class="dataViewContainer">
+                            <div>{{items.userName}}
+                                <i class="fa fa-close" (click)="delUser(items)" style="cursor:pointer"></i>
+                            </div>
+                        </div>
+                    </template>
+                </p-dataGrid>
+                <button type="button" (click)="getUser()" style="float:left;margin-top:5px;width:50px;height:20px">Select</button>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Target Close Date:</span>
+                <p-calendar [(ngModel)]="closeDate" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}"></p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon" style="height:80px;line-height:80px;">Tracking forum:</span>
+                <textarea type="text" pInputTextarea style="height:80px;" [(ngModel)]="forumValue" maxlength="500"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Status:</span>
+                <p-dropdown autoWidth="false" [options]="statusValueStore" [(ngModel)]="statusValue" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button *ngIf="add" pButton type="button" (click)="saveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!issueValue || !issueDate || !closeDate"></button>
+        <button *ngIf="!add" pButton type="button" (click)="saveChangeBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!issueValue || !issueDate || !closeDate"></button>
+        <button pButton type="button" (click)="cancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Close Issue" [(visible)]="closeDisplay" width="600" [responsive]="true" modal="modal" class="dialogLittle">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Program:</span>
+                <input type="text" disabled="true" pInputText value="{{closeItem.programCode}}">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Issue:</span>
+                <input type="text" disabled="true" maxlength="100" pInputText value="{{closeItem.issueItem}}">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Issue Type:</span>
+                <input type="text" disabled="true" pInputText value="{{closeItem.issueType}}">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Issue Date:</span>
+                <input type="text" disabled="true" pInputText value="{{closeItem.issueDate}}">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Description/Action:</span>
+                <input type="text" disabled="true" maxlength="500" pInputText value="{{closeItem.issueAction}}">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Owner:</span>
+                <input type="text" disabled="true" pInputText value="{{closeItem.ownerName}}">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Target Close Date:</span>
+                <input type="text" disabled="true" pInputText value="{{closeItem.issueClosedDate}}">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Actual Close Date:</span>
+                <p-calendar [(ngModel)]="closeCloseDate" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}"></p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon" style="height:80px;line-height:80px;">Tracking forum:</span>
+                <textarea type="text" pInputTextarea style="height:80px;" [(ngModel)]="closeForumValue" maxlength="500"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Status:</span>
+                <p-dropdown autoWidth="false" [options]="statusValueStore" [(ngModel)]="closeStatusValue" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="closeSaveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!closeCloseDate"></button>
+        <button pButton type="button" (click)="closeCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog class="dialog" header="Please Choose Your Manager" [(visible)]="managerSearchDialog" [responsive]="true" [modal]="true" width="800">
+    <div class="topBar">
+        Department:<input (keyup)="managerEnterSearch($event)" type="text" pInputText [(ngModel)]="managerDialogDepartment" class="searchInput">
+        User Name:<input (keyup)="managerEnterSearch($event)" type="text" pInputText [(ngModel)]="managerDialogUserName" class="searchInput">
+        Employee ID:<input (keyup)="managerEnterSearch($event)" type="text" pInputText [(ngModel)]="managerDialogEmployeeCode" class="searchInput">
+        <button pButton type="button" (click)="managerLookClick()" label="Search"></button>
+    </div>
+    <div class="ui-grid" style="padding:5px">
+        <p-dataTable (onRowDblclick)="managerDbclick($event)" [rowHover]=true selectionMode="single" class="data-table" [value]="managerData" rows="10" scrollable="true" scrollHeight="30rem">
+            <p-column styleClass="ui-grid-col-2" field="userName" header="User Name"></p-column>
+            <p-column field="employeeCode" header="Employee ID" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="jobPosition" header="Job"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="telephone" header="Telphone"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="emailAddress" header="Email"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="departmentName" header="Department"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="masterName" header="Manager"></p-column>
+        </p-dataTable>
+        <p-paginator rows="{{managerDataRows}}" first="{{managerDataFirst}}" totalRecords="{{managerDataLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="managerPaginate($event)"></p-paginator>
+    </div>
+</p-dialog>
+<p-dialog header="Select Programs" [(visible)]="programDisplay" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="topBar">
+        Brand:
+        <p-dropdown autoWidth="false" [options]="brandSerchStore" appendTo="body" [(ngModel)]="brandSerch"></p-dropdown>
+        Platform:
+        <p-dropdown autoWidth="false" appendTo="body" [options]="platformSerchStore" [(ngModel)]="platformSerch"></p-dropdown>
+        Program Code:<input (keyup)="managerEnterSearch($event)" type="text" pInputText [(ngModel)]="programProgramCodeSearch" class="searchInput">
+        <button pButton type="button" (click)="programLookUpBtn()" label="Search"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="programStore" class="data-table" scrollable="true" scrollHeight="30rem" (onRowDblclick)="dbclick($event)" [rowHover]=true>
+        <p-column field="id" header="NO" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="projectCode" header="Project Code" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="projectName" header="Project Name" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="modelYear" header="Model Year" styleClass="ui-grid-col-2"></p-column>
+    </p-dataTable>
+<p-paginator totalRecords="{{programStoreLen}}" [rowsPerPageOptions]="[10,20,30]" rows="{{programStoreRows}}" first="{{programStoreFirst}}" pageLinkSize="3" (onPageChange)="programPaginate($event)"></p-paginator>
+</p-dialog>
+<div id="messageDetail"></div>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+<p-confirmDialog></p-confirmDialog>

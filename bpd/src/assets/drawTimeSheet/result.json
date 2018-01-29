@@ -1,0 +1,51 @@
+{
+
+	"startDate":"2010-12-12",
+	"endDate":"2017-09-19",
+	"list":[{
+		"planDate":"2011-10-10",
+		"configGraphicType": 1,
+		"configDisplayPosition": 1,
+		"configGraphicColor": "RED",
+		"configBorder": "1",
+		"configWidth": "40",
+		"configElementTypeId": "xxxxx",
+		"elementTypeName": "xxxxx"
+	},{
+		"planDate":"2012-10-10",
+		"configGraphicType": 2,
+		"configDisplayPosition": 2,
+		"configGraphicColor": "RED",
+		"configBorder": "1",
+		"configWidth": "40",
+		"configElementTypeId": "xxxxx",
+		"elementTypeName": "xxxxx"
+	},{
+		"planDate":"2013-10-10",
+		"configGraphicType": 3,
+		"configDisplayPosition": 3,
+		"configGraphicColor": "RED",
+		"configBorder": "1",
+		"configWidth": "40",
+		"configElementTypeId": "xxxxx",
+		"elementTypeName": "xxxxx"
+	},{
+		"planDate":"2015-10-10",
+		"configGraphicType": 4,
+		"configDisplayPosition": 4,
+		"configGraphicColor": "RED",
+		"configBorder": "1",
+		"configWidth": "40",
+		"configElementTypeId": "xxxxx",
+		"elementTypeName": "xxxxx"
+	},{
+		"planDate":"2015-10-10",
+		"configGraphicType": 5,
+		"configDisplayPosition": 5,
+		"configGraphicColor": "RED",
+		"configBorder": "1",
+		"configWidth": "40",
+		"configElementTypeId": "xxxxx",
+		"elementTypeName": "xxxxx"
+	}]
+}

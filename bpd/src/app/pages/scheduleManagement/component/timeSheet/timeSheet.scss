@@ -1,0 +1,119 @@
+@import '../../../sass/privateStyle';
+.time-sheet-content {
+    .project-info-table {
+        width: 95%;
+        float: left;
+        // .ui-datatable table {
+            // table-layout: auto
+        // }
+        .ui-datatable-scrollable-header {
+            width: 100%;
+        }
+        idx-style {
+            width: 10%;
+        }
+        other-style {
+            width: 30%;
+        }
+        .ui-widget {
+            .ui-widget-header {
+                .previous-head {
+                    line-height: 3rem;
+                    width: 50%;
+                    margin-left: 3rem;
+                    float: left;
+                    color: #fff;
+                    text-align: right;
+                }
+                padding: 0;
+                margin: 0;
+                .previous-button {
+                    float: right;
+                    height: 100%;
+                    margin: 0;
+                    background-color: #fff;
+                    color: $table-head;
+                }
+            }
+        }
+    }
+    .dialog {
+        &>div {
+            width: 40%;
+            &>div {
+                &>div {
+                    &>div {
+                        margin: 1rem 0;
+                    }
+                }
+            }
+        }
+        .dialog-search-input {
+            float: left;
+            width: 92%;
+        }
+        .dialog-search-button {
+            float: left;
+            width: 8%;
+            height: 2.3rem;
+            box-sizing: border-box;
+            margin: 0;
+        }
+    }
+    .search-dialog {
+        &>div{
+            width: 30%;
+        }
+    }
+    .content-right {
+        margin-top: 1rem;
+        .version-button {
+            &>div {
+                &>label {
+                    height: 2rem;
+                    line-height: 2rem;
+                }
+            }
+            .operate-buttons {
+                // margin-top: .3rem;
+                button {
+                    margin-left: .7rem;
+                    &>span {
+                        font-size: 1.2rem;
+                        padding: .25em .5em;
+                    }
+                }
+                &>:first-child {
+                    margin-left: 1rem;
+                }
+            }
+        }
+    }
+    .add-gvdp-dialog {
+        .ui-dialog-content {
+             height: 40rem;
+             overflow: auto;
+         }
+        // .ui-dialog {
+            // margin-top: -5rem;
+        // }
+        &>div {
+            width: 80%;
+        }
+    }
+    .copy-template-dialog {
+        // .ui-dialog-content {
+        //      height: 40rem;
+        //      overflow: auto;
+        //  }
+        // .ui-dialog {
+            // margin-top: -5rem;
+        // }
+        &>div {
+            width: 80%;
+        }
+    }
+    .gvdp-detail {
+        margin-top: 1rem;
+    }
+}

@@ -1,0 +1,7 @@
+.ui-tabview {padding: 0em;}
+.ui-tabview .ui-tabview-nav{background: #f6f7f8}
+.ui-tabview.ui-tabview-top>.ui-tabview-nav{padding:0em 0em 0}  /*用来控制primeng 的 tabview */
+.ui-tabview.ui-tabview-top>.ui-tabview-nav li{border: 0px solid #d6d6d6;}
+
+
+

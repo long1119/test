@@ -1,0 +1,19 @@
+@import '../../../../../sass/privateStyle';
+.score-card-detail {
+    .item-data-table {
+        margin-top: 0;
+    }
+    .information-modify-dialog {
+        &>div {
+            .ui-dialog-content {
+                // min-height: 10rem;
+                height: 40rem;
+                overflow: auto;
+            }
+            width: 70%;
+            .drop-down-label {
+                margin-top: .3rem;
+            }
+        }
+    }
+}

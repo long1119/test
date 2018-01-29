@@ -1,0 +1,33 @@
+<div class="main-content">
+    <div class="ui-g">
+        <div class="ui-g-3">
+            <div class="ui-g-5" style="margin-top: 0.4rem;">
+                Project Type:
+            </div>
+            <div class="ui-g-7">
+                <p-dropdown [options]="projectTypes" [(ngModel)]="selectedType" placeholder="Select a type"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-g-3">
+            <div class="ui-g-5" style="margin-top: 0.4rem;">
+                Project Code:
+            </div>
+            <div class="ui-g-7">
+                <input (keyup)="lookUpEnterSearch($event)" id="input" type="text" pInputText [(ngModel)]="text">
+            </div>
+        </div>
+        <div class="ui-g-4">
+            <div class="ui-g-6" style="margin-top: 0.4rem;">
+                Approved Investment:  >=
+            </div>
+            <div class="ui-g-6">
+                <input (keyup)="lookUpEnterSearch($event)" id="input1" type="text" pInputText [(ngModel)]="text">
+            </div>
+        </div>
+        <div class="ui-g-2">
+            <div class="ui-g-10">
+                MRMB<button pButton type="button" (click)="lookUp()" label="Search"></button>
+            </div>
+        </div>
+    </div>
+</div>

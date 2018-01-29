@@ -1,0 +1,11 @@
+.radio-button {
+    .ui-state-active {
+        .fa-circle:before {
+            content: "";
+        }
+    }
+}
+
+label {
+    margin-top: 0.18rem;
+}

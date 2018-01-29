@@ -1,0 +1,19 @@
+<p-dialog class="dialog" header="Submit Approve：" *ngIf="nextDisplay" [(visible)]="nextDisplay" modal="modal" [responsive]="true">
+    <table>
+        <tr style="height: 3rem;">
+            <td>Approve Node</td>
+            <td>&nbsp;&nbsp;&nbsp;</td>
+            <td>Approver</td>
+        </tr>
+        <tr style="height: 3rem;" *ngFor="let item of nextData">
+            <td>{{item.name}}</td>
+            <td></td>
+            <td>[{{item.participants}}]</td>
+        </tr>
+    </table>
+    <!-- <button (click)="commit()">submit</button> -->
+    <!-- <button pButton (click)="commit()" label="submit">submit</button> -->
+    <button type="button" style="margin-top: 1rem;" pButton (click)="commit()" label="Submit"></button>
+</p-dialog>
+<!-- 成功弹框提示 -->
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

@@ -1,0 +1,16 @@
+<!--  resizableColumns="true" columnResizeMode="expand" -->
+<p-dataTable class="data-table" [value]="rateChangeData" [paginator]="true" [rows]="10">
+    <p-column header="NO">
+        <template let-idx="rowIndex" pTemplate="body">
+            <span *ngIf="rateChangeData[idx].propertyGroupName">
+                    {{idx + 1}}
+                </span>
+        </template>
+    </p-column>
+    <p-column field="propertyGroupName" header="Investment Property Group"></p-column>
+    <p-column *ngFor="let list of yearListData" field="{{list}}" header="{{list}}">
+        <template let-col let-idx="rowIndex" let-data="rowData" pTemplate="body">
+            <input (keydown)="messageService.checkNumValue($event, 100)" *ngIf="rateChangeData[idx].propertyGroupName" (change)="rateChange($event)" id="regionType" [(ngModel)]="data[col.field]" />
+        </template>
+    </p-column>
+</p-dataTable>

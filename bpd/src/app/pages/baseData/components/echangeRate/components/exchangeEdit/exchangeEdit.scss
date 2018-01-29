@@ -1,0 +1,15 @@
+.exchange-edit-content{
+    .exchange-exit{
+        margin-bottom: 1rem;
+    }
+    .exchange-tabel {
+        width: 100%;
+        overflow: auto;
+        .currency {
+            width: 20rem;
+        }
+        .year {
+            width: 3rem;
+        }
+    }
+}

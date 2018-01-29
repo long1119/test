@@ -1,0 +1,32 @@
+{
+    "specialRegion": [
+        "View Investment Portal",
+        "Create Budget",
+        "View Project Costbook",
+        "View Costbook Overview",
+        "View Costbook Detail",
+        "View Close Report",
+        "View Budget Summary",
+        "View Benchmark"
+    ],
+    "noSpecial":[ 
+        "View Inv. Veh.project",
+        "View Inv. PT Project",
+        "View Fac.Project",
+        "View AR Project",
+        "View Costbook member",
+        "View  Advance Estimation",
+        "View FX&Cashflow"
+    ],
+    "specialPlatForm":[ 
+        "View PT Vehicle Program",
+        "View NOD",
+        "View Project Scorecard",
+        "View Veh. Project  Problem",
+        "View Master timesheet",
+        "View Launch Plan",
+        "View PQRR Plan&Status",
+        "View Inv. Program Info"
+    ]
+}
+    

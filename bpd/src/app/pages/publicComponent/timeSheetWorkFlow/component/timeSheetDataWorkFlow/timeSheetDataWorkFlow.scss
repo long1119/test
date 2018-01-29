@@ -1,0 +1,24 @@
+@import '../../../../sass/privateStyle';
+.time-sheet-data-work-flow {
+    padding-top: 1rem;
+    .time-sheet-edit-dialog {
+        &>div {
+            width: 40%;
+            .ui-dialog-content {
+                height: 15rem;
+                overflow: auto;
+            }
+        }
+    }
+    .dialog-view {
+        &>div {
+            width: 100vw;
+            height: 100vh;
+            .ui-dialog-content{
+				max-height: 60rem;
+				height:100%;
+				padding: 1rem 1rem 4rem 1rem;
+			}
+        }
+    }
+}

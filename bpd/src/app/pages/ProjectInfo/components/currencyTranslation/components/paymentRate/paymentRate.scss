@@ -1,0 +1,27 @@
+.payment-rate {
+    .data-table {
+        width: 100%;
+    }
+    .add-dialog {
+        // color: cyan;
+        .ui-dialog {
+            // margin-top: -14rem;
+        }
+    }
+    .table-layout {
+    //     overflow: auto;
+        // width: 100%;
+            .ui-datatable table {
+                table-layout: auto;
+                .column-width {
+                    width: 4rem;
+                }
+                .trible-column-width {
+                    width: 10rem;
+                }
+                .double-column-width {
+                    width: 7rem;
+                }
+            }
+    }
+}

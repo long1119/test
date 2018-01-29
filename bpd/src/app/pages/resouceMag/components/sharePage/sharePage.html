@@ -1,0 +1,18 @@
+<div class="topBar">
+    File Name:<input (keyup)="shareFileEnterSearch($event)" type="text" pInputText [(ngModel)]="shareFileNameSearch" class="searchInput">
+    <button pButton type="button" (click)="shareFileLookUpBtn()" label="Search"></button>
+</div>
+<p-dataTable [rows]="10" [value]="shareFileStore" class="data-table" scrollable="true" scrollHeight="30rem" [rowHover]=true>
+    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+    <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="dirEname" header="Dir Name" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="uploadUserName" header="Upload User" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="uploadTime" header="Upload Date" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="createUserName" header="Share User" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="createTime" header="Share Date" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column header="File Name" styleClass="ui-grid-col-4 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" (click)="shareFileClickBtn(item)">{{item.fileFullName}}</span>
+        </template>
+    </p-column>
+</p-dataTable>

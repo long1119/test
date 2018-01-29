@@ -1,0 +1,41 @@
+@import "../../../sass/privateStyle";
+.echange-content {
+    .content-add {
+        &>span {
+            background-color: $buttons;
+        }
+    }
+    .data-table {
+        text-align: center;
+        // margin-top: 1rem;
+        .edit-button {
+            margin: .3rem;
+            &>span {
+                background-color: $buttons;
+                padding: .2rem .5rem;
+            }
+        }
+    }
+    .yearDrop {
+		.ui-dropdown {
+			width: 90px !important;
+		}
+	}
+	.monthDrop {
+		.ui-dropdown {
+			width: 60px !important;
+		}
+	}
+    .file-upload {
+        width: 100%;
+    }
+    .message {
+        border: 1px solid red;
+        color: red;
+        font-weight: 500;
+        padding: 2rem 0;
+        width: 100%;
+        text-align: center;
+        border-radius: 5px;
+    }
+}

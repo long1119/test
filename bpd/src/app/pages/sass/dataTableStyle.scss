@@ -1,0 +1,83 @@
+.data-table {
+    text-align: center;
+    margin-top: 1rem;
+    & > div {
+        margin-top: 1rem;
+    }
+    .ui-datatable-scrollable-header {
+        display: table;
+    }
+    .ui-datatable-scrollable-view {
+        overflow: hidden;
+        width: 100%;
+        border-bottom: #ddd 1px solid;
+        border-right: #ddd .5px solid;
+    }
+    .ui-datatable {
+        .ui-datatable-thead {
+            background-color: $table-head;
+            &>tr {
+                height: 3rem; // line-height: 3rem;
+                .ui-sortable-column:hover {
+                    color: #fff;
+                    background-color: shade($table-head, 5%);
+                }
+                &>:hover {
+                    color: #fff;
+                    background-color: shade($table-head, 5%);
+                }
+            }
+        }
+        th.ui-state-default {
+            &>:hover {
+                color: #fff;
+                background-color: shade($table-head, 5%);
+            }
+            color: #fff;
+            background-color: $table-head;
+        }
+        .ui-state-active {
+            &>:hover {
+                color: #fff;
+                background-color: $table-head;
+            }
+            color: #fff;
+            ;
+        }
+    }
+    .ui-widget-header {
+        background: $table-head;
+        color: #fff;
+        height: 3rem;
+    }
+    .ui-widget-content {
+        height: 3rem; // line-height: 3rem;
+        .edit-span {
+            margin: .3rem;
+            color: $buttons;
+            padding: .2rem .5rem;
+            cursor: pointer;
+        }
+        .no-edit-span {
+            margin: .3rem;
+            color: #ddd;
+            padding: .2rem .5rem;
+            // cursor: pointer;
+        }
+    }
+    .ui-state-highlight {
+        background-color: shade($table-head, 5%);
+        .edit-span {
+            color: #FFF;
+        }
+    }
+    .ui-paginator-bottom {
+        background: transparent;
+    }
+}
+.data-table .ui-widget-header {
+    background: #fff;
+}
+.ui-datatable-header {
+    background: #4B98DC !important;
+}

@@ -1,0 +1,65 @@
+@import '../../../sass/privateStyle';
+.project-member-content {
+    .data-table {
+        width: 95%;
+        float: left;
+        .ui-widget {
+            .ui-widget-header {
+                .previous-head {
+                    line-height: 3rem;
+                    width: 50%;
+                    margin-left: 3rem;
+                    float: left;
+                    color: #fff;
+                    text-align: right;
+                }
+                padding: 0;
+                margin: 0;
+                .previous-button {
+                    float: right;
+                    height: 100%;
+                    margin: 0;
+                    background-color: #fff;
+                    color: $table-head;
+                }
+            }
+        }
+    }
+    .dialog {
+        &>div {
+            width: 40%;
+            &>div {
+                &>div {
+                    &>div {
+                        margin: 1rem 0;
+                    }
+                }
+            }
+        }
+        input {
+            width: 100%;
+        }
+        .dialog-search-input {
+            float: left;
+            width: 92%;
+        }
+        .dialog-search-button {
+            float: left;
+            width: 8%;
+            height: 2.3rem;
+            box-sizing: border-box;
+            margin: 0;
+        }
+        .ar-project-search {
+            &>::after {
+                content: "";
+                height: 0;
+                clear: both;
+                display: table;
+            }
+        }
+    }
+    .search-dialog {
+        width: 40%;
+    }
+}

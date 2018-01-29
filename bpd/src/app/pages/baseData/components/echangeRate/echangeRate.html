@@ -1,0 +1,77 @@
+<div class="ui-grid echange-content">
+    <div *ngIf="!importFlag">
+        <button pButton *ngIf="localStorageAuthority" type="button" [ngClass]="{'content-add': true}" (click)="addClick()" label="Import"></button>
+        <p-dataTable class="ui-grid-row data-table" [value]="baseData" resizableColumns="true" columnResizeMode="expand">
+            <p-column styleClass="ui-grid-col-2" header="NO">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <span *ngIf="data.exchangeRateId">{{idx + 1}}</span>
+                </template>
+            </p-column>
+            <p-column styleClass="ui-grid-col-5" header="Year Exchange Name" [sortable]="true">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <span class="edit-span" (click)="forcastInfoClick(idx,data)">{{baseData[idx].forcastInfo}}</span>
+                </template>
+            </p-column>
+            <p-column styleClass="ui-grid-col-2" field="createUser" header="Import User"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="vDate" header="Version"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="updateDate" header="Import Date"></p-column>
+            <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <span *ngIf="data.exchangeRateId" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+        <!-- <p-paginator totalRecords="{{echangeTotalRecords}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator> -->
+        <!-- 添加界面 -->
+        <p-dialog class="dialog" header="Echange Rate" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+            <div class="ui-grid-responsive ui-fluid">
+                <div class="ui-grid-row">
+                    <p-dropdown class="yearDrop" (onChange)="dateChange()" autoWidth="false" [options]="yearSerchStore" [(ngModel)]="yearSerch"></p-dropdown>
+                    <p-dropdown class="monthDrop" (onChange)="dateChange()" autoWidth="false" [options]="monthSerchStore" [(ngModel)]="monthSerch"></p-dropdown>
+                </div>
+                <div *ngIf="!fileUploadFlag">
+                    <p-fileUpload styleClass="file-upload" mode="basic" name="file" url="/bpd-proj/bpd/exchangeRateInfo/importExchangeYearRate?vDate={{yearSerch}}-{{monthSerch}}" accept="xlsm" (onBeforeUpload)="onBasicBeforeUpload($event)"
+                        (onSelect)="onBasicSelect($event)" (onUpload)="onBasicUpload($event)"></p-fileUpload>
+                </div>
+                <div class="ui-grid-row" *ngIf="fileUploadFlag">
+                    <div class="message">
+                        {{yearSerch}}-{{monthSerch}} Exchange Verion Exist!!
+                    </div>
+                </div>
+            </div>
+        </p-dialog>
+        <!-- 信息提示页 -->
+        <p-dialog class="dialog" header="Echange Rate" [(visible)]="messageDialog">
+            <p-dataTable class="ui-grid-row data-table" [value]="messageData">
+                <p-column styleClass="ui-grid-col-3" field="colIndex" header="Col">
+                </p-column>
+                <p-column styleClass="ui-grid-col-3" field="rowIndex" header="Row"></p-column>
+                <p-column styleClass="ui-grid-col-6" field="errorInfo" header="errorInfo"></p-column>
+            </p-dataTable>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                    <button type="button" pButton (click)="messageDetermine()" label="Close"></button>
+                    <button type="button" pButton (click)="messageVeto()" label="Confirm"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+        <!-- 删除弹框  -->
+        <p-dialog header="Echange Rate" class="dialog" [(visible)]="deleteDialog">
+            <div>
+                Are You Sure To Delete?
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                    <button type="button" pButton (click)="deleteNo(idx,data)" label="No"></button>
+                    <button type="button" pButton (click)="deleteYes(idx,data)" label="Yes"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+        <!-- 成功弹框提示 -->
+        <p-growl styleClass="message-class" [(value)]="growMessage" life="{{growLife}}"></p-growl>
+        </div>
+        <exchange-edit [paginatorPage]="paginatorPage" [paginatorRow]="paginatorRow" (flagOut)="rejFlag($event)" *ngIf="importFlag"
+            [changedCode]="changedCode" (paginatorPageOut)="paginatorPageRec($event)" (paginatorRowOut)="paginatorRowRec($event)"></exchange-edit>
+        <!-- 成功弹框提示 -->
+        <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+    </div>

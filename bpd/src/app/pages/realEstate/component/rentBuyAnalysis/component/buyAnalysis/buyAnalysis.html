@@ -1,0 +1,13 @@
+<div class="buy-analysis">
+    <div class="button-content">
+        <button pButton type="button" class="program-add" (click)="exportAnalysisClick()" label="Export"></button>
+    </div>
+    <p-dataTable class="ui-grid data-table" [value]="buyAnalysisData" resizableColumns="true" columnResizeMode="expand">
+        <p-column rowStyleClass="table-align" styleClass="index-row" field="index" header="Index"></p-column>
+		<p-column *ngFor="let list of buyAnalysisList" styleClass="ui-grid-col-4 align-right" header="{{list}}" field="{{list}}">
+            <template pTemplate="body" let-data="rowData">
+                <span>{{data[list] | ammountPips}}</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+</div>

@@ -1,0 +1,127 @@
+<div style="overflow:auto;width:calc(100% + 36px);height:calc(100vh - 100px);position:relative;margin:-8px -18px" id="girdDiv">
+    <div *ngIf="showHeader" id="mainHeader" style="width:100%;height:72px;position:fixed;background-color:#153857;z-index:899;margin:0;">
+        <table class="gridTable">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="max-width:80px;min-width:80px;width:80px;text-align:center;">
+                        <i class="fa fa-reply-all" style="margin-right:10px;display:inline-block;cursor:pointer;" [routerLink]="['../../../pages/kanban-config',{}]"></i>
+                        <i class="fa fa-download" style="cursor:pointer;" (click)="download()"></i>
+                    </th>
+                    <th rowspan="2" style="max-width:100px;min-width:100px;width:100px">Platform</th>
+                    <th rowspan="2" style="max-width:100px;min-width:100px;width:100px">Brand</th>
+                    <th rowspan="2" style="max-width:100px;min-width:100px;width:100px">Program</th>
+                    <th colspan="4">{{thisYear}}</th>
+                    <th colspan="4">{{thisYear+1}}</th>
+                    <th colspan="4">{{thisYear+2}}</th>
+                    <th colspan="4">{{thisYear+3}}</th>
+                    <th colspan="4">{{thisYear+4}}</th>
+                    <!-- <th colspan="4">{{thisYear+5}}</th> -->
+                </tr>
+                <tr>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th>
+                    <!-- <th>1</th>
+                    <th>2</th>
+                    <th>3</th>
+                    <th>4</th> -->
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <table class="gridTable">
+        <thead>
+            <tr>
+                <th rowspan="2" style="max-width:80px;min-width:80px;width:80px;">
+                    <i class="fa fa-reply-all" style="margin-right:10px;display:inline-block; cursor:pointer;" [routerLink]="['../../../pages/kanban-config',{}]"></i>
+                    <i class="fa fa-download" style="cursor:pointer;" (click)="download()"></i>
+                </th>
+                <th rowspan="2" style="max-width:100px;min-width:100px;width:100px">Platform</th>
+                <th rowspan="2" style="max-width:100px;min-width:100px;width:100px">Brand</th>
+                <th rowspan="2" style="max-width:100px;min-width:100px;width:100px">Program</th>
+                <th colspan="4">{{thisYear}}</th>
+                <th colspan="4">{{thisYear+1}}</th>
+                <th colspan="4">{{thisYear+2}}</th>
+                <th colspan="4">{{thisYear+3}}</th>
+                <th colspan="4">{{thisYear+4}}</th>
+                <!-- <th colspan="4">{{thisYear+5}}</th> -->
+            </tr>
+            <tr>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <!-- <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th> -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor = "let item of gridStore; let i = index">
+                <td *ngIf="i==0 || item['category']!=gridStore[i-1].category" [attr.rowspan]="item.rowspan" style="background-color:#153857;color:#fff">{{item.category}}</td>
+                <td style="background-color:#d9d9d9;word-wrap:break-word;word-break:break-all;">{{item.platform}}</td>
+                <!-- <td>{{item.brandName}}</td> -->
+                <td style="background-color:#fff"><img [src]="item.brandUrl" style="width:50px;height:50px"></td>
+                <td style="background-color:#d9d9d9">{{item.programName}}</td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+                <td style="background-color:#c5d9f1"></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,169 @@
+<div class="rental-expense">
+    <div *ngIf="localStorageAuthority" class="button-content ui-grid">
+        <div class="ui-grid-col-1">
+            <button pButton type="button" style="margin-top: 1rem;" class="program-add" (click)="saveBuildingCostAndOthersClick()" label="Save"></button>
+        </div>
+        <div class="ui-grid-col-11"></div>
+    </div>
+    <p-panel class="panel" [toggleable]="true" header="Land Acqusition Cost">
+        <div class="inner-table-input ui-grid">
+            <!-- <div class="ui-grid-col-2"><label>Rental Price :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText type="number" (keyup)="calculationCost()" min="0" max="100" id="regionCode" [(ngModel)]="dialogAcqusitionLandCost" />
+            </div> -->
+            <!-- <div class="ui-grid-col-2"><label>Initial Investment (CNY) :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText disabled type="number" min="0" max="100" id="regionCode" [(ngModel)]="dialogAcqusitionInitialInvestment" />
+            </div> -->
+            <div class="ui-grid-col-2"><label>Period :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText type="number" (keyup)="calculationCost()" min="0" max="100" id="regionCode" [(ngModel)]="dialogAcqusitionPeriod" />
+            </div>
+            <div class="ui-grid-col-2"><label>Acreage (sqm) :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText type="number" (keyup)="calculationCost()" min="0" max="100" id="regionCode" [(ngModel)]="dialogAcqusitionAcreage" />
+            </div>
+        </div>
+        <!-- <div class="inner-table-input ui-grid">
+            
+        </div> -->
+        <!-- <div class="inner-table-input ui-grid">
+            <div class="ui-grid-col-2"><label>Annual Depreciation :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText disabled type="number" min="0" max="100" id="regionCode" [(ngModel)]="dialogAcqusitionAnnualDepreciation" />
+            </div>
+            <div class="ui-grid-col-6"></div>
+        </div> -->
+        <div *ngIf="localStorageAuthority" class="inner-button-content">
+            <button pButton type="button" class="program-add" (click)="addAcqusitionClick()" label="Add"></button>
+        </div>
+        <p-dataTable selectionMode="single" class="ui-grid data-table" [value]="landAcqusitionData" [rows]="10">
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="year" header="Occured Year"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="weightValue" header="Occured Percentage"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="rentalPrice" header="Rental Price"></p-column>
+            <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-1" header="">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <span class="edit-span" (click)="editAcqusitionClick(idx,data)">Edit</span>
+                    <span class="edit-span" (click)="deleteAcqusitionClick(idx,data)">Delete</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+    </p-panel>
+    <p-panel class="panel" [toggleable]="true" header="Other Cost">
+        <div class="inner-table-input ui-grid">
+            <div class="ui-grid-col-2"><label>Other Cost (CNY) :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText type="number" (keyup)="calculationCost()" min="0" max="100" id="regionCode" [(ngModel)]="dialogOtherLandCost" />
+            </div>
+            <div class="ui-grid-col-2"><label>Initial Investment (CNY) :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText disabled type="number" min="0" max="100" id="regionCode" [(ngModel)]="dialogOtherInitialInvestment" />
+            </div>
+        </div>
+        <div class="inner-table-input ui-grid">
+            <div class="ui-grid-col-2"><label>Period :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText type="number" (keyup)="calculationCost()" min="0" max="100" id="regionCode" [(ngModel)]="dialogOtherPeriod" />
+            </div>
+            <div class="ui-grid-col-2"><label>Annual Depreciation :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText disabled type="number" min="0" max="100" id="regionCode" [(ngModel)]="dialogOtherAnnualDepreciation" />
+            </div>
+            <!-- <div class="ui-grid-col-6"></div> -->
+        </div>
+        <div *ngIf="localStorageAuthority" class="inner-button-content">
+            <button pButton type="button" class="program-add" (click)="addOtherClick()" label="Add"></button>
+        </div>
+        <p-dataTable selectionMode="single" class="ui-grid data-table" [value]="otherCostData" [rows]="10">
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="year" header="Occured Year"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="weightValue" header="Occured Percentage"></p-column>
+            <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-1" header="">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <span class="edit-span" (click)="editOtherClick(idx,data)">Edit</span>
+                    <span class="edit-span" (click)="deleteOtherClick(idx,data)">Delete</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+    </p-panel>
+    <p-panel class="panel" [toggleable]="true" header="Long Term Expense">
+        <div class="inner-table-input ui-grid">
+            <div class="ui-grid-col-2"><label>Long Term Cost (CNY) :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText type="number" (keyup)="calculationCost()" min="0" max="100" id="regionCode" [(ngModel)]="dialogExpenseLandCost" />
+            </div>
+            <div class="ui-grid-col-2"><label>Initial Investment (CNY) :</label></div>
+            <div class="ui-grid-col-4">
+                <input pInputText disabled type="number" min="0" max="100" id="regionCode" [(ngModel)]="dialogExpenseInitialInvestment" />
+            </div>
+        </div>
+        <div *ngIf="localStorageAuthority" class="inner-button-content">
+            <button pButton type="button" class="program-add" (click)="addExpenseClick()" label="Add"></button>
+        </div>
+        <p-dataTable selectionMode="single" class="ui-grid data-table" [value]="longTermExpenseData" [rows]="10">
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="year" header="Occured Year"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="weightValue" header="Occured Percentage"></p-column>
+            <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-1" header="">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <span class="edit-span" (click)="editExpenseClick(idx,data)">Edit</span>
+                    <span class="edit-span" (click)="deleteExpenseClick(idx,data)">Delete</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+    </p-panel>
+    <!-- 添加界面 -->
+    <p-dialog class="dialog real-estate-modify" header="Real Estate {{modifyAreaFlag}}" [(visible)]="modifyDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label class="required" for="regionCode">Occured Year No :</label></div>
+                <div class="ui-grid-col-7"><input required type="number" min="0" max="100" maxlength="4" pInputText id="regionCode" [(ngModel)]="dialogOccuredNo"
+                    /></div>
+            </div>
+            <div class="ui-grid-row" *ngIf="modifyFlag == 'add'">
+                <div class="ui-grid-col-5"><label class="required" for="regionCode">Year Count :</label></div>
+                <div class="ui-grid-col-7"><input required type="number" min="0" max="100" pInputText (keyup)="dialogYearCount = inputRegex(dialogYearCount)" id="regionCode" [(ngModel)]="dialogYearCount" /></div>
+            </div>
+            <div class="ui-grid-row" *ngIf="modifyAreaFlag == 'Acqusition'">
+                <div class="ui-grid-col-5"><label class="required" for="regionCode">Rental Price :</label></div>
+                <div class="ui-grid-col-7"><input required type="number" min="0" max="100" pInputText (keyup)="dialogYearCount = inputRegex(dialogYearCount)" id="regionCode" [(ngModel)]="dialogRentalPrice" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label class="required" for="regionCode">Occured Percentage :</label></div>
+                <div class="ui-grid-col-7"><input required type="number" min="0" max="100" pInputText (keyup)="dialogOccuredPercentage = inputRegex(dialogOccuredPercentage)" id="regionCode" [(ngModel)]="dialogOccuredPercentage" />%</div>
+            </div>
+        </div>
+        <!-- <div *ngFor="let inputPercentage of inputPercentages" class="ui-grid-row">
+                <div class="ui-grid-col-2"><label class="required" for="regionCode">Occured Year No :</label></div>
+                <div class="ui-grid-col-2"><input required disabled type="number" min="0" max="100" maxlength="4" pInputText id="regionCode" [(ngModel)]="inputPercentage.occuredNo"
+                    /></div>
+                <div class="ui-grid-col-2"><label class="required" for="regionCode">Year Count :</label></div>
+                <div class="ui-grid-col-2"><input required (keyup)="setInput(addDynamicFlag ,true)" type="number" min="0" max="100" pInputText id="regionCode" [(ngModel)]="inputPercentage.yearCount" /></div>
+                <div class="ui-grid-col-2"><label class="required" for="regionCode">Occured Percentage :</label></div>
+                <div class="ui-grid-col-2"><input required  (keyup)="inputPercentage.occuredPercentage = dynamicInput(addDynamicFlag, inputPercentage.occuredPercentage, regexFlag)" type="number" min="0" max="100" pInputText id="regionCode" [(ngModel)]="inputPercentage.occuredPercentage" />%</div>
+            </div>
+            <div class="required" style="margin-top: 1rem;" *ngIf="!addPercentageFlag">The Sum Of The Percentage Must Equal 100!</div> -->
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="modifyEstateCancel()" label="Cancel"></button>
+                <button *ngIf="modifyFlag == 'add'" type="button" pButton [(disabled)]="!dialogOccuredNo || !dialogYearCount || !dialogOccuredPercentage" (click)="modifyEstateSave()"
+                label="Confirm"></button>
+                <button *ngIf="modifyFlag == 'edit'" type="button" pButton [(disabled)]="!dialogOccuredNo || !dialogOccuredPercentage" (click)="modifyEstateSave()"
+                label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="Delete Real Estate {{modifyAreaFlag}}" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteEstateNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteEstateYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

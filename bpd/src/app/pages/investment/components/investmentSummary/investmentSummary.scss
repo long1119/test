@@ -1,0 +1,58 @@
+@import "../../../sass/privateStyle.scss";
+.investmentSummaryBody{
+    .wrap-body{
+        height: 500px;
+        overflow-y: auto;
+        .head-title{
+            background-color: #4B98DC;
+            color: white;
+            height: 50px;
+            padding-left: 0.5rem;
+          }
+    }
+    .blue{
+      color:#6BB2F3;
+      text-align:center;
+      cursor:pointer;
+    }
+    .clickStyle{
+      background-color: #186BA0;
+      color: white;
+      .blue{
+        color: white;
+      }
+    }
+    .overStyle{
+      background-color: rgba(220,220,220,0.5);
+    }
+    .table-bordered thead{
+      background-color: #4B98DC;
+      color: white;
+    }
+    .table-bordered td{
+      border: 1px solid #D9D9D9 !important;
+      padding: 0.5rem;
+      height: 36px;
+    }
+    .table-bordered th{
+      border: 1px solid #D9D9D9 !important;
+      padding: 0.5rem;
+    }
+    #elseDropDown{
+      p-dropdown{
+        .ui-dropdown{
+          width: 20% !important;
+        }
+      }
+    }
+    .center{
+      text-align: center;
+    }
+    .right{
+      text-align: right;
+    }
+    .tableDifferentiate{
+      font-weight: bold;
+      text-align: left !important;
+    }
+}

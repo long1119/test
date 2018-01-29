@@ -1,0 +1,24 @@
+<div class="launch-plan">
+    <!--  scrollable="true" scrollHeight="40rem" -->
+    <p-dataTable (onRowClick)="onRowClick($event)" selectionMode="single" class="ui-grid data-table project-info-table" scrollable="true" scrollHeight="30rem"
+        [value]="launchPlanData" [(selection)]="selectedLaunchPlan">
+        <p-column styleClass="ui-grid-col-2" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="launchPlanData[idx].adProjectCode">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="programCode" header="Program Code"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="modelYear" header="Model Year"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="projectName" header="Project Name"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="classifcation" header="Classifcation"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="categoryName" header="Category"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="currentPqrr" header="Current-PQRR"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="userName" header="Program Manager"></p-column>
+    </p-dataTable>
+    <p-paginator rows="10" totalRecords="{{launchPlanPaginatorTotal}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="launchPlanPaginate($event)"></p-paginator>
+    <p-tabView class="tab-view">
+        <p-tabPanel header="Launch Plan">
+            <time-sheet-version-info [changeAdProjectCode]="changeAdProjectCode"></time-sheet-version-info>
+        </p-tabPanel>
+    </p-tabView>
+</div>

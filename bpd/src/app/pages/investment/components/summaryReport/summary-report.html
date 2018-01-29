@@ -1,0 +1,423 @@
+<div class="theme">
+    <button pButton type="button" (click)="addReport()" label="Add" [disabled]="powerOfModify!='true'"></button>
+    <!-- 主表 -->
+    <table class="table table-bordered">
+        <thead class="thead-inverse">
+            <tr>
+                <th>No</th>
+                <th style="text-align:center;">Subject</th>
+                <th style="text-align:center;">Report Date</th>
+                <th style="text-align:center;">Scorecard Meeting</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody (mouseout)="outTable()">
+            <tr *ngFor="let option of summaryReportTable;let i=index" [ngClass]="{'clickStyle':i==flag1,'overStyle':i==flag2}" (click)="gotoClick(i)" (mouseover)="gotoCover(i)">
+                <td>{{i+1}}</td>
+                <td style="text-align:center;">{{option.subject}}</td>
+                <td style="text-align:center;">{{option.reportDate}}</td>
+                <td style="text-align:center;">{{option.reportSeason}}</td>
+                <td *ngIf="powerOfModify=='true'"><span class="txt" (click)="change(option)">Edit</span><span class="txt" (click)="remove(option.summaryId)">Delete</span></td>
+                <td *ngIf="powerOfModify!='true'"><span class="txt" (click)="viewReport(option)">View</span></td>
+            </tr>
+            <tr *ngIf="summaryReportTable.length==0" style="text-align: center;">
+                <td colspan="5"> No records found</td>
+            </tr>
+        </tbody>
+    </table>
+    <p-dialog class="dialog" [(visible)]="showSummaryReport" width="1000">
+        <p-header>
+            <div *ngIf="stepOne" class="stepOne" style="font-size:1.5rem;font-weight:bold;display:inline-block;width:500px;">
+                Report Cover  <button *ngIf="switch=='modify'" style="background-color:#F2F2F2;color:black;margin-left:1rem;" pButton type="button" (click)="export()" label="Export"></button>
+            </div>
+            <div *ngIf="stepTwo" class="stepTwo ui-g" style="display:inline-block;width:900px;">
+                <div class="ui-g-2" style="font-size:1.5rem;font-weight:bold;padding:0;">Report Summary</div> 
+                <div class="ui-g-2" style="padding:0 0 0 4rem;">Analysis Type:</div>
+                <div class="ui-g-3" style="padding:0;">
+                    <p-dropdown [options]="types" (onChange)="changePicture()" [(ngModel)]="selectedType"></p-dropdown>
+                </div>
+            </div>
+        </p-header>
+        <div class="outer">
+            <div class="stepOne" *ngIf="stepOne">
+                <div class="wrapOne"> 
+                    <div class="ui-g">
+                        <div class="ui-g-3 txt">议题 Subject:</div>
+                        <div class="ui-g-7 txt">
+                            <input type="text" pInputText [(ngModel)]="subject" maxlength="50">
+                        </div>
+                        <div class="ui-g-3 txt">日期 Meeting Date:</div>
+                        <div class="ui-g-7 txt">
+                            <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" [(ngModel)]="meetingDate" (onSelect)="calendarChange($event)" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
+                        </div>
+                        <div class="ui-g-3 txt">记分卡会议 Scorecard Meeting:</div>
+                        <div class="ui-g-7 txt">
+                            <!-- <input id="input" type="text" disabled="true" pInputText [(ngModel)]="season"> -->
+                            <p-dropdown [options]="scoreMeetings" class="drop-down" [(ngModel)]="selectedMeeting" [autoWidth]="false"></p-dropdown>
+                        </div>
+                        <div class="ui-g-3 txt">汇报人 Presender:</div>
+                        <div class="ui-g-8 txt">
+                            <div class="wrap" style="padding-top:0.3rem;">
+                                <span *ngFor="let item of presenders;let i=index;">{{item}}
+                                    <i class="fa fa-times" style="color:red;" (click)="remove1(i)"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ui-g-1 txt">
+                            <button pButton type="button" (click)="selectOne()" label="Select"></button>
+                        </div>
+                        <div class="ui-g-3 txt">出席人 SIME:</div>
+                        <div class="ui-g-8 txt">
+                            <div class="wrap" style="padding-top:0.3rem;">
+                                <span *ngFor="let item of attendees;let i=index">{{item}}
+                                    <i class="fa fa-times" style="color:red;" (click)="remove2(i)"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ui-g-1 txt">
+                            <button pButton type="button" (click)="selectTwo()" label="Select"></button>
+                        </div>
+                        <div class="ui-g-3 txt">出席部门 Supporting Dept:</div>
+                        <div class="ui-g-8 txt">
+                            <div class="wrap" style="padding-top:0.3rem;">
+                                <span *ngFor="let item of departments;let i=index">{{item}}
+                                    <i class="fa fa-times" style="color:red;" (click)="remove3(i)"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="ui-g-1 txt">
+                            <button pButton type="button" (click)="selectThree()" label="Select"></button>
+                        </div>
+                    </div>
+                    <p-panel header="主题Synopsis of Topic" [toggleable]="true" [style]="{'margin-bottom':'10px'}">
+                        <div class="ui-g">
+                            <div class="ui-g-2">1.汇报 Report</div>
+                            <div class="ui-g-10">
+                                <textarea rows="5" cols="80" pInputTextarea [(ngModel)]="report"></textarea>
+                            </div>
+                        </div>   
+                    </p-panel>
+                    <!-- <div class="card">
+                        <div class="card-title">主题Synopsis of Topic</div>
+                        <div class="card-body ui-g">
+                            <div class="ui-g-2">1.汇报</div>
+                            <div class="ui-g-10">
+                                <textarea rows="5" cols="80" pInputTextarea [(ngModel)]="report"></textarea>
+                            </div>
+                        </div>
+                    </div> -->
+                    <p-panel header="主要观点/问题/风险Key points/Roadblocks/Risks" [toggleable]="true" [style]="{'margin-bottom':'10px'}">
+                        <div class="card-body">
+                            <div class="ui-g">
+                                <!-- <p>1.{{season}}项目积分卡关键指标分析</p>
+                                <p>{{year}} {{Qseason}} scorecard summary and analysis</p> -->
+                                <div class="ui-g-2">
+                                    主要观点 Key Points:
+                                </div>
+                                <div class="ui-g-4">
+                                    <input type="text" pInputText [(ngModel)]="keyPoints" maxlength="500">
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <!-- <p>2.各项目详细积分卡状态</p>
+                                <p>  Detailed scorecard for each program</p> -->
+                                <div class="ui-g-2">
+                                    问题 Roadblocks:
+                                </div>
+                                <div class="ui-g-4">
+                                    <input type="text" pInputText [(ngModel)]="roadblocks" maxlength="500">
+                                </div>
+                            </div>
+                            <div class="ui-g">
+                                <div class="ui-g-2">
+                                    风险 Risks:
+                                </div>
+                                <div class="ui-g-4">
+                                    <input type="text" pInputText [(ngModel)]="Risks" maxlength="500">
+                                </div>
+                            </div>
+                            <div class="body3">
+                                <div>&nbsp;&nbsp;记分卡书面查阅项目 Scorecard Written Access Items</div>
+                                <div class="ui-g">
+                                    <div class="ui-g-10">
+                                        <p style="border:1px solid #c8c8c8;padding:0.5rem;height:30px;">{{checkProgram}}</p>  
+                                    </div>
+                                    <div class="ui-g-2">
+                                        <button pButton type="button" (click)="readProgram()" label="Initial"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p-panel>
+                    <!-- <div class="card">
+                        <div class="card-title">主要观点/问题/风险Key points/Roadblocks/Risks</div>
+                        <div class="card-body">
+                            <div class="body1">
+                                <p>1.{{season}}项目积分卡关键指标分析</p>
+                                <p>{{year}} {{Qseason}} scorecard summary and analysis</p>
+                            </div>
+                            <div class="body2">
+                                <p>2.各项目详细积分卡状态</p>
+                                <p>  Detailed scorecard for each program</p>
+                            </div>
+                            <div class="body3">
+                                <p>3.积分卡书面查阅项目</p>
+                                <div class="ui-g">
+                                    <div class="ui-g-10">
+                                        <p style="height:100%;border:1px solid #c8c8c8;">{{checkProgram}}</p>  
+                                    </div>
+                                    <div class="ui-g-2">
+                                        <button pButton type="button" (click)="readProgram()" label="Initial"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    <p-panel header="决策方向/建议Decision/Direction Required/Recommendation" [toggleable]="true">
+                        <button pButton type="button" (click)="addItem()" label="Add"></button> 
+                        <table class="table table-bordered">
+                            <thead class="thead-inverse" style="background-color:#4B98DC;color:white;">
+                                <tr>
+                                    <th>Item</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let option of items;let i=index">
+                                    <td>{{option}}</td>       
+                                    <td style="color:blue;cursor:pointer;text-align:center;" (click)="removeItem(i)">Delete</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </p-panel>
+                    <!-- <span>决策方向/建议Decision/Direction Required/Recommendation</span><br> -->
+                    <!-- <button pButton type="button" (click)="addItem()" label="Add"></button> 
+                    <table class="table table-bordered">
+                        <thead class="thead-inverse" style="background-color:#4B98DC;color:white;">
+                            <tr>
+                                <th>Item</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let option of items;let i=index">
+                                <td>{{option}}</td>       
+                                <td style="color:blue;cursor:pointer;text-align:center;" (click)="removeItem(i)">Delete</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                    <!-- 增加时用此表格 -->
+                    <!-- <table *ngIf="switch == 'add'" class="table table-bordered">
+                        <thead class="thead-inverse" style="background-color:#4B98DC;color:white;">
+                            <tr>
+                                <th>Item</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let option of addItems;let i=index">
+                                <td>{{option}}</td>       
+                                <td style="color:blue;cursor:pointer;text-align:center;" (click)="removeItem1(i)">Delete</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                </div>
+                <p-footer class="ui-g foot">
+                        <div class="ui-g-4" style="margin-left:5rem;"></div>
+                        <button [disabled]="!checkProgram" type="button" pButton (click)="nextStep()" label="Next"></button>
+                        <div class="ui-g-1"></div>
+                        <button type="button" pButton (click)="showSummaryReport=false" label="Cancel"></button>
+                </p-footer>
+            </div>
+            <div class="stepTwo" *ngIf="stepTwo" style="margin:0;">
+                <div class="wrapTwo">
+                    <div class="childOne" *ngIf="selectedType==1">
+                        <div class="title ui-g">
+                            <!-- <span style="padding-top:0.8rem;"> Metrix Group:</span>
+                            <div class="ui-g-2">
+                                <p-dropdown [options]="metrixGroups" (onChange)="changeChild()" [(ngModel)]="selectedGroup"></p-dropdown>
+                            </div>
+                            <div class="ui-g-3">
+                                <button pButton type="button" (click)="refresh()" label="Refresh"></button>
+                                <button pButton type="button" (click)="exportGraphic()" label="Export Graphic"></button>
+                            </div> -->
+                            <table class="table table-bordered">
+                                <thead class="thead-inverse">
+                                    <tr *ngFor="let option of title1">
+                                        <th rowspan="2" colspan="2"></th>
+                                        <th *ngFor="let tit of title;let i=index" style="text-align:center;">{{option[tit]}}</th>
+                                    </tr>
+                                    <tr *ngFor="let option of title2">
+                                        <th *ngFor="let tit of title;" style="text-align:center;">{{option[tit]}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let option of table1.slice(0,1)">
+                                        <td [attr.rowspan]=table1.length style="background-color:#F2DCDB;width:10px;vertical-align:middle;">Customer Focused 客户关注</td>
+                                        <td style="text-align:left;">{{option.metrix}}</td>
+                                        <td style="text-align:center;vertical-align:middle;" *ngFor="let tit of title" [ngClass]="{'red':option[tit]=='R','green':option[tit]=='G','yellow':option[tit]=='Y'}">{{option[tit]}}</td>
+                                    </tr>
+                                    <tr *ngFor="let option of table1.slice(1)">
+                                        <td style="text-align:left">{{option.metrix}}</td>
+                                        <td style="text-align:center;vertical-align:middle;" *ngFor="let tit of title" [ngClass]="{'red':option[tit]=='R','green':option[tit]=='G','yellow':option[tit]=='Y'}">{{option[tit]}}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody>
+                                    <tr *ngFor="let option of table2.slice(0,1)">
+                                        <td [attr.rowspan]=table2.length style="background-color:#CCFF99;width:10px;vertical-align:middle;">Program Profit 项目利益</td>
+                                        <td style="text-align:left">{{option.metrix}}</td>
+                                        <td style="text-align:center;vertical-align:middle;" *ngFor="let tit of title" [ngClass]="{'red':option[tit]=='R','green':option[tit]=='G','yellow':option[tit]=='Y'}">{{option[tit]}}</td>
+                                    </tr>
+                                    <tr *ngFor="let option of table2.slice(1)">
+                                        <td style="text-align:left">{{option.metrix}}</td>
+                                        <td style="text-align:center;vertical-align:middle;" *ngFor="let tit of title" [ngClass]="{'red':option[tit]=='R','green':option[tit]=='G','yellow':option[tit]=='Y'}">{{option[tit]}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="childTwo" *ngIf="selectedType==2">
+                        <div class="ui-g" *ngFor="let option of table3">
+                            <div class="ui-g-4 text">
+                                <div>{{option.metrix}}</div>
+                            </div>
+                            <div class="ui-g-8 tipBar">
+                                <div *ngIf="option.Gnum" [ngStyle]="{'width':option.Gnum/option.tatolNum*100+'%'}" style="background-color:green;height:40px;line-height:40px;"><span style="color:white;">{{option.Gnum/option.tatolNum|percent:'1.0-0'}}</span>({{option.Gnum}})</div>
+                                <div *ngIf="option.Ynum" [ngStyle]="{'width':option.Ynum/option.tatolNum*100+'%'}" style="background-color:orange;height:40px;line-height:40px;"><span style="color:white;">{{option.Ynum/option.tatolNum|percent:'1.0-0'}}</span>({{option.Ynum}})</div>
+                                <div *ngIf="option.Rnum" [ngStyle]="{'width':option.Rnum/option.tatolNum*100+'%'}" style="background-color:#C00000;height:40px;line-height:40px;"><span style="color:white;">{{option.Rnum/option.tatolNum|percent:'1.0-0'}}</span>({{option.Rnum}})</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-4"></div>
+                            <div class="ui-g-8 wrap-percent">
+                                <div class="percent">0%</div>
+                                <div class="percent">20%</div>
+                                <div class="percent">40%</div>
+                                <div class="percent">60%</div>
+                                <div class="percent">80%</div>
+                                <div>100%</div>
+                            </div>
+                            <div style="padding-left:400px;"><span class="tubiao" style="background-color:green;"></span>G<span class="tubiao" style="background-color:orange;"></span>Y<span class="tubiao" style="background-color:#C00000;"></span>R</div>
+                        </div>
+                    </div>
+                    <div class="childThree" *ngIf="selectedType==3">
+                        <bubble-chart [childData]="parentDate"></bubble-chart>
+                    </div>
+                </div>
+                <p-footer class="ui-g foot" *ngIf="view">
+                        <!-- <div class="ui-g-4"></div>
+                        <button type="button" pButton (click)="nextStep()" label="Tracking issue"></button> -->
+                        <div class="ui-g-4" style="margin-left:5rem;"></div>
+                        <button type="button" pButton (click)="lastStep()" label="Previous"></button>
+                        <div class="ui-g-1"></div>
+                        <button type="button" pButton (click)="showSummaryReport=false" label="Cancel"></button>
+                </p-footer>
+            </div>
+        </div>
+    </p-dialog>
+    <p-dialog class="dialog" header="Select Users" [(visible)]="showUsers" width="1000">
+        <div class="ui-g">
+            <div class="ui-g-1" style="margin:0;padding:0.8rem 0 0 0;">
+                <label>Department:</label>
+            </div>
+            <div class="ui-g-2" style="margin:0;">
+                <input (keyup)="checkupEnterSearch($event)" id="input" type="text" pInputText [(ngModel)]="department">
+            </div>
+            <div class="ui-g-1" style="margin:0;padding:0.8rem 0 0 0;">
+                <label>User Name:</label>
+            </div>
+            <div class="ui-g-2" style="margin:0;">
+                <input (keyup)="checkupEnterSearch($event)" id="input" type="text" pInputText [(ngModel)]="userName">
+            </div>
+            <div class="ui-g-2" style="margin:0;">
+                <button pButton type="button" (click)="checkUp()" label="Search"></button>
+            </div>
+        </div>
+        <div style="max-height:430px;overflow-y:auto;">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-inverse" style="background-color:#4B98DC;color:white;">
+                    <tr>
+                        <th>No</th>
+                        <th>User Name</th>
+                        <th>Employee ID</th>
+                        <th>Job</th>
+                        <th>Telephone</th>
+                        <th>Email</th>
+                        <th>Department</th>
+                        <th>Manager</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of userTable;let i=index">
+                        <td>
+                            <p-checkbox name="group1" [value]=item [(ngModel)]="selectedItems"></p-checkbox>
+                        </td>
+                        <td>{{item.userName}}</td>
+                        <td>{{item.employeeCode}}</td>
+                        <td>{{item.jobPosition}}</td>
+                        <td>{{item.telephone}}</td>
+                        <td>{{item.emailAddress}}</td>
+                        <td>{{item.departmentName}}</td>
+                        <td>{{item.masterName}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+        <p-footer class="ui-g foot">
+                <div class="ui-g-4" style="margin-left:5rem;"></div>
+                <button type="button" pButton (click)="handOver()" label="Confirm"></button>
+                <div class="ui-g-1"></div>
+                <button type="button" pButton (click)="showUsers=false" label="Cancel"></button>
+        </p-footer>
+    </p-dialog>
+    <p-dialog class="dialog" header="Select Departments" [(visible)]="showDepartments" width="600">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-inverse" style="background-color:#4B98DC;color:white;">
+                <tr>
+                    <th>No</th>
+                    <th>Department Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let option of DepartmentTable;let i=index;">
+                    <td>
+                        <p-checkbox name="group2" [value]=option [(ngModel)]="selectedDepartments"></p-checkbox>
+                    </td>
+                    <td>{{option.deptName}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <p-footer class="ui-g foot">
+                <div class="ui-g-4"></div>
+                <button type="button" pButton (click)="handChoose()" label="Confirm"></button>
+                <div class="ui-g-1"></div>
+                <button type="button" pButton (click)="showDepartments=false" label="Cancel"></button>
+        </p-footer>
+    </p-dialog>
+    <!-- 主表增加弹框最下方表格的增加弹框 -->
+    <p-dialog class="dialog" header="Add Item" [(visible)]="showItems" width="400">
+        <div class="ui-g">
+            <div class="ui-g-2">Item</div>
+            <div class="ui-g-10">
+                <input id="input" type="text" pInputText [(ngModel)]="item" maxlength="100">
+            </div>
+        </div>
+        <p-footer class="ui-g foot">
+                <div class="ui-g-4"></div>
+                <button type="button" pButton (click)="handItem()" label="Confirm"></button>
+                <div class="ui-g-1"></div>
+                <button type="button" pButton (click)="showItems=false" label="Cancel"></button>
+        </p-footer>
+    </p-dialog>
+    <p-dialog class="dialog" header="Delete" [(visible)]="deleteSure" width="400">
+        Are you sure to delete it?
+        <p-footer class="ui-g foot">
+                <div class="ui-g-4"></div>
+                <button type="button" pButton (click)="sureDelete()" label="Confirm"></button>
+                <div class="ui-g-1"></div>
+                <button type="button" pButton (click)="deleteSure=false" label="Cancel"></button>
+        </p-footer>
+    </p-dialog>
+    <p-growl styleClass="message-class" [(value)]="msgs" life="3000"></p-growl>
+</div>

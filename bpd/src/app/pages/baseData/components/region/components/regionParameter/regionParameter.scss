@@ -1,0 +1,62 @@
+@import "../../../../../../theme/sass/conf/conf";
+.project-parameter-content {
+    // .region-table {
+    //     text-align: center;
+    // }
+    padding-top: 1rem;
+    .data-table {
+        text-align: center;
+        margin-top: 1rem;
+        .edit-button {
+            margin: .3rem;
+            &>span {
+                background-color: $buttons;
+                padding: .2rem .5rem;
+            }
+        }
+    }
+    .dialog {
+        .ui-dialog {
+            // margin-top: -13rem;
+        } // max-height: 70%;
+        &>div {
+            width: 70%;
+            &>div {
+                &>div {
+                    vertical-align: middle;
+                    .parameter-label {
+                        // height: 100%;
+                        width: 30%;
+                        float: left;
+                    }
+                    .parameter-drop-down {
+                        width: 70%;
+                        float: right;
+                        vertical-align: bottom;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+        .overflowtable {
+            height: 100%;
+            overflow: auto;
+        }
+        .parameter-font {
+            margin-top: .35rem;
+        }
+        input {
+            margin-top: .2rem;
+        }
+    }
+    .delete-dialog {
+        &>div {
+            width: 40%;
+        }
+    }
+    //    .dialog-project-parameter {
+    //        &>div {
+    //            width: 90%;
+    //        }
+    //    } 
+}

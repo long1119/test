@@ -1,0 +1,24 @@
+@import '../../sass/conf/conf';
+
+
+  //     font-weight: $font-bold;
+  //     color: $default-text;
+  //     font-weight: $font-normal;
+  //     color: $primary-light;
+  //     color: $default-text;
+
+  .hashs {
+    margin: 1rem 0 0 1rem;
+    // @if $lte-ie { *zoom: 1; } 
+    &:before, &:after { content: ""; display: table; } 
+    &:after { clear: both; overflow: hidden; }
+    .hash{
+        float: left;
+        padding: .5rem 1rem;
+        color: #fff;
+        font-size: 1.5rem;
+        border: .1rem solid $border-new; 
+        background-color: $back-ground;
+
+    }
+}

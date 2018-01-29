@@ -1,0 +1,23 @@
+.ar-sub-project-content {
+    padding-top: 1rem;
+    .user-choose-dialog {
+        .ui-dialog {
+            // margin-top: -12rem;
+        }
+    }
+    .modify-dialog {
+        &>div {
+            .ui-dialog-content {
+                height: 45rem;
+                overflow: auto;
+            }
+        }
+        .dialog-search-input {
+            width: 90%;
+        }
+        .dialog-search-button{
+            width: 10%;
+        }
+    }
+
+}

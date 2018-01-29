@@ -1,0 +1,285 @@
+    @import '../../../../sass/privateStyle';
+    .main-content{
+        .dialog{
+            .ui-dialog {
+                .ui-dialog-titlebar-close{
+                visibility: visible;
+                }
+            }
+        }
+        li.ui-tabview-selected a{
+            color: red;
+        }
+        width:1000px;
+        height: 500px;
+        overflow-y: auto;
+        .header{
+            height: 36px;
+            line-height: 36px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            background-color: #4B98DC;
+            margin: 0;
+        }
+        .body1{
+            border: 1px solid #6FADE2;
+            height: 440px;
+            overflow-y: auto;
+            .txt{
+                font-size: 1.2rem;
+            }
+            .body-content1{
+                height:195px;
+            .image{
+                width: 65px;
+                height: 65px;
+                margin: 35px 5px;
+                img{
+                    width:100%;
+                    height:100%;
+                }
+            }
+            .main-body{
+                padding-left: 20px;
+            }
+            .text{
+                padding-bottom: 0.1rem;
+            }
+            }
+        }
+        .body3{
+            .head-title{
+            background-color: #4B98DC;
+            border-radius: 5px 5px 0 0;
+            height: 30px;
+            color: white;
+            padding: 0.8rem 0.5rem;
+            // line-height:30px;
+            text-align:center;
+            margin: 0;
+            }
+            .monthCalendar{
+            .body-title{
+                display: flex;
+                display: -webkit-flex;
+                margin: 0;
+                .title{
+                //   width:14.28%;
+                width: 136.65px;
+                height: 30px;
+                background-color: #E6F7FF;
+                box-sizing: border-box;
+                line-height: 30px;
+                text-align: center;
+                font-weight: bold;
+                border: 1px solid white;
+                }
+            }
+            .body-body{
+                height: 340px;
+                overflow-y: auto;
+                display: flex;
+                display: -webkit-flex;
+                flex-wrap: wrap;
+                margin: 0;
+                .body{
+                //   width:14.28%;
+                width: 136.65px;
+                height: 90px;
+                overflow-y: auto;
+                overflow-x: hidden;
+                border: 1px solid #F0F0F0;
+                box-sizing: border-box;
+                cursor: pointer;
+                .child{
+                    // background-color: lime;
+                    margin:0.1rem;
+                }
+                }
+                .border{
+                border:1px solid #4B98DC;
+                }
+            }
+            }
+            .dayCalendar{
+                max-height: 360px;
+                overflow-y: auto;
+            .day-item:hover{
+                box-shadow: 0px 0px 0px gray,
+                5px 5px 5px gray,
+                0px 5px 5px gray,
+                -5px 5px 5px gray;
+                cursor: pointer;
+            }
+            .day-item{
+                padding: 0;
+                margin: 0.5rem;
+                background-color: #5695CD;
+                border-radius: 5px 5px 0 0;
+                color: white;
+                .day-title{
+                font-weight: bold;
+                text-align: center;
+                height: 30px;
+                line-height: 30px;
+                border-bottom: 2px solid white;
+                }
+            }
+            .day-body{
+                display: flex;
+                display: -webkit-flex;
+                flex-wrap: wrap;
+                .left{
+                width: 50%;
+                box-sizing: border-box;
+                padding: 1rem 2rem;
+                }
+                .right{
+                width: 50%;
+                box-sizing: border-box;
+                padding: 1rem 2rem;
+                }
+            }
+            }
+        }
+        .body2,.body4,.body5,.body6{
+            border: 1px solid #6FADE2;
+            height: 440px;
+            overflow-y: auto;
+            .txt{
+                font-size: 1.2rem;
+            } 
+        }
+        // .body5{
+        //     height: 400px;
+        // }
+        // .body4{
+        //     border: 1px solid #6FADE2;
+        //     height: 440px;
+        //     overflow-y: auto;
+        //     .txt{
+        //         font-size: 1.2rem;
+        //     } 
+        // }
+        .especialDialog{
+            .ui-dialog-content {
+                height: 500px;
+            }
+            .tab-view{
+                .ui-tabview{
+                    .ui-tabview-panel{
+                        padding: 0;
+                    }
+                }
+                .card{
+                    margin-top: 1rem;
+                    border: 1px solid #4B98DC;
+                    border-radius: 5px 5px 0 0;
+                    height: 300px;
+                    .title{
+                        height: 30px;
+                        line-height: 30px;
+                        padding-left: 1rem;
+                        border-radius: 5px 5px 0 0;
+                        background-color: #4B98DC;
+                        color: white;
+                    }
+                    .card-body{
+                        position: relative;
+                        color: white;
+                        margin: 1rem;
+                        padding: 0;
+                        height: 245px;
+                        .start,.over{
+                            width: 70px;
+                            height: 30px;
+                            border-radius: 50%;
+                            background-color: #4B98DC;
+                            text-align: center;
+                            line-height: 30px;
+                            position: absolute;
+                        }
+                        .line{
+                            position: absolute;
+                            width: 40px;
+                            border-top: 1px solid #4B98DC;
+                            margin: 0;
+                            top:8px;
+                        }
+                        .triangle{
+                            position: absolute;
+                            border-width: 8px 0 8px 8px;
+                            border-style: solid;
+                            border-color: transparent;
+                            border-left-color: #4B98DC;
+                            left: 40px;
+                        }
+                        .title1{
+                            height: 30px;
+                            text-align: center;
+                            line-height: 30px;
+                            background-color: #4B98DC;
+                        }
+                        .body{
+                            color:black;
+                            height: 30px;
+                            line-height: 30px;
+                        }
+                        .wrap1,.wrap2,.wrap3,.wrap4{
+                            position: absolute;
+                            top: 7px;
+                        }
+                        .wrap1{
+                            left: 70px;
+                        }
+                        .department,.check1,.check2{
+                            position: absolute;
+                            width: 80px;
+                            border: 1px solid #4B98DC;
+                            top: 0;
+                        }
+                        .department:hover,.check1:hover,.check2:hover{
+                            cursor: pointer;
+                            border: 1px solid pink;
+                        }
+                        .department{
+                            left: 118px;
+                        }
+                        .wrap2{
+                            left: 198px;
+                        }
+                        .check1{
+                            left: 246px;
+                        }
+                        .wrap3{
+                            left: 326px;
+                        }
+                        .check2{
+                            left: 374px;
+                        }
+                        .wrap4{
+                            left: 454px;
+                        }
+                        .over{
+                            left: 502px; 
+                            top: 0;
+                        }
+                    }
+                }
+            }
+        }
+        .flow-table th{
+            // height: 36px;
+            line-height: 35px;
+            padding: 0.5rem;
+        }
+        .flow-table td{
+            // height: 36px;
+            line-height: 35px;
+            padding: 0.5rem;
+        }
+    }
+    // .ui-dialog-mask{
+        // z-index: 1009 !important;
+    // }

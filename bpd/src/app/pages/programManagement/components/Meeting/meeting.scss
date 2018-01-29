@@ -1,0 +1,88 @@
+@import '../../../sass/privateStyle';
+.header-main-body{
+    .ui-dropdown{
+        width: 170px !important;
+    }
+    .table{
+        margin-top: 0.5rem;
+        // .thead-inverse{
+        //     background-color:#4B98DC;
+        //     color:white;
+        // }
+    }
+    .txt{
+        color: #6BB2F3;
+        margin: 0 0.5rem;
+        cursor: pointer;
+    }
+    .txt1{
+        color: gray;
+        margin: 0 0.5rem;
+        // cursor: pointer;
+    }
+    .calendar-icon-input {
+        width: 100%;
+        span {
+            width: 80%;
+            input {
+                width: 100%;
+                // .ui-fluid {
+                //     width: 100%;
+                // }
+            }
+        }
+    }
+    .drop-down{
+        width: 100%;
+        .ui-dropdown {
+            width: 90% !important;
+        }
+    }
+    .click-style{
+        background-color: #186BA0;
+        color: white;
+        .txt{
+            color: white;
+        }
+    }
+    .over-style{
+        background-color: rgba(220,220,220,0.5);
+      }
+      .view-body{
+        .ui-tabview-panels{
+            .ui-widget-content{
+                max-height: 180px;
+                overflow-y: auto;
+            }
+        }
+      }
+      .flexHeight{
+        .ui-tabview-panels{
+            .ui-widget-content{
+                max-height: 500px;
+                min-height: 300px;
+                overflow-y: auto;
+            }
+        }
+      }
+
+    .table-bordered td{
+        border: 1px solid #D9D9D9 !important;
+    }
+    .table-bordered th{
+        border: 1px solid #D9D9D9 !important;
+    }
+    .thead-inverse{
+        background-color: #4B98DC;
+        color: white;
+    }
+    .blue{
+        cursor: pointer;
+        color: blue;
+    }
+    .dialog > div {
+        .ui-dialog-content{
+            max-height: 60rem;
+        }
+    }
+}

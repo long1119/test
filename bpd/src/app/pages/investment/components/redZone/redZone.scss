@@ -1,0 +1,235 @@
+@import '../../../sass/privateStyle';
+red-zone {
+	.tabView {
+		.ui-tabview.ui-tabview-top>.ui-tabview-nav li {
+			background-color: #ebedf0;
+			border-radius: 5px 5px 0 0;
+			width: 165px;
+			margin-right: 10px;
+			a {
+				text-align: center;
+				width: 100%;
+			}
+			a:hover {
+				cursor: pointer;
+				background-color: rgb(190,203,216);
+				border-radius: 5px 5px 0 0;
+				font-weight: bold;
+			}
+		}
+		.ui-tabview .ui-tabview-nav > li.ui-state-active {
+			cursor: text;
+			background-color: rgb(190,203,216);
+			border-radius: 5px 5px 0 0;
+			font-weight: bold;
+		}
+		.tabView > div {
+			margin-top: 30px;
+		}
+		.ui-tabview .ui-tabview-panel {
+			padding: 0;
+		}
+	}
+	.topBar {
+		padding: 10px;
+		p-dropdown {
+		    display: inline-block;
+		    width: 12rem;
+		    margin: 0 1rem;
+		}
+		.searchInput {
+			margin: 0 1rem;
+		}
+		input {
+			width: 70px;
+			margin: 0 1rem;
+		}
+		button {
+			margin-right: 1rem;
+		}
+	}
+	.footer {
+		text-align: right;
+	    padding-top: 10px;
+	}
+	.editBtn {
+	    margin-right: 10px;
+	    display: inline-block;
+	    text-align: center;
+	}
+	.editBtn, .delBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+	}
+	.ui-datatable tbody > tr.ui-widget-content.ui-state-highlight .editBtn{
+		color: #fff;
+	}
+	.generalDialog {
+		.ui-dialog-titlebar {
+		    background: #4B98DC;
+		    color: #fff;
+		}
+		.ui-dialog-titlebar a {
+			color: #fff;
+		}
+		.ui-fluid .ui-inputtext {
+			width: 250px;
+		}
+		.ui-fluid .ui-dropdown {
+		    width: 250px !important;
+		}
+		.ui-inputgroup-addon {
+			width: 130px;
+			display: inline-block;
+		}
+	}
+	.targetSonTitle {
+		background-color: rgb(239,239,239);
+		font-weight: bold;
+		height: 40px;
+		line-height: 40px;
+		padding-left: 20px;
+		font-size: 14px;
+	}
+	.chart {
+		canvas {
+			height: 100% !important;
+		}
+		& > div {
+			height: 100% !important;
+		}
+	}
+	.sonChart {
+		canvas {
+			height: 80% !important;
+		}
+		& > div {
+			height: 60% !important;
+		}
+	}
+	.gridTable {
+    	text-align: center;
+    	tr {
+    		height: 1.5rem;
+    		text-align: center;
+    	}
+    	td {
+    		border: 1px solid #e6e4e4;
+    		text-align: center;
+    		width: 70px;
+    	}
+    }
+    .ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+	.borderNode {
+		border-bottom-color: rgba(0,0,0,0) !important;
+		padding: 0 !important;
+		width: 100px;
+		.ui-cell-data {
+			    position: absolute;
+				top: calc(50% + 1.5rem);
+				-ms-transform: translate(-50%,-50%);
+				-webkit-transform: translate(-50%,-50%);
+				width: 100px;
+				text-align: center;
+				height: 3rem;
+			    line-height: 3rem;
+		}
+	}
+	.borderNode2 {
+		border-bottom-color: rgba(0,0,0,0) !important;
+		padding: 0 !important;
+		width: 100px;
+		.ui-cell-data {
+			    position: absolute;
+				top: calc(50% + 3rem);
+				-ms-transform: translate(-50%,-50%);
+				-webkit-transform: translate(-50%,-50%);
+				width: 100px;
+				text-align: center;
+				height: 3rem;
+			    line-height: 3rem;
+		}
+	}
+	.dataView{ 
+		float: left;
+		width: 200px;
+		height: 100px;
+	    overflow: auto;
+		.ui-g {
+			padding: 0 !important;
+		}
+		.ui-datagrid-content, .ui-widget-content {
+			min-height: 100px;
+		}
+	}
+	.dataViewContainer {
+		position: relative;
+		& > div {
+			width: 75px;
+		    border: 1px solid #dedddd;
+		    background-color: #e6e5e5;
+		    position: relative;
+		    height: 30px;
+		    text-align: center;
+		    line-height: 30px;
+		    margin: 8px;
+		    overflow: hidden;
+		}
+		& > div > i {
+			position: absolute;
+			right: 0;
+			top: 0;
+			color: red;
+		}
+	}
+	p-confirmDialog {
+		.ui-dialog.ui-widget .ui-dialog-titlebar {
+			background: #2399e5;
+			color: #fff;
+			a {
+				color: #fff;
+			}
+		}
+	 	.ui-dialog.ui-widget .ui-dialog-content {
+			padding: 1em 2em;
+		}
+	}
+	#relativeTable {
+		tbody {
+			position: relative;
+		}
+	}
+
+	.gridTableMain {
+    	width: 100%;
+    	text-align: center;
+    	tr {
+    		height: 36px;
+    		text-align: center;
+    	}
+    	td {
+    		border: 1px solid #e6e4e4;
+    		text-align: center;
+    		height: 36px;
+    	}
+    	th {
+    		background-color: #4B98DC;
+    		text-align: center;
+    		color: #fff;
+		    border: 1px solid #d0d0d0;
+    	}
+    	thead {
+    		tr {
+    			th {
+    				white-space: nowrap;
+    				padding: 0 10px;
+    				min-width: 10%;
+    				max-width: 10%;
+    				width: 10%;
+    			}
+    		}
+    	}
+     }
+}

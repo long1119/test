@@ -1,0 +1,274 @@
+    <div class="ar-project-content">
+        <div class="ui-grid" style="margin-bottom: 1rem;">
+            <div *ngIf="localStorageAuthority" class="ui-grid-col-1">
+                <button pButton type="button" class="program-add" (click)="addClick()" label="Add"></button>
+            </div>
+            <div class="ui-grid-col-2">
+                <div style="margin-top: .4rem;" class="ui-grid-col-7">Investment Year:</div>
+                <div class="ui-grid-col-4">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="investmentYearOption" [(ngModel)]="selectedInvestmentYear"></p-dropdown>
+                </div>
+                <div class="ui-grid-col-1"></div>
+            </div>
+            <div class="ui-grid-col-2">
+                <div style="margin-top: .4rem;" class="ui-grid-col-5">Company:</div>
+                <div class="ui-grid-col-6">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="companyOption" [(ngModel)]="selectedDropdownCompany"></p-dropdown>
+                </div>
+                <div class="ui-grid-col-1"></div>
+            </div>
+            <div class="ui-grid-col-4">
+                <div style="margin-top: .4rem;" class="ui-grid-col-7">Approved Investment(MRMB)>=:</div>
+                <div class="ui-grid-col-4">
+                    <input type="number" (keyup)="searchYearEnterSearch($event)" style="width: 100%" pInputText id="regionCode" [(ngModel)]="selectedApprovedInvestment" />
+                </div>
+                <div class="ui-grid-col-1"></div>
+            </div>
+            <div class="ui-grid-col-1">
+                <button pButton type="button" class="program-add" (click)="searchYearClick()" label="Search"></button>
+            </div>
+            <div class="ui-grid-col-2">
+                <p-checkbox style="float:right" [(ngModel)]="checked" binary="true" (onChange)="checkedChange()"></p-checkbox>
+            </div>
+        </div>
+        <p-dataTable (onRowClick)="onRowClick($event)" selectionMode="single" class="ui-grid data-table" [value]="baseData" [first]="0" [(selection)]="selectedBaseData">
+            <p-column styleClass="ui-grid-col-1" header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                    <span *ngIf="baseData[idx].adProjectCode">{{idx + 1}}</span>
+                </template>
+            </p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="arYear" header="Year"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="projectCode" header="Costbook Code"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="projectName" header="Project Name"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="userName" header="Investment Manager"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="company" header="Company"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="approvedInvestment" header="Approved Investment"></p-column>
+            <!-- <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="sop" header="SOP Time"></p-column> -->
+            <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <span *ngIf="baseData[idx].adProjectCode" class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                    <span *ngIf="baseData[idx].adProjectCode" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+        <p-paginator rows="10" totalRecords="{{baseDataLen}}" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>
+        <p-tabView class="tab-view" (onChange)="changeTab($event)">
+            <p-tabPanel header="Sub Project">
+                <ar-sub-project [refreshSubProject]="refreshSubProject" [changeCode]="changeCode" [changeRegionIds]="changeRegionIds" (refreshFlagOut)="refreshFlagIn($event)"></ar-sub-project>
+            </p-tabPanel>
+        </p-tabView>
+        <!-- 添加界面 -->
+        <p-dialog class="dialog" header="Ar Project" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+            <div class="ui-grid-responsive ui-fluid">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"><label for="regionCode">Costbook Code :</label></div>
+                    <div class="ui-grid-col-3"><input maxlength="8" (change)="dialogProjectCode = checkEnglish(dialogProjectCode)" (blur)="checkOutRegionCode($event)" pInputText id="regionCode" [(ngModel)]="dialogProjectCode" /></div>
+                    <div class="ui-grid-col-1"></div>
+                    <div class="ui-grid-col-4" style="float:right;">
+                        <p-dropdown class="drop-down" (onChange)="yearChange()" autoWidth="false" [options]="YearOption" [(ngModel)]="selectedYear"></p-dropdown>
+                    </div>
+                    <div class="ui-grid-col-2" style="float:right;"><label class="required" for="regionType">Investment Year :</label></div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"><label class="required" for="regionType">Project Name :</label></div>
+                    <div class="ui-grid-col-3"><input maxlength="50" pInputText id="regionType" (ngModelChange)="requireChange($event)" [(ngModel)]="dialogProjectName"
+                        /></div>
+                    <div class="ui-grid-col-1">
+                    </div>
+                    <div class="ui-grid-col-4" style="float:right;">
+                        <input class="dialog-search-input" readonly pInputText id="regionType" [(ngModel)]="selectedManager" />
+                        <button [ngClass]="{'dialog-search-button': true}" pButton type="button" class="previous-button" icon="fa-search" (click)="searchManagerClick()"></button>
+                    </div>
+                    <div class="ui-grid-col-2" style="float:right;"><label class="required" for="regionType">Manager:</label></div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"><label class="required" for="project-name">AVD Code :</label></div>
+                    <div class="ui-grid-col-3"><input disabled pInputText id="project-name" [(ngModel)]="dialogAVDCode" /></div>
+                    <div class="ui-grid-col-4" style="float:right;">
+                        <input class="dialog-search-input" readonly pInputText id="regionType" [(ngModel)]="selectedCompany" />
+                        <button [ngClass]="{'dialog-search-button': true}" pButton type="button" class="previous-button" icon="fa-search" (click)="searchCompanyClick(true,true)"></button>
+                    </div>
+                    <div class="ui-grid-col-2" style="float:right;"><label class="required" for="regionType">Company:</label></div>
+                </div>
+                <!-- <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"><label class="required" for="project-name">SOP Time :</label></div>
+                    <div class="ui-grid-col-3">
+                        <p-calendar [(ngModel)]="sopDate" dateFormat="yy-mm-dd" [monthNavigator]="true" yearRange="{{yearRange}}" readonlyInput="true" [yearNavigator]="true"></p-calendar>
+                    </div>
+                </div> -->
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"><label for="project-name">Approved Investment :</label></div>
+                    <div class="ui-grid-col-3">
+                        <input pInputText (keydown)="messageService.checkNumValue($event, 99999999)" id="regionCode" [(ngModel)]="dialogApprovedInvestment" />
+                    </div>
+                </div>
+                <div style="height: 1.5rem;">
+                    <div class="ui-grid-col-12"><label for="project-name">Project Summary :</label></div>
+                </div>
+                <div>
+                    <textarea maxlength="1000" pInputTextarea (ngModelChange)="requireChange($event)" [(ngModel)]="dialogTextarea" style="width:90%;height:13rem;margin:1rem auto;display:block;"></textarea>
+                </div>
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                    <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                    <button type="button" [(disabled)]="!dialogProjectName || !selectedManager || !projectCodeFlag || !selectedCompany || !dialogProjectCode" pButton
+                        [disabled]="requireFlag" (click)="addSave()" label="Save"></button>
+                </div>
+            </p-footer>
+        </p-dialog>
+        <!-- 编辑界面 -->
+        <p-dialog class="dialog" header="Ar Project" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+            <div class="ui-grid-responsive ui-fluid">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"><label for="regionCode" class="required">Costbook Code :</label></div>
+                    <div class="ui-grid-col-3"><input maxlength="8" (change)="dialogProjectCode = checkEnglish(dialogProjectCode)" pInputText (blur)="checkOutRegionCode($event)" id="regionCode" [(ngModel)]="dialogProjectCode" /></div>
+                    <div class="ui-grid-col-1"></div>
+                    <div class="ui-grid-col-4" style="float:right;">
+                        <input pInputText id="regionType" (ngModelChange)="requireChange($event)" [(ngModel)]="dialogInvestmentYear" disabled
+                        />
+                    </div>
+                    <div class="ui-grid-col-2" style="float:right;"><label class="required" for="regionType">Investment Year :</label></div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"><label class="required" for="regionType">Project Name :</label></div>
+                    <div class="ui-grid-col-3"><input maxlength="50" pInputText id="regionType" (ngModelChange)="requireChange($event)" [(ngModel)]="dialogProjectName"
+                        /></div>
+                    <div class="ui-grid-col-1">
+                    </div>
+                    <div class="ui-grid-col-4" style="float:right;">
+                        <input class="dialog-search-input" readonly pInputText id="regionType" [(ngModel)]="selectedManager" />
+                        <button [ngClass]="{'dialog-search-button': true}" pButton type="button" class="previous-button" icon="fa-search" (click)="searchManagerClick()"></button>
+                    </div>
+                    <div class="ui-grid-col-2" style="float:right;"><label class="required" for="regionType">Manager:</label></div>
+                </div>
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2"><label class="required" for="project-name">AVD Code :</label></div>
+                    <div class="ui-grid-col-3"><input disabled pInputText id="project-name" [(ngModel)]="dialogAVDCode" /></div>
+                    <div class="ui-grid-col-4" style="float:right;">
+                        <input class="dialog-search-input" readonly pInputText id="regionType" [(ngModel)]="selectedCompany" />
+                        <button [ngClass]="{'dialog-search-button': true}" pButton type="button" class="previous-button" icon="fa-search" (click)="searchCompanyClick(true,false)"></button>
+                    </div>
+                <div class="ui-grid-col-2" style="float:right;"><label class="required" for="regionType">Company:</label></div>
+            </div>
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label class="required" for="project-name">SOP Time :</label></div>
+                <div class="ui-grid-col-3">
+                    <p-calendar [(ngModel)]="sopDate" dateFormat="yy-mm-dd" [monthNavigator]="true" yearRange="{{yearRange}}" readonlyInput="true" [yearNavigator]="true"></p-calendar>
+                </div>
+            </div> -->
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label for="project-name">Approved Investment :</label></div>
+                <div class="ui-grid-col-3">
+                    <input (keydown)="messageService.checkNumValue($event, 99999999)" pInputText id="regionCode" [(ngModel)]="dialogApprovedInvestment" />
+                </div>
+            </div>
+            <div style="height: 1.5rem;">
+                <div class="ui-grid-col-12"><label for="project-name">Project Summary :</label></div>
+            </div>
+            <div>
+                <textarea maxlength="1000" pInputTextarea (ngModelChange)="requireChange($event)" [(ngModel)]="dialogTextarea" style="width:90%;height:13rem;margin:1rem auto;display:block;"></textarea>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="editCancle()" label="Cancel"></button>
+                <button type="button" pButton [(disabled)]="!dialogProjectName || !selectedManager || !projectCodeFlag || !selectedCompany || !dialogProjectCode"  [disabled]="requireFlag" (click)="editSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 主管界面 -->
+    <p-dialog class="dialog user-dialog" header="Please Choose Your Manager" [(visible)]="searchManagerDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-col-12 ">
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-col-4 parameter-font">Department :</div>
+                <div class="ui-grid-col-7">
+                    <input (keyup)="lookClickEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogDepartment" />
+                </div>
+                <div class="ui-grid-col-1"></div>
+            </div>
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-col-4 parameter-font" style="text-align: right;">User Name:&nbsp;&nbsp;</div>
+                <div class="ui-grid-col-8">
+                    <input (keyup)="lookClickEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogUserName" />
+                </div>
+            </div>
+            <div class="ui-grid-col-2">
+                <button style="margin-left: 1rem;" pButton type="button" class="program-add" (click)="lookClick()" label="Search"></button>
+            </div>
+        </div>
+        <div class="ui-grid">
+            <p-dataTable (onRowDblclick)="onDialogRowClick($event)" selectionMode="single" class="ui-grid-row search-table" [ngClass]="{'data-table': true}"
+                [value]="managerData" [(selection)]="selectedManagerData" dataKey="vin" scrollable="true" scrollHeight="30rem">
+                <p-column styleClass="ui-grid-col-2" field="userName" header="User Name"></p-column>
+                <p-column styleClass="ui-grid-col-2" field="userCode" header="User Code"></p-column>
+                <p-column styleClass="ui-grid-col-1" field="jobPosition" header="Job"></p-column>
+                <p-column styleClass="ui-grid-col-2" field="telephone" header="Telphone"></p-column>
+                <p-column styleClass="ui-grid-col-3" field="emailAddress" header="Email"></p-column>
+                <p-column styleClass="ui-grid-col-1" field="departmentName" header="Department"></p-column>
+                <p-column styleClass="ui-grid-col-1" field="rowNames" header="Manager"></p-column>
+            </p-dataTable>
+            <p-paginator rows="10" [first]="0" totalRecords="{{paginatorTotal}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="roelPaginate($event)"></p-paginator>
+        </div>
+        <!-- <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="searchCancle()" label="Cancel"></button>
+                <button type="button" pButton  (click)="searchSave()" label="Confirm"></button>
+            </div>
+        </p-footer> -->
+    </p-dialog>
+    <!-- 公司界面 -->
+    <p-dialog class="dialog user-dialog" header="Please Choose Your Company" [(visible)]="searchCompanyDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-col-12 ">
+            <div class="ui-grid-col-5">
+                <div class="ui-grid-col-4 parameter-font">Decription :</div>
+                <div class="ui-grid-col-7">
+                    <input (keyup)="lookCompanyEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogCompany" />
+                </div>
+                <div class="ui-grid-col-1"></div>
+            </div>
+            <div class="ui-grid-col-2">
+                <button style="margin-left: 1rem;" pButton type="button" class="program-add" (click)="lookCompanyClick()" label="Search"></button>
+            </div>
+            <div class="ui-grid-col-5"></div>
+        </div>
+        <div class="ui-grid">
+            <p-dataTable (onRowDblclick)="onCompanyDblClick($event)" selectionMode="single" class="ui-grid-row search-table" [ngClass]="{'data-table': true}"
+                [value]="companyData" [(selection)]="selectedCompanyData" dataKey="vin" scrollable="true" scrollHeight="30rem">
+                <p-column styleClass="ui-grid-col-1" header="NO">
+                    <template let-idx="rowIndex" pTemplate="body">
+                    {{idx + 1}}
+                    </template>
+                </p-column>
+                <p-column styleClass="ui-grid-col-3" field="plantCode" header="plant Code(WBS L2)"></p-column>
+                <p-column styleClass="ui-grid-col-3" field="plantDescription" header="Plant" ></p-column>
+                <p-column styleClass="ui-grid-col-3" field="plantComment" header="Memo"></p-column>
+                <p-column styleClass="ui-grid-col-3" field="base" header="Base"></p-column>
+                <p-column styleClass="ui-grid-col-3" field="company" header="Company"></p-column>
+            </p-dataTable>
+            <!-- <p-paginator rows="10" totalRecords="{{paginatorTotal}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="roelPaginate($event)"></p-paginator> -->
+        </div>
+        <!-- <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="searchCancle()" label="Cancel"></button>
+                <button type="button" pButton (click)="searchSave()" label="Confirm"></button>
+            </div>
+        </p-footer> -->
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="Ar Project Delete" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="growMessage" life="{{growLife}}"></p-growl>
+</div>

@@ -1,0 +1,88 @@
+<div class="topBar">
+    <button pButton type="button" (click)="SelectProgramBtn()" label="Select Program"></button>
+    <button pButton type="button" (click)="exportProgramBtn()" label="Export Program"></button>
+</div>
+<div *ngIf="!haveData">
+	<p-dataTable [value]="emptyStore" class="data-table">
+	    <p-headerColumnGroup>
+	        <p-row>
+	            <p-column header="Program" rowspan="2"></p-column>
+	            <p-column header="指标1 Fuel Economy/Consumption 油耗MFC (L/100km)" colspan="5"></p-column>
+	            <p-column header="指标1 Fuel Economy/Consumption 油耗MFC (L/100km)" colspan="5"></p-column>
+	        </p-row>
+	        <p-row>
+	            <p-column header="CSO Target"></p-column>
+	            <p-column header="Version1 Status"></p-column>
+	            <p-column header="Version2 Status"></p-column>
+	            <p-column header="V2 VS CSO Deviation"></p-column>
+	            <p-column header="V2 VS V1 Deviation"></p-column>
+
+	            <p-column header="CSO Target"></p-column>
+	            <p-column header="Version1 Status"></p-column>
+	            <p-column header="Version2 Status"></p-column>
+	            <p-column header="V2 VS CSO Deviation"></p-column>
+	            <p-column header="V2 VS V1 Deviation"></p-column>
+	        </p-row>
+	    </p-headerColumnGroup>
+	    <p-column field="id"></p-column>
+
+	    <p-column field="id"></p-column>
+	    <p-column field="id"></p-column>
+	    <p-column field="id"></p-column>
+	    <p-column field="id"></p-column>
+	    <p-column field="id"></p-column>
+
+	    <p-column field="id"></p-column>
+	    <p-column field="id"></p-column>
+	    <p-column field="id"></p-column>
+	    <p-column field="id"></p-column>
+	    <p-column field="id"></p-column>
+	</p-dataTable>
+</div>
+<div *ngIf="haveData">
+	<p-dataTable [value]="contentStore" *ngIf="contentStore.length >= 10" class="data-table" scrollable="true" scrollHeight="30rem">
+	    <p-headerColumnGroup>
+	        <p-row>
+	            <p-column header="Program" rowspan="2" [style]="{'width':'150px'}"></p-column>
+	            <p-column *ngFor = "let item of title1Store" header="{{item}}" colspan="5" [style]="{'width':'750px'}"></p-column>
+	        </p-row>
+	        <p-row>
+	            <p-column *ngFor = "let item of title2Store" header="{{item}}" [style]="{'width':'150px'}"></p-column>
+	        </p-row>
+	    </p-headerColumnGroup>
+	    <p-column *ngFor = "let item of contentValueStore" field="{{item}}" [style]="{'width':'150px'}"></p-column>
+	</p-dataTable>
+	<p-dataTable [value]="contentStore" *ngIf="contentStore.length < 10" class="data-table">
+	    <p-headerColumnGroup>
+	        <p-row>
+	            <p-column header="Program" rowspan="2" [style]="{'width':'150px'}"></p-column>
+	            <p-column *ngFor = "let item of title1Store" header="{{item}}" colspan="5" [style]="{'width':'750px'}"></p-column>
+	        </p-row>
+	        <p-row>
+	            <p-column *ngFor = "let item of title2Store" header="{{item}}" [style]="{'width':'150px'}"></p-column>
+	        </p-row>
+	    </p-headerColumnGroup>
+	    <p-column *ngFor = "let item of contentValueStore" field="{{item}}" [style]="{'width':'150px'}"></p-column>
+	</p-dataTable>
+</div>
+<p-dialog header="Select Metrix" [(visible)]="display" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="topBar">
+        <span style="width:100px;display:inline-block;">Metrix Group:</span>
+        <p-dropdown autoWidth="false" [options]="groupValueStore" [(ngModel)]="groupValue" (onChange)="groupValueChange($event)" appendTo="body"></p-dropdown>
+    </div>
+    <p-dataTable [rows]="10" [value]="metrixStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem" [(selection)]="metrixSelectedStore">
+        <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+        <p-column field="indexName" header="Metrics" styleClass="ui-grid-col-11 align-left"></p-column>
+    </p-dataTable>
+    <div class="topBar">
+        <span style="width:120px;display:inline-block;">Scorecard Version1:</span>
+        <p-dropdown autoWidth="false" [options]="v1Store" [(ngModel)]="v1" (onChange)="v1Change($event)" appendTo="body"></p-dropdown>
+        <span style="width:120px;display:inline-block;">Scorecard Version2:</span>
+        <p-dropdown autoWidth="false" [options]="v2Store" [(ngModel)]="v2" (onChange)="v2Change($event)" appendTo="body"></p-dropdown>
+    </div>
+    <div class="footer">
+        <button pButton type="button" [(disabled)]="!allowConfirm" (click)="saveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="cancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

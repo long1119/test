@@ -1,0 +1,11 @@
+@import '../../../sass/privateStyle';
+.land-purchase-record {
+    .button-content {
+        margin: 1rem 0;
+    }
+    .purchase-modify-dialog {
+        &>div {
+            width: 70%;
+        }
+    }
+}

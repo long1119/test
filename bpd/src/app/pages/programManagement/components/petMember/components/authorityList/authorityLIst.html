@@ -1,0 +1,232 @@
+<div class="authority-list-content">
+    <!-- <div style="height:30rem;"></div>  -->
+    <p-tabView class="tab-view" (onChange)="changeTab($event)">
+        <p-tabPanel header="PET Member">
+            <button *ngIf="localStorageAuthority" [disabled]="!changeProjectCode" style="margin: 1rem 0;" pButton type="button" class="program-add"
+                (click)="addClick()" label="Add"></button>
+            <!-- <button *ngIf="localStorageAuthority" [disabled]="!changeProjectCode" style="margin: 1rem 0;" pButton type="button" class="program-add" (click)="initClick()"
+                label="Init"></button> -->
+            <button *ngIf="localStorageAuthority" [disabled]="!changeProjectCode" style="margin: 1rem 0;" pButton type="button" class="program-add"
+                (click)="exportClick()" label="Export"></button>
+            <p-treeTable class="tree-table" selectionMode="single" [(selection)]="selectedFile" scrollable="true" scrollHtight="30rem"
+                (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnselect($event)" [value]="baseData" class="tree-table"
+                resizableColumns="true">
+                <p-column styleClass="ui-grid-col-4" header="User Name">
+                    <template pTemplate="body" let-idx="rowIndex" let-data="rowData">
+                        <span class="edit-span" (click)="showDetailClick(idx,data)">{{data.data.userName}}</span>
+                    </template>
+                </p-column>
+                <p-column styleClass="ui-grid-col-3" field="description" header="PET Role Name"></p-column>
+                <p-column styleClass="ui-grid-col-3" field="roleName" header="System Role Name"></p-column>
+                <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+                    <template let-data="rowData" pTemplate="body">
+                        <span *ngIf="data.data.flag !== '1'" class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                        <span *ngIf="data.data.flag !== '1' && data.data.initPet !== '1'" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+                    </template>
+                </p-column>
+            </p-treeTable>
+        </p-tabPanel>
+    </p-tabView>
+    <!-- <button [disabled]="!changeProjectCode" style="margin-bottom: 1rem;" pButton type="button" class="program-add" (click)="addClick()"
+        label="Add"></button>
+    <p-treeTable class="tree-table" selectionMode="single" [(selection)]="selectedFile" (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnselect($event)"
+        [value]="baseData" class="tree-table">
+        <p-column styleClass="ui-grid-col-5" field="userName" header="User Name"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="roleName" header="Role Name"></p-column>
+        <p-column styleClass="ui-grid-col-2" field="description" header="Description"></p-column>
+        <p-column styleClass="ui-grid-col-2" header="">
+            <template let-data="rowData" pTemplate="body">
+                <span *ngIf="data.data.flag !== '1'" class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                <span *ngIf="data.data.flag !== '1'" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-treeTable> -->
+    <!-- 添加界面 -->
+    <p-dialog class="dialog" class="dialog" header="PET Member" [(visible)]="addDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">System Role Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown filter="true" (onChange)="dropChange($event)" class="drop-down" class="drop-down" autoWidth="false" [options]="RoleOption"
+                        [(ngModel)]="selectedRole"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="project-name">PET Role Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText id="regionType" maxlength="500" [(ngModel)]="dialogTextarea" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionType">User Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input class="dialog-search-input" pInputText readonly id="regionType" [(ngModel)]="selectedUserName" />
+                    <button [(disabled)]="!changeRoleCode" [ngClass]="{'dialog-search-button': true}" pButton type="button" class="previous-button"
+                        icon="fa-search" (click)="searchClick()"></button>
+                </div>
+            </div>
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="regionType">Parent User :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" class="drop-down" class="drop-down" autoWidth="false" [options]="parentUserOption" [(ngModel)]="selectedParentUser"></p-dropdown>
+                </div>
+            </div> -->
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="addCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!selectedRole || !changeUserCode" pButton (click)="addSave()" label="Save"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 编辑界面 -->
+    <p-dialog class="dialog" class="dialog" header="PET Member" [(visible)]="editDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">System Role Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown filter="true" [(disabled)]="!editFlag" (onChange)="dropChange($event)" class="drop-down" class="drop-down" autoWidth="false"
+                        [options]="RoleOption" [(ngModel)]="selectedRole"></p-dropdown>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="project-name">PET Role Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText [(disabled)]="!editFlag" id="regionType" maxlength="500" [(ngModel)]="dialogTextarea" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionType">User Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input class="dialog-search-input" pInputText readonly id="regionType" [(ngModel)]="selectedUserName" />
+                    <button [(disabled)]="!changeRoleCode" [ngClass]="{'dialog-search-button': true}" pButton type="button" class="previous-button"
+                        icon="fa-search" (click)="searchClick()"></button>
+                </div>
+            </div>
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionType">Parent User :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="parentUserOption" [(ngModel)]="selectedParentUser"></p-dropdown>
+                </div>
+            </div> -->
+
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="editCancle()" label="Cancel"></button>
+                <button type="button" pButton [(disabled)]="!selectedRole || !changeUserCode" (click)="editSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 人物详情 -->
+    <p-dialog class="dialog user-detail-dialog" header="PET Member" [(visible)]="userDetailDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5">
+                    <button type="button" pButton (click)="clearUser()" label="Clear User"></button>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label for="regionType">Employee ID :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText readonly id="regionType" [(ngModel)]="userDetailData.employeeCode" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label for="regionType">User Name :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText readonly id="regionType" [(ngModel)]="userDetailData.userName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label for="regionType">Telephone :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText readonly id="regionType" [(ngModel)]="userDetailData.telephone" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label for="regionType">E-Mail Adress :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText readonly id="regionType" [(ngModel)]="userDetailData.emailAddress" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label for="regionType">Position :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText readonly id="regionType" [(ngModel)]="userDetailData.jobPosition" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label for="regionType">Department :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText readonly id="regionType" [(ngModel)]="userDetailData.departmentName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6">
+                    <label for="regionType">Report To :</label>
+                </div>
+                <div class="ui-grid-col-6">
+                    <input pInputText readonly id="regionType" [(ngModel)]="userDetailData.masterCode" />
+                </div>
+            </div>
+        </div>
+    </p-dialog>
+    <!-- 搜索人物界面 -->
+    <p-dialog class="dialog search-role-dialog" header="PET Member" [(visible)]="searchDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <user-select *ngIf="userSelectDialog" (selectUserNameOut)="recUserName($event)" (selectUserCodeOut)="recUserCode($event)"
+            [roleCode]="changeRoleCode"></user-select>
+        <!-- <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="searchCancle()" label="cancle"></button>
+                <button type="button" pButton  (click)="searchSave()" label="Save"></button>
+            </div>
+        </p-footer> -->
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="PET Member" [(visible)]="deleteDialog">
+        <div>
+            Do You Want To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteNo(idx,data)" label="No"></button>
+                <button type="button" pButton (click)="deleteYes(idx,data)" label="Yes"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

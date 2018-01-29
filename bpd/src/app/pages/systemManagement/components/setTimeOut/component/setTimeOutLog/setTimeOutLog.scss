@@ -1,0 +1,53 @@
+@import '../../../../../sass/privateStyle';
+.permission-content {
+    .permission-tree-table {
+        text-align: left;
+        p-header {
+            display: block;
+            width: 100%;
+            height: 100%;
+            &>span {
+                float: left;
+                font-weight: 500;
+                font-size: 1.5rem;
+            }
+            &>button {
+                background-color: #fff;
+                color: $table-head;
+                float: right;
+                margin-top: -.6rem;
+                margin-right: -.9rem;
+                height: 2.8rem;
+                &:hover {
+                    background-color: shade($table-head,10%);
+                    color: #fff;
+                }
+            }
+        }
+    }
+    .dialog {
+        & > div {
+            width: 55%;
+        }
+        .management-radio-button {
+            margin: 0;
+            p-radiobutton {
+                .ui-state-active {
+                    .fa-circle:before {
+                        content: "";
+                    }
+                }
+            }
+            label {
+                margin-top: 0.18rem;
+            }
+        }
+        ul {
+            margin: 0;
+            padding: .5rem;
+            li {
+                list-style: 0 none;
+            }
+        }
+    }
+}

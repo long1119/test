@@ -1,0 +1,57 @@
+<div class="ui-grid main-content">
+    <button *ngIf="localStorageAuthority" pButton type="button" [(disabled)]="!changeCategoryCode" [ngClass]="{'content-add': true}" (click)="addClick()" label="Upload"></button>
+    <div class="overflowTable">
+        <p-dataTable class="ui-grid-row data-table" [value]="tables" [paginator]="true" rows="10">
+            <p-column styleClass="ui-grid-col-1" header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                    {{idx + 1}}
+                </template>
+            </p-column>
+            <p-column styleClass="ui-grid-col-5" field="fileFullName" header="Template File Name"></p-column>
+            <p-column styleClass="ui-grid-col-4" field="createTime" header="UploadDate"></p-column>
+            <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                   <span *ngIf="tables[idx].attId" class="edit-span" (click)="downloadClick(idx,data)">Download</span>
+                   <span *ngIf="tables[idx].attId" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+    </div>
+    <p-dialog class="dialog" styleClass="parameter-dialog" header="Buget Template" [(visible)]="addDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <!-- <div class="ui-grid"> 
+             <div class="ui-g-6">
+                <div class="parameter-label">
+                    <label>Template Type :</label>
+                </div>
+                <div class="parameter-drop-down">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="regionTypeOption" [(ngModel)]="selectedPropertyGroup" placeholder="please choose"></p-dropdown>
+                </div>
+            </div>
+        </div> -->
+        <!-- <p-fileUpload name="myfile[]" url="./upload.php" multiple="multiple"
+        accept="xlsx/*"></p-fileUpload> -->
+        <p-fileUpload mode="basic" name="file" url="{{uploadURL}}" accept="xlsm" (onBeforeUpload)="onBasicBeforeUpload($event)" (onSelect)="onBasicSelect($event)" (onUpload)="onBasicUpload($event)"></p-fileUpload>
+    </p-dialog>
+    <p-dialog class="dialog" styleClass="parameter-dialog" header="Buget Template" [(visible)]="errDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <p-dataTable scrollable="true" scrollHeight="30rem" class="ui-grid-row data-table" [value]="errMessage">
+            <p-column styleClass="ui-grid-col-5" field="colIndex" header="Col"></p-column>
+            <p-column styleClass="ui-grid-col-4" field="rowIndex" header="Row"></p-column>
+            <p-column styleClass="ui-grid-col-4" field="errorInfo" header="Err Info"></p-column>
+        </p-dataTable>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="Region Template" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete This Template?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+</div>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

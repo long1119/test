@@ -1,0 +1,93 @@
+<div class="header">
+    <button *ngIf="userRoot" pButton type="button" (click)="add()" label="Add"></button>
+    Role Name:<input (keyup)="roleSearchEnterSearch($event)" type="text" name="roleNameSearch" class="Department" [(ngModel)]="roleNameSearch">
+    Role Description:<input (keyup)="roleSearchEnterSearch($event)" type="text" name="roleNameSearch" class="Department" [(ngModel)]="roleDescriptionSearch">
+    Role Type:<p-dropdown autoWidth="false" [options]="roleTypeSearchStore" [(ngModel)]="roleTypeSearch" appendTo="body"></p-dropdown>
+    <button pButton type="button" (click)="roleSearch()" label="Search"></button>
+    <button pButton type="button" (click)="exportBtn()" label="Export"></button>
+</div>
+<p-dataTable [value]="gridStore" class="data-table" (onRowClick)="onRowClick($event)" selectionMode="single" [(selection)]="mainselectedStore" [rowHover]=true scrollable="true" scrollHeight="30rem">
+    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+    <p-column field="roleName" header="Role Name" styleClass="ui-grid-col-4 align-left"></p-column>
+    <p-column field="roleDescription" header="Description" styleClass="ui-grid-col-5 align-left"></p-column>
+    <p-column field="roleType" header="Role Type" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column *ngIf="userRoot" header="" styleClass="ui-grid-col-3 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" (click)="editBtn(item)">Set Users</span>
+            <span *ngIf="item.id && item.roleFlag == 0" class="editBtn" (click)="editRoleBtn(item)">Edit</span>
+            <span *ngIf="item.id && item.roleFlag == 0" class="editBtn" (click)="delRoleBtn(item)">Delete</span>
+            <span *ngIf="item.id && item.roleFlag == 1" class="noEditBtn">Edit</span>
+            <span *ngIf="item.id && item.roleFlag == 1" class="noEditBtn">Delete</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-dataTable [rows]="10" [value]="selectedStore" class="data-table" dataKey="userCode" *ngIf="allowShow" scrollable="true" scrollHeight="25rem">
+    <p-column field="userName" header="User Name" styleClass="ui-grid-col-3"></p-column>
+    <p-column field="employeeCode" header="Employee ID" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="jobPosition" header="Job" styleClass="ui-grid-col-3 align-center"></p-column>
+    <p-column field="telephone" header="Telephone" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column field="emailAddress" header="Email" styleClass="ui-grid-col-3 align-center"></p-column>
+    <p-column field="departmentName" header="Department" styleClass="ui-grid-col-3"></p-column>
+    <p-column field="masterName" header="Manager" styleClass="ui-grid-col-2 align-center"></p-column>
+    <p-column *ngIf="userRoot" header="" styleClass="ui-grid-col-2 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="delBtn(item)">Delete</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator *ngIf="allowShow" rows="10" totalRecords="{{userStoreLen}}" pageLinkSize="3" (onPageChange)="userPaginate($event)"></p-paginator>
+<p-dialog header="Slelect Users" width="750" minHeight=500 [closable]="true" [responsive]="true" modal="modal" [(visible)]="setStatusDisplay" class="setStatusDia">
+    <div class="header search-header">
+        Department:
+        <input type="text" name="Department" class="Department" [(ngModel)]="DepartmentSearch"> User Name:
+        <input type="text" name="userName" class="userName" [(ngModel)]="userNameSearch">
+        Employee ID:
+        <input type="text" name="userName" class="userName" [(ngModel)]="employeeSearch">
+        <button pButton type="button" (click)="search()" label="Lookup"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="gridUserStore" class="data-table" dataKey="userCode" (onRowDblclick)="dbclick($event)" [rowHover]=true scrollable="true" scrollHeight="30rem">
+        <p-column field="userName" header="User Name" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="employeeCode" header="Employee ID" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="jobPosition" header="Job" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="telephone" header="Telephone" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column field="emailAddress" header="Email" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column field="departmentName" header="Department" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="masterName" header="Manager" styleClass="ui-grid-col-2 align-center"></p-column>
+    </p-dataTable>
+    <p-paginator rows="{{gridUserStoreRows}}" first="{{gridUserStoreFirst}}" totalRecords="{{gridUserStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+</p-dialog>
+<p-dialog header="Role" width="550" [closable]="true" [responsive]="true" modal="modal" [(visible)]="roleDisplay" class="dialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Role Name:</span>
+                <input style="float:right;width:70%;" type="text" pInputText [(ngModel)]="roleName" maxlength="50">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Description:</span>
+                <input style="float:right;width:70%;" type="text" pInputText [(ngModel)]="description" maxlength="200">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Role Type:</span>
+                <p-dropdown autoWidth="false" [options]="roleTypeStore" [(ngModel)]="roleType" class="dropdown" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <p-footer>
+        <div class="footer">
+            <button *ngIf="save" pButton type="button" (click)="saveRoleBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!roleName || !roleType"></button>
+            <button *ngIf="saveChange" pButton type="button" (click)="saveRoleChangeBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!roleName || !roleType"></button>
+            <button pButton type="button" (click)="roleDisplay=false" label="Cancel"></button>
+        </div>
+    </p-footer>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+<p-confirmDialog></p-confirmDialog>

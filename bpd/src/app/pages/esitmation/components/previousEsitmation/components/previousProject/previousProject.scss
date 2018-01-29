@@ -1,0 +1,27 @@
+.previous-project {
+    .project-button {
+        margin-bottom: 1rem;
+    }
+    .data-table {
+        margin: 0;
+        width: 100%;
+        float: right;
+    }
+    .dialog {
+        &>div{
+            width: 70%;
+        }
+        // .overflow {
+        //     overflow: hidden;
+        //     &>div {
+        //         width: 10000%;
+        //         height: 100000%;
+        //     }
+        // }
+    }
+    .delete-dialog {
+        &>div{
+            width: 30%;
+        }
+    }
+}

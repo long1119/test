@@ -1,0 +1,88 @@
+<div class="rate-change">
+    <div *ngIf="localStorageAuthority" class="rate-change-buttons">
+        <button pButton [(disabled)]="!changeProjectId" type="button" (click)="addClick()" label="Add"></button>
+        <button pButton [(disabled)]="!changeProjectId" type="button" (click)="deleteClick()" label="Delete"></button>
+    </div>
+    <div class="table-layout">
+        <p-dataTable class="data-table" resizableColumns="true" columnResizeMode="expand" [value]="rateChangeData" [paginator]="true" [rows]="10">
+            <p-column styleClass="column-width align-left" header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                    <span *ngIf="rateChangeData[idx].propertyGroupName">
+                        {{idx + 1}}
+                    </span>
+                </template>
+            </p-column>
+            <p-column styleClass="trible-column-width align-left" field="propertyGroupName" header="Investment Property Group"></p-column>
+            <p-column styleClass="double-column-width align-right" *ngFor="let list of yearListData" field="{{list}}" header="{{list}}"></p-column>
+        </p-dataTable>
+    </div>
+    <!-- 添加界面 -->
+    <p-dialog class="dialog add-dialog" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <p-header>
+            <div>
+                <div class="dialog-count">1</div>
+                Select Investment Property
+            </div>
+            <div>
+                <div class="dialog-count">2</div>
+                Set Investment Weight
+            </div>
+        </p-header>
+        <div class="dialog-content" *ngIf="!stepSelect">
+            <p-dataTable class="ui-grid data-table" [value]="categoryData" [paginator]="true"  resizableColumns="true" columnResizeMode="expand" rows="10" [(selection)]="selectedParameter">
+                <div *ngIf="selectMode == 'multiple'">
+                    <p-column [style]="{'width':'2.5rem'}" selectionMode="multiple">
+                    </p-column>
+                </div>
+                <p-column styleClass="ui-grid-col-2" header="NO">
+                    <template let-idx="rowIndex" pTemplate="body">
+                        <span *ngIf="categoryData[idx].groupPropertyName">
+                        {{idx + 1}}
+                        </span>
+                    </template>
+                </p-column>
+                <p-column styleClass="ui-grid-col-10" field="groupPropertyName" header="Parameter Name" [sortable]="true"></p-column>
+            </p-dataTable>
+            <div class="ui-grid">
+                <div class="ui-grid-col-2">
+                    <label class="required input-label">Star Year :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-dropdown [(disabled)]="stepOne" [options]="starYearOption" [(ngModel)]="dialogStarYear"></p-dropdown>
+                </div>
+                <div class="ui-grid-col-2">
+                    <label class="required input-label">Year Count :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input [(disabled)]="stepOne" (keyup)="dialogYearCount = maxYearCountCheck(dialogYearCount)" type="text" (keydown)="messageService.checkNumValue($event, 99)" [(ngModel)]="dialogYearCount">
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content" *ngIf="stepSelect">
+            <year-rate [yearEditableListData]="yearEditableListData" [rateChangeEditableData]="rateChangeEditableData" (editedDataOut)="editedDataRec($event)"></year-rate>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                <button type="button" *ngIf="!stepSelect" [(disabled)]="!dialogYearCount || !dialogStarYear || !selectedParameter.length" pButton
+                     (click)="nextStepClick()" label="Next Step"></button>
+                <button type="button" [(disabled)]="confirmCheck" *ngIf="stepSelect" pButton  (click)="addSave()" label="Confirm"></button>
+                <button type="button" *ngIf="stepSelect" pButton  (click)="priorStepClick()" label="Prior Step"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="Ar Project Delete" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+    </div>

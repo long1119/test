@@ -1,0 +1,17 @@
+@import '../../../../../sass/privateStyle';
+.buy-analysis {
+	.button-content {
+		margin: 1rem 0;
+	}
+	.data-table {
+		.ui-datatable table {
+			table-layout: auto;
+			// .index-row {
+			// 	width: 9rem;
+			// }
+			// .other-row {
+			// 	width: 6rem;
+			// }
+		}
+	}	
+}

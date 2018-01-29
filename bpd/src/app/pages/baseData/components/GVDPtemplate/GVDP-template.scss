@@ -1,0 +1,138 @@
+@import "../../../sass/privateStyle";
+.gvdp-main-content{
+  .drop-down{
+    width: 100%;
+    .ui-dropdown {
+        width: 90% !important;
+    }
+  }
+  p-spinner{
+    span{
+      width:90%;
+    }
+  }
+  .but{
+    margin-bottom: 5px;
+  }
+  .data-table{
+    font-size: 0.5rem;
+  }
+  .card{
+    margin-top: 20px;
+    .card-header{
+      background-color: $table-head;
+    }
+  }
+  .thead-inverse{
+    background-color: $table-head;
+  }
+  .blue{
+    color: #6BB2F3;
+  }
+  .blue:hover{
+    cursor: pointer;
+  }
+  .foot{
+    padding: 10px;
+  }
+  .background{
+    background-color: #00b0e8;
+  }
+  .clickStyle{
+    background-color: #186BA0;
+    color: white;
+    .blue{
+      color: white;
+    }
+  }
+  .overStyle{
+    background-color: rgba(220,220,220,0.5);
+  }
+  .table-bordered td{
+    border: 1px solid #D9D9D9 !important;
+  }
+  .table-bordered th{
+    border: 1px solid #D9D9D9 !important;
+  }
+  .wrap{
+    width: 300px;
+    height: 22px;
+    display: flex;
+    display: -webkit-flex;
+    .box{
+      width: 20%;
+      height: 100%;
+      display: flex;
+      display: -webkit-flex;
+      .boxChild1{
+        width: 40%;
+        height: 100%;
+      }
+      .boxChild2{
+        width: 60%;
+        height: 100%;
+      }
+    }
+  }
+  .wrap1{
+    width: 20px;
+    height: 20px;
+    .box1{
+      width: 20px;
+      height: 12px;
+    }
+    .box2{
+      border-width: 6px 10px 0;
+      border-style: solid;
+      border-color: transparent;
+    }
+  }
+  .wrap2{
+    width: 20px;
+    height: 20px;
+    .box3{
+      border-width: 0 10px 6px;
+      border-style: solid;
+      border-color: transparent;
+        }
+    .box4{
+      width: 20px;
+      height: 12px;
+    }
+  }
+  .wrap3{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+  .wrap4{
+    position: relative;
+    width: 20px;
+    height: 20px;
+    .box5{
+      position: absolute;
+      top: 5px;
+      width: 20px;
+      height: 10px;
+    }
+  }
+  .wrap5{
+    width: 20px;
+    height: 20px;
+    .box6{
+      border-width: 0 10px 10px;
+      border-style: solid;
+      border-color: transparent;
+    }
+    .box7{
+      border-width: 10px 10px 0;
+      border-style: solid;
+      border-color: transparent;
+    }
+  }
+  .specialTable{
+    td{
+      line-height: 25px;
+    }
+  }
+}

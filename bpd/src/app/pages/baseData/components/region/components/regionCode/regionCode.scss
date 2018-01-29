@@ -1,0 +1,25 @@
+@import "../../../../../../theme/sass/conf/conf";
+.region-code {
+    padding-top: 1rem;
+    .data-table {
+            text-align: center;
+            margin-top: 1rem;
+            .edit-button {
+                margin: .3rem;
+                &>span {
+                    background-color: $buttons;
+                    padding: .2rem .5rem;
+                }
+            }
+        }
+    .dialog {
+      &> div {
+          width: 50%;
+      } 
+    }
+    .delete-dialog {
+        &>div {
+            width: 30%;
+        }
+    }
+}

@@ -1,0 +1,16 @@
+<div class="rent-buy-analysis">
+    <p-tabView class="tab-view" (onChange)="changeTab($event)">
+        <p-tabPanel header="Building Cost And Others">
+            <building-cost-and-others *ngIf="selectedBuilding"></building-cost-and-others>
+        </p-tabPanel>
+        <p-tabPanel header="Rental Expense">
+            <rental-expense *ngIf="selectedExpense"></rental-expense>
+        </p-tabPanel>
+        <p-tabPanel header="Buy Analysis">
+            <buy-analysis *ngIf="selectedBuy"></buy-analysis>
+        </p-tabPanel>
+        <p-tabPanel header="Rental Analysis">
+            <rental-analysis *ngIf="selectedAnalysis"></rental-analysis>
+        </p-tabPanel>
+    </p-tabView>
+</div>

@@ -1,0 +1,79 @@
+<div class="ui-grid pt-lineup-info">
+    <div class="button-content ui-grid" *ngIf="!ptLineupInfoEditable && localStorageAuthority">
+        <div class="ui-grid-col-1">
+            <button pButton type="button" class="program-add" (click)="addClick()" label="Add"></button>
+        </div>
+        <div style="margin-left: 1rem;" class="ui-grid-col-3">
+            <button pButton type="button" (click)="PTDownloadBtn()" label="PT Reference Info"></button>
+        </div>
+    </div>
+    <!--  (onRowClick)="onRowClick($event)" -->
+    <p-dataTable selectionMode="single" class="ui-grid-row data-table" [value]="ptLineupData">
+        <p-header>PT Lineup Info</p-header>
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="ptLineupData[idx].ptLineupId">
+                    {{idx + 1}}
+                </span>
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-4" field="engine" header="Engine"></p-column>
+        <p-column styleClass="ui-grid-col-5" field="transmission" header="Transmission"></p-column>
+        <p-column *ngIf="!ptLineupInfoEditable && localStorageAuthority" styleClass="ui-grid-col-2" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="ptLineupData[idx].ptLineupId" class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                <span *ngIf="ptLineupData[idx].ptLineupId" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!--  [rowsPerPageOptions]="[10,20,30]" -->
+    <p-paginator rows="5" totalRecords="{{ptLineupInfoPaginatorTotal}}" pageLinkSize="3" (onPageChange)="ptLineupInfoPaginate($event)"></p-paginator>
+    <!-- 添加界面 -->
+    <p-dialog class="dialog" header="PT Lineup Info" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="project-name">Engine :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="50" pInputText id="project-name" [(ngModel)]="dialogEngine" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="project-name">Transmission :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="50" pInputText id="project-name" [(ngModel)]="dialogTransimission" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogTransimission || !dialogEngine" pButton  [disabled]="requireFlag"
+                    (click)="addSave()" label="Save"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-dialog header="PT Reference Info" [(visible)]="PTDownloadDisplay" width="500" minHeight=400 [responsive]="true" modal="modal"
+        class="dialog pt-download-dialog">
+        <p-dataTable class="ui-grid data-table project-info-table" selectionMode="single" [value]="arTemplateData" [(selection)]="selectedVersionData"
+            scrollable="true" scrollHeight="30rem">
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-7" field="fileName" header="File Name"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-7" field="createUserName" header="Create User"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-7" field="createTime" header="Date"></p-column>
+            <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-7" header="">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <span *ngIf="data.uploadUserName" class="edit-span" (click)="downloadTemplateDblClick(idx,data)">Download</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="PT Lineup Info" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="growMessage" life="{{growLife}}"></p-growl>
+</div>

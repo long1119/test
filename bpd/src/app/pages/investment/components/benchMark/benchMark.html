@@ -1,0 +1,412 @@
+<div class="topBar">
+	<button pButton type="button" (click)="SelectProjectBtn()" label="Select Project"></button>
+	<button [(disabled)]="!haveStore" pButton type="button" (click)="ExportBtn()" label="Export"></button>
+	<button [(disabled)]="!haveStore" style="float:right;" pButton type="button" (click)="RefreshDataBtn()" label="Refresh Data"></button>
+</div>
+<div *ngIf="!haveStore">
+	<p-dataTable class="data-table" [value]="emptyStore">
+        <p-column field="none" header="Region Category" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="none" header="Category Name" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="index" header="Index 1" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="index" header="Index 2" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="index" header="Index 3" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="index" header="Index 4" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="index" header="Index 5" styleClass="ui-grid-col-2"></p-column>
+    </p-dataTable>
+</div>
+<div *ngIf="haveStore" style="overflow:auto;width:100%;">
+    <table class="gridTable">
+        <thead>
+            <tr>
+                <th style="white-space: nowrap;padding:0 10px;" *ngFor = "let item of compareStore">{{item}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor = "let item of compareContentStore">
+                <td style="white-space:nowrap;padding:0 10px;" (click)="categoryClick(item,tdItem)" *ngFor = "let tdItem of compareStore1">{{item[tdItem]}}</td>
+                <td style="white-space:nowrap;padding:0 10px;text-align:right" (click)="categoryClick(item,tdItem)" *ngFor = "let tdItem of compareStore2">{{item[tdItem] | ammountPips}}</td>
+            </tr>
+            <tr>
+                <td style="color:#000;white-space:nowrap;padding:0 10px;">Total</td>
+                <td style="white-space:nowrap;padding:0 10px;">总计</td>
+                <td style="white-space:nowrap;padding:0 10px;text-align:right" *ngFor = "let item of totalStore">{{item | ammountPips}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<p-dialog header="Select Project & Index" [(visible)]="display" width="980" modal="modal" class="dialog">
+    <div class="topBar">
+        <button [(disabled)]="!generalLookupDisplay" pButton type="button" (click)="generalLookup()" label="General LookUp"></button>
+        Project Type:<p-dropdown autoWidth="false" [options]="projectTypeSerchStore" [(ngModel)]="projectTypeSerch" (onChange)="selectionChange($event)" appendTo="body"></p-dropdown>
+        Costbook Code:<input (keyup)="projectCodeEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCodeSerch" class="searchInput">
+        <button pButton type="button" (click)="dialogLookUpBtn()" label="Search"></button>
+    </div>
+    <p-dataTable [rows]="6" [value]="programStore" [(selection)]="programSelectedStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="18rem" selectionMode="single" (onRowClick)="programGridRowClick($event)">
+        <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="projectCode" header="Costbook Code" styleClass="ui-grid-col-2 align-left"></p-column>
+        <p-column field="projectTypeName" header="Project Type" styleClass="ui-grid-col-2 align-left"></p-column>
+        <p-column field="sop" header="SOP" styleClass="ui-grid-col-2 align-left"></p-column>
+        <p-column field="modelPlatform" header="Platform" styleClass="ui-grid-col-2 align-left"></p-column>
+        <p-column field="investmentCharacter" header="Investment Charactor" styleClass="ui-grid-col-2 align-left"></p-column>
+        <p-column field="userName" header="Investment Manager" styleClass="ui-grid-col-2 align-left"></p-column>
+    </p-dataTable>
+    <p-paginator totalRecords="{{programStoreLen}}" [rowsPerPageOptions]="[6,12,18]" rows="{{programStoreRows}}" first="{{programStoreFirst}}" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>
+    <div class="sonTitle">
+        <span>Benchmark Index</span>
+        <button pButton type="button" (click)="SelectIndexBtn()" label="Select" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="ClearIndexBtn()" label="Clear"></button>
+    </div>
+    <div class="indexGrid">
+        <p-dataTable [rows]="4" [value]="indexGridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="9rem">
+            <p-column field="indexName" header="Index Name" styleClass="ui-grid-col-3 align-left"></p-column>
+            <p-column field="budgetVersionName" header="Budget Version" styleClass="ui-grid-col-2 align-left"></p-column>
+        </p-dataTable>
+    </div>
+    <div class="footer">
+        <button pButton type="button" [(disabled)]="!sendArr.length" (click)="saveBtn()" label="Confirm"></button>
+        <button pButton type="button" (click)="cancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<!-- 整车搜索 -->
+<p-dialog header="General Locate Project Info" [(visible)]="generalVehicleLookUpDisplay" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="title">Program Info</div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Program Code:</span>
+                <input type="text" pInputText maxlength="6" [(ngModel)]="generalProgramCode">
+            </div>
+        </div>
+        <!-- <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Program Type:</span> 
+                <input type="text" pInputText disabled="true" value="Vehicle Investment">
+            </div>
+        </div> -->
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">SORP:</span> 
+                <p-dropdown id="yearDrop" autoWidth="false" [options]="yearSerchStore" [(ngModel)]="sorpYearSerch" appendTo="body"></p-dropdown>
+                <p-dropdown id="monthDrop" autoWidth="false" [options]="monthSerchStore" [(ngModel)]="sorpMonthSerch" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Platform:</span>
+                <input type="text" pInputText [(ngModel)]="generalPlatform">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Brand:</span>
+                <input type="text" pInputText [(ngModel)]="generalBrand">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Segment Market:</span>
+                <input type="text" pInputText [(ngModel)]="generalMarket">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">LCA Volume:</span>
+                <input type="text" pInputText [(ngModel)]="generalLCA">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Category:</span> 
+                <p-dropdown autoWidth="false" [options]="generalCategoryStore" [(ngModel)]="generalCategory" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Body Style:</span>
+                <input type="text" pInputText [(ngModel)]="generalStyle">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Plant:</span> 
+                <p-dropdown autoWidth="false" [options]="plantStore" [(ngModel)]="plant" appendTo="body" filter="filter"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="title">Cost book Info</div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Costbook Code:</span> 
+                <input type="text" pInputText maxlength="8" [(ngModel)]="projectCodeSerch"> 
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Costbook Name:</span>
+                <input type="text" pInputText [(ngModel)]="generalProjectName">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Classification:</span>
+                <p-dropdown autoWidth="false" [options]="generalClassificationStore" [(ngModel)]="generalClassification" appendTo="body" filter="filter"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Investment Character:</span> 
+                <p-dropdown autoWidth="false" [options]="generalCharacterStore" [(ngModel)]="generalCharacter"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Approved Investment(MRMB) >=:</span>
+                <input type="text" pInputText [(ngModel)]="generalRMB">
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="lookupSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="generalVehicleLookUpDisplay=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+<!-- 动力搜索 -->
+<p-dialog header="General Locate Project Info" [(visible)]="generalPowerLookUpDisplay" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="title">Program Info</div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Program Code:</span>
+                <input type="text" pInputText maxlength="6" [(ngModel)]="generalProgramCode">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">SORP:</span> 
+                <p-dropdown id="yearDrop" autoWidth="false" [options]="yearSerchStore" [(ngModel)]="sorpYearSerch" appendTo="body"></p-dropdown>
+                <p-dropdown id="monthDrop" autoWidth="false" [options]="monthSerchStore" [(ngModel)]="sorpMonthSerch" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Platform:</span>
+                <input type="text" pInputText [(ngModel)]="generalPlatform">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">LCA Volume:</span>
+                <input type="text" pInputText [(ngModel)]="generalLCA">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Category:</span> 
+                <p-dropdown autoWidth="false" [options]="generalCategoryStore" [(ngModel)]="generalCategory" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Plant:</span> 
+                <p-dropdown autoWidth="false" [options]="plantStore" [(ngModel)]="plant" appendTo="body" filter="filter"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="title">Cost book Info</div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Costbook Code:</span> 
+                <input type="text" pInputText maxlength="8" [(ngModel)]="projectCodeSerch"> 
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Costbook Name:</span>
+                <input type="text" pInputText [(ngModel)]="generalProjectName">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">PT Model:</span>
+                <input type="text" pInputText [(ngModel)]="PTModel">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">PT Count:</span>
+                <input type="text" pInputText [(ngModel)]="PTCount">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Classification:</span>
+                <p-dropdown autoWidth="false" [options]="generalClassificationStore" [(ngModel)]="generalClassification" appendTo="body" filter="filter"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Investment Character:</span> 
+                <p-dropdown autoWidth="false" [options]="generalCharacterStore" [(ngModel)]="generalCharacter" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Approved Investment(MRMB) >=:</span>
+                <input type="text" pInputText [(ngModel)]="generalRMB">
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="lookupSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="generalPowerLookUpDisplay=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+<!-- 基建搜索 -->
+<p-dialog header="General Locate Project Info" [(visible)]="generalBuildingLookUpDisplay" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Costbook Code:</span> 
+                <input type="text" pInputText [(ngModel)]="projectCodeSerch">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Costbook Name:</span>
+                <input type="text" pInputText [(ngModel)]="buildingProjectName">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Category:</span> 
+                <p-dropdown autoWidth="false" [options]="generalCategoryStore" [(ngModel)]="generalCategory" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">SORP:</span> 
+                <p-dropdown id="yearDrop" autoWidth="false" [options]="yearSerchStore" [(ngModel)]="sorpYearSerch" appendTo="body"></p-dropdown>
+                <p-dropdown id="monthDrop" autoWidth="false" [options]="monthSerchStore" [(ngModel)]="sorpMonthSerch" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Land Area:</span>
+                <input type="text" pInputText [(ngModel)]="landArea">
+            </div>
+        </div>
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Building Area:</span> 
+                <input type="text" pInputText [(ngModel)]="buildingArea">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-6">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Location:</span>
+                <input type="text" pInputText [(ngModel)]="location">
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="lookupSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="generalBuildingLookUpDisplay=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+<!-- AR搜索 -->
+<p-dialog header="General Locate Project Info" [(visible)]="generalARLookUpDisplay" width="450" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Year:</span> 
+                <p-dropdown autoWidth="false" [options]="ARYearStore" [(ngModel)]="ARYear" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Costbook Code:</span>
+                <input type="text" pInputText [(ngModel)]="projectCodeSerch">
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="lookupSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="generalARLookUpDisplay=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Select benchmark index" [(visible)]="selectIndexDisplay" width="500" [responsive]="true" modal="modal" class="generalDialog">
+    <p-dataTable [rows]="10" [value]="selectIndexStore" [(selection)]="selectIndexSelectedStore" class="data-table" [rowHover]=true>
+        <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+        <p-column field="indexName" header="Index Name" styleClass="ui-grid-col-5 align-left"></p-column>
+        <p-column header="Budget version" styleClass="ui-grid-col-6 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.flag">
+                    <p-dropdown autoWidth="false" [options]="budgetVersionStore" [(ngModel)]="item.budgetVersionName" (onChange)="budegetChange($event,item)" appendTo="body"></p-dropdown>
+                </span>
+                <span *ngIf="!item.flag">
+                    <input type="text" pInputText value="N/A" style="width:205px" disabled="true">
+                </span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <div class="footer">
+        <button pButton type="button" (click)="selectIndexSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="selectIndexCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog [(visible)]="investmentDisplay" width="800" [responsive]="true" modal="modal" class="generalDialog">
+    <p-header>
+        <span style="font-size:15px">{{dialogTitle}} investment analysis</span>
+        <button style="color:#2399e5;background-color:#fff;margin-left:20px;" pButton type="button" (click)="exportInvestmentBtn()" label="Export"></button>
+    </p-header>
+    <div style="overflow:auto;width:100%;max-height:40rem;min-height:40rem">
+        <table class="gridScrollTable">
+            <thead>
+                <tr>
+                    <th style="white-space: nowrap;padding:0 10px;">L1~L3</th>
+                    <th style="white-space: nowrap;padding:0 10px;">L4~L7</th>
+                    <th style="white-space: nowrap;padding:0 10px;">Item Name</th>
+                    <th style="white-space: nowrap;padding:0 10px;" *ngFor = "let item of compareExt2Store">{{item}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor = "let item of investmentStore">
+                    <td style="white-space:nowrap;padding:0 10px;" *ngFor = "let tdItem of investmentTitleStore">{{item[tdItem]}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="3000"></p-growl>

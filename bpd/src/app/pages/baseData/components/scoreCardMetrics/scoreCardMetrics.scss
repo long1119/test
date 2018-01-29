@@ -1,0 +1,49 @@
+@import '../../../sass/privateStyle';
+.score-card-metrics {
+    .button-content {
+        margin-bottom: 1rem;
+    }
+    .dialog {
+        &>div {
+            width: 40%;
+            &>div {
+                &>div {
+                    &>div {
+                        margin: 1rem 0;
+                    }
+                }
+            }
+        }
+        input {
+            width: 100%;
+        }
+        .dialog-search-input {
+            float: left;
+            width: 92%;
+        }
+        .dialog-search-button {
+            float: left;
+            width: 8%;
+            height: 2.3rem;
+            box-sizing: border-box;
+            margin: 0;
+        }
+        .ar-project-search {
+            &>::after {
+                content: "";
+                height: 0;
+                clear: both;
+                display: table;
+            }
+        }
+    }
+    .dialog-user-select {
+        &>div {
+            width: 70%;
+            .ui-dialog-content {
+                height: 45rem;
+                overflow: auto;
+            }
+        }
+    }
+}

@@ -1,0 +1,118 @@
+<div class="ui-grid buget-template">
+    <div class="ui-grid">
+        <div class="ui-grid-col-1">
+            <button pButton *ngIf="localStorageAuthority" type="button" class="program-add" (click)="addClick()" label="Add"></button>
+        </div>
+    </div>
+    <p-dataTable class="ui-grid data-table" [value]="baseData" scrollable="true" scrollHeight="30rem">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="baseData[idx].regionUserId">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="regionName" header="Region"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="reportPersonName" header="Report Person"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="regionManagerName" header="Region Manager"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="baseData[idx].regionUserId" class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                <span *ngIf="baseData[idx].regionUserId" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- 添加界面 -->
+    <p-dialog class="dialog" header="Ar Special Region" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <p-dataTable class="ui-grid data-table" [value]="fontData" scrollable="true" scrollHeight="9rem">
+                <p-column styleClass="ui-grid-col-1" header="NO">
+                    <template let-idx="rowIndex" pTemplate="body">
+                        <span *ngIf="fontData[idx].regionName">{{idx + 1}}</span>
+                    </template>
+                </p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="regionName" header="Region"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-4" field="commissionerName" header="Report Person"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-4" field="managerName" header="Manager"></p-column>
+            </p-dataTable>
+            <div *ngIf="currentStep == 'region'" class="ui-grid-row">
+                <div style="float: left; width: 9rem; margin-top: .25rem;">
+                    <label>Region Name :</label>
+                </div>
+                <div style="float: left; width: 14rem; margin-left: 1rem;">
+                    <input maxlength="36" (keyup)="regionNameEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogRegionName" />
+                </div>
+                <div style="float: left; margin-left: 1rem;">
+                    <button pButton type="button" class="program-add" (click)="regionNameLookClick()" label="Search"></button>
+                </div>
+            </div>
+            <div *ngIf="currentStep == 'region'">
+                <p-dataTable class="ui-grid-row data-table" (onRowUnselect)="onRowClick()" (onRowSelect)="onRowClick()" [value]="regionData" scrollable="true" scrollHeight="15rem" [(selection)]="selectedRegionData">
+                    <p-column *ngIf="selectRegionMode" [style]="{'width':'2.5rem'}" selectionMode="multiple"></p-column>
+                    <p-column styleClass="ui-grid-col-1" header="NO">
+                        <template let-idx="rowIndex" pTemplate="body">
+                            {{idx + 1}}
+                        </template>
+                    </p-column>
+                    <p-column styleClass="ui-grid-col-2" field="regionCode" header="Region Code(WBS Level3)"></p-column>
+                    <p-column styleClass="ui-grid-col-3" field="regionCategoryName" header="Region Type"></p-column>
+                    <p-column styleClass="ui-grid-col-3" field="regionGroupName" header="Region Group"></p-column>
+                    <p-column styleClass="ui-grid-col-4" field="regionName" header="Region Name"></p-column>
+                </p-dataTable>
+            </div>
+            <div *ngIf="currentStep != 'region'" class="ui-grid-row">
+                <div style="float: left; width: 9rem; margin-top: .25rem;">
+                    <label>User Name :</label>
+                </div>
+                <div style="float: left; width: 14rem; margin-left: 1rem;">
+                    <input maxlength="36" (keyup)="userNameEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogUserName" />
+                </div>
+                <div style="float: left; margin-left: 1rem;">
+                    <button pButton type="button" class="program-add" (click)="userNameLookClick()" label="Search"></button>
+                </div>
+                <div style="float: right; margin-left: 1rem;">
+                    <h3 style="color: #186BA0">{{currentStepLabel}}</h3>
+                </div>
+            </div>
+            <div *ngIf="currentStep == 'manager'" class="ui-grid-row">
+                <div class="ui-grid-col-1">
+                    <button pButton type="button" class="program-add" (click)="clearManager()" label="Clear"></button>
+                </div>
+            </div>
+            <div *ngIf="currentStep != 'region'">
+                <p-dataTable selectionMode="single" class="ui-grid-row search-table" class="data-table"
+                    [value]="userData" (onRowSelect)="onRowClick()" (onRowUnselect)="onRowClick()" [(selection)]="selectedUserData" scrollable="true" scrollHeight="15rem" [rows]="20" virtualScroll="virtualScroll" [lazy]="false">
+                    <p-column styleClass="ui-grid-col-1" field="userName" header="User Name"></p-column>
+                    <p-column styleClass="ui-grid-col-1" field="userCode" header="User Code"></p-column>
+                    <p-column styleClass="ui-grid-col-3" field="jobPosition" header="Job"></p-column>
+                    <p-column styleClass="ui-grid-col-1" field="telephone" header="Telphone"></p-column>
+                    <p-column styleClass="ui-grid-col-2" field="emailAddress" header="Email"></p-column>
+                    <p-column styleClass="ui-grid-col-2" field="departmentName" header="Department"></p-column>
+                    <p-column styleClass="ui-grid-col-1" field="rowNames" header="Manager"></p-column>
+                </p-dataTable>
+                <!-- <p-paginator rows="5" totalRecords="{{userPaginatorTotal}}" (onPageChange)="userPaginate($event)" first="{{userFontFirst}}"></p-paginator> -->
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="addCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!nextStepFlag" pButton (click)="nextStep()" label="{{nextStepLabel}}"></button>
+                <div *ngIf="previousFlag">
+                    <button type="button" *ngIf="currentStep != 'region'" pButton (click)="previousStep()" label="Previous"></button>
+                </div>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog delete-dialog" header="Ar Special Region" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete This Ar Special Region?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteNo()" label="Cancel"></button>
+                <button type="button" pButton (click)="deleteYes()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

@@ -1,0 +1,21 @@
+@import '../../../sass/privateStyle';
+.set-time-out {
+    .content-left {
+        h3 {
+            width: 95%;
+            text-align: center;
+            color: #fff;
+            background-color: $table-head;
+            margin: 0 0 0 0;
+            font-size: 1.5rem;
+            height: 3rem;
+            line-height: 3rem;
+            border-radius: .3rem .3rem 0 0;
+        }
+        .data-list {
+            .ui-listbox {
+                text-align: left;
+            }
+        }
+    }
+}

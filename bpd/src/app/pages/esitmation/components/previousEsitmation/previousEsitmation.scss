@@ -1,0 +1,31 @@
+@import '../../../sass/privateStyle';
+.previous-content {
+    // .ui-datatable-scollable .ui-datatable-scrollable-header {
+    //     display: table !important;
+    // }
+    .data-table {
+        width: 95%;
+        float: left;
+        .ui-widget {
+            .ui-widget-header {
+                .previous-head {
+                    line-height: 3rem;
+                    width: 50%;
+                    margin-left: 3rem; 
+                    float: left;
+                    color: #fff;
+                    text-align: right;
+                }
+                padding: 0;
+                margin: 0;
+                .previous-button {
+                    float: right;
+                    height: 100%;
+                    margin: 0;
+                    background-color: #fff;
+                    color: $table-head;
+                }
+            }
+        }
+    }
+}

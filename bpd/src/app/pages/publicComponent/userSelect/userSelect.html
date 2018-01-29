@@ -1,0 +1,41 @@
+<div class="user-select">
+    <div class="ui-grid">
+        <div class="ui-grid-col-3">
+            <div class="ui-grid-col-6 parameter-font">Department :</div>
+            <div class="ui-grid-col-6">
+                <input (keyup)="lookClickEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogDepartment" />
+            </div>
+            <div class="ui-grid-col-1"></div>
+        </div>
+        <div class="ui-grid-col-3">
+            <div class="ui-grid-col-6 parameter-font" style="text-align: right;">User Name:&nbsp;&nbsp;</div>
+            <div class="ui-grid-col-6">
+                <input (keyup)="lookClickEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogUserName" />
+            </div>
+        </div>
+        <div class="ui-grid-col-3">
+            <div class="ui-grid-col-6 parameter-font" style="text-align: right;">Employee ID:&nbsp;&nbsp;</div>
+            <div class="ui-grid-col-6">
+                <input (keyup)="lookClickEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogEmployeeCode" />
+            </div>
+        </div>
+        <div class="ui-grid-col-2">
+            <button style="margin-left: 1rem;" pButton type="button" class="program-add" (click)="lookClick()" label="Search"></button>
+        </div>
+    </div>
+    <div class="ui-grid"  style="margin-top: 1rem;">
+        <p-dataTable (onRowClick)="onDialogRowClick($event)" (onRowDblclick)="onDialogRowDblClick($event)" selectionMode="single" class="ui-grid-row search-table" class="data-table"
+        [value]="baseData" [(selection)]="selectedManagerData">
+            <p-column *ngIf="multiple" selecetMode="multiple"></p-column>
+            <p-column styleClass="ui-grid-col-1" field="userName" header="User Name"></p-column>
+            <p-column styleClass="ui-grid-col-1" field="employeeCode" header="Employee ID"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="jobPosition" header="Job"></p-column>
+            <p-column styleClass="ui-grid-col-1" field="telephone" header="Telphone"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="emailAddress" header="Email"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="departmentName" header="Department"></p-column>
+            <p-column styleClass="ui-grid-col-1" field="rowNames" header="Manager"></p-column>
+        </p-dataTable>
+        <!--  pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" -->
+        <p-paginator rows="10" first="{{fontFirst}}" totalRecords="{{paginatorTotal}}" (onPageChange)="paginate($event)"></p-paginator>
+    </div>
+</div>

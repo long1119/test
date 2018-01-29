@@ -1,0 +1,68 @@
+@import '../../../sass/privateStyle';
+deliverable-bill {
+	.topBar {
+		padding: 10px;
+		p-dropdown {
+		    display: inline-block;
+		    width: 200px;
+		    margin-left: 10px;
+		    margin-right: 20px;
+		}
+		button {
+			margin-right: 25px;
+			padding: 0 5px;
+		}
+	}
+	.editBtn, .noEditBtn {
+	    margin-right: 10px;
+	    display: inline-block;
+	    text-align: center;
+	}
+	.editBtn, .delBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+	}
+	.noEditBtn {
+		color: #bfbdbd;
+	}
+	.dialog {
+		.ui-inputtext {
+			width: 100%;
+		}
+		.input {
+			width: 75%;
+		}
+		.ui-dropdown {
+			width: 75% !important;
+		}
+	}
+	.w105 {
+		width: 110px;
+		display: inline-block;
+		margin-right: 20px !important;
+	}
+	.footer {
+		text-align: right;
+	    margin-right: 115px !important;
+	    margin-top: 50px !important;
+	    margin-bottom: 20px !important;
+	}
+	.ui-dropdown-filter-container {
+		display: block !important;
+	}
+	.ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+	p-confirmDialog {
+		.ui-dialog.ui-widget .ui-dialog-titlebar {
+			background: #2399e5;
+			color: #fff;
+			a {
+				color: #fff;
+			}
+		}
+	 	.ui-dialog.ui-widget .ui-dialog-content {
+			padding: 1em 2em;
+		}
+	}
+}

@@ -1,0 +1,12 @@
+@import '../../../pages/sass/privateStyle';
+.work-flow {
+	.approve-dialog {
+		& > div {
+			.ui-dialog-content {
+	             max-height: 40rem;
+	             overflow: auto;
+	         }
+			width: 80%;
+		}
+	}
+}

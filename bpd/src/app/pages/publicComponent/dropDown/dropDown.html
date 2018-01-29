@@ -1,0 +1,11 @@
+<div>
+    <div>
+        <input type="text">
+        <div>
+            <div class="drop-down-sub"></div>
+        </div>
+    </div>
+    <div class="drop-down-box" *ngIf="dropDownFlag">
+        <div *ngFor="let dropDownList of dropDownLists; let idx = index"><span [ngClass]="{'drop-down-select':true}">{{dropDownList.label}}</span></div>
+    </div>
+</div>

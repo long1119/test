@@ -1,0 +1,83 @@
+@import '../../../sass/privateStyle';
+pqrr-submit {
+	.topBar {
+		padding: 10px;
+		p-dropdown {
+		    display: inline-block;
+		    width: 200px;
+		    margin-left: 10px;
+		    margin-right: 20px;
+		}
+		button {
+			margin-right: 25px;
+			padding: 0 5px;
+		}
+	}
+	.editBtn {
+	    margin-right: 10px;
+	    display: inline-block;
+	    text-align: center;
+	}
+	.editBtn, .delBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+	}
+	.dialog {
+		.ui-inputtext {
+			width: 100%;
+		}
+		.input {
+			width: 75%;
+		}
+		.ui-dropdown {
+			width: 75% !important;
+		}
+		.ui-calendar {
+			display: inline-block;
+		    width: 65% !important;
+		}
+	}
+	.w105 {
+		width: 110px;
+		display: inline-block;
+		margin-right: 20px !important;
+	}
+	.footer {
+		text-align: right;
+	    margin-right: 115px !important;
+	    margin-top: 50px !important;
+	    margin-bottom: 20px !important;
+	}
+	.lookUpFooter {
+		text-align: right;
+		margin-right: 20px;
+	    margin-top: 10px;
+	}
+	.green {
+		color: rgb(98,198,6);
+		font-size: 18px;
+	}
+	.yellow {
+		color: #e8c806;
+		font-size: 18px;
+	}
+	.red {
+		color: red;
+		font-size: 18px;
+	}
+	.deliverTitle {
+		height: 2.2rem;
+		background-color: rgb(239,239,239);
+		line-height: 2.2rem;
+		font-size: 14px;
+		text-indent: 10px;
+	}
+	.blue {
+		color: rgb(55,138,240);
+		font-size: 16px;
+	}
+	.ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+
+}

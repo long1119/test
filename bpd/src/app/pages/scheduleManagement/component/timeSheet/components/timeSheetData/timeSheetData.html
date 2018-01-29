@@ -1,0 +1,267 @@
+<div class="time-sheet-data">
+    <div *ngIf="timeSheetData[0]?.timeSheetstatus != '2' && timeSheetData[0]?.timeSheetstatus != '1' && localStorageAuthority && changeProjectStatus"
+        class="time-sheet-buttons">
+        <button type="button" [(disabled)]="!changeAdProjectCode || managerFlag" pButton (click)="addTimeSheetClick()" label="Add"></button>
+        <button type="button" [(disabled)]="!changeAdProjectCode || !selectedTimingItemId || managerFlag" pButton (click)="batchAdjustClick()"
+            label="Batch Adjust"></button>
+        <button type="button" pButton (click)="viewGraphicClick()" label="View Graphic"></button>
+        <label for="">Element Name :</label>
+        <input style="width: 10rem;" (keyup)="elementNameEnterSearch($event)" pInputText [(ngModel)]="dialogSearchElementName" />
+        <label for="">Element ID :</label>
+        <input style="width: 10rem;" (keyup)="elementNameEnterSearch($event)" pInputText [(ngModel)]="dialogSearchElementCode" />
+        <button type="button" pButton (click)="searchByElementName()" label="Search"></button>
+    </div>
+    <div *ngIf="(timeSheetData[0]?.timeSheetstatus == '1' || timeSheetData[0]?.timeSheetstatus == '2') && changeProjectStatus"
+        class="time-sheet-buttons">
+        <button type="button" [disabled]="true" pButton label="Add"></button>
+        <button type="button" [disabled]="true" pButton label="Batch Adjust"></button>
+        <button type="button" (click)="viewGraphicClick()" pButton label="View Graphic"></button>
+        <label for="">Element Name :</label>
+        <input style="width: 10rem;" (keyup)="elementNameEnterSearch($event)" pInputText [(ngModel)]="dialogSearchElementName" />
+        <label for="">Element ID :</label>
+        <input style="width: 10rem;" (keyup)="elementNameEnterSearch($event)" pInputText [(ngModel)]="dialogSearchElementCode" />
+        <button type="button" pButton (click)="searchByElementName()" label="Search"></button>
+    </div>
+    <div *ngIf="(timeSheetData[0]?.timeSheetstatus != '2' || timeSheetData[0]?.timeSheetstatus != '1') && !changeProjectStatus"
+        class="time-sheet-buttons">
+        <button type="button" [disabled]="true" pButton label="Add"></button>
+        <button type="button" [disabled]="true" pButton label="Batch Adjust"></button>
+        <button type="button" (click)="viewGraphicClick()" pButton label="View Graphic"></button>
+        <label for="">Element Name :</label>
+        <input style="width: 10rem;" (keyup)="elementNameEnterSearch($event)" pInputText [(ngModel)]="dialogSearchElementName" />
+        <label for="">Element ID :</label>
+        <input style="width: 10rem;" (keyup)="elementNameEnterSearch($event)" pInputText [(ngModel)]="dialogSearchElementCode" />
+        <button type="button" pButton (click)="searchByElementName()" label="Search"></button>
+    </div>
+    <!-- <div *ngIf="timeSheetData[0]?.timeSheetstatus != '2' && !localStorageAuthority " class="time-sheet-buttons">
+        <button type="button" [(disabled)]="!changeAdProjectCode || !timeSheetData.length" pButton (click)="viewGraphicClick()" label="View Graphic"></button>
+        <label for="">Element Name :</label>
+        <input (keyup)="elementNameEnterSearch($event)" pInputText [(ngModel)]="dialogSearchElementName" />
+        <button type="button" pButton (click)="searchByElementName()" label="Search"></button>
+    </div> -->
+    <!-- <p-dataTable scrollable="true" scrollHeight="30rem" class="ui-grid data-table" [value]="timeSheetData" (onRowClick)="onTimeSheetRowClick($event)"
+        selectionMode="single" [rows]="20" virtualScroll="virtualScroll" [lazy]="false" [totalRecords]="timeSheetDataTotalRecords" (onLazyLoad)="timeSheetDataLazyLoad($event)"> -->
+    <p-dataTable scrollable="true" scrollHeight="30rem" class="ui-grid data-table" [value]="timeSheetData" (onRowClick)="onTimeSheetRowClick($event)"
+        selectionMode="single">
+        <p-column styleClass="ui-grid-col-2" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="timeSheetData[idx].timingItemId">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-4" field="elementName" header="Element Name"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="planDate" header="Plan Date"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" header="Status">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <div *ngIf="data.timingItemId && checkboxFlag && localStorageAuthority ">
+                    <!-- TODO: checkBox添加 -->
+                    <p-checkbox *ngIf="data.timeSheetstatus == '1' && data.status == '0' && data.updateFlag == '0' && !managerFlag" name="checkboxName + {{ idx }}"
+                        (onChange)="onStatusCheckboxChange(idx, data)" value="complate" [(ngModel)]="selectedStatusValues"></p-checkbox>
+                    <!-- data.updateFlag == '0' &&  -->
+                    <label *ngIf="data.timeSheetstatus !== '0' && data.timeSheetstatus !== '2' && data.status == '1'">Complate</label>
+                </div>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="week" header="Week"></p-column>
+        <p-column *ngIf="localStorageAuthority " styleClass="ui-grid-col-2" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <div *ngIf="timeSheetData[idx].timingItemId && data.status != '1' && data.timeSheetstatus != '2' && data.timeSheetstatus != '1' && !managerFlag && !changePorjctStatus">
+                    <span *ngIf="timeSheetData[idx].timingItemId" class="edit-span" (click)="editTimeSheetClick(idx,data)">Edit</span>
+                    <span *ngIf="timeSheetData[idx].timingItemId && timeSheetData[idx].elementName.trim().toUpperCase() != 'SORP'" class="edit-span"
+                        (click)="deleteTimeSheetClick(idx,data)">Delete</span>
+                </div>
+                <div *ngIf="timeSheetData[idx].timingItemId && data.status == '1' || data.timeSheetstatus == '2' || data.timeSheetstatus == '1' || managerFlag|| changePorjctStatus">
+                    <span *ngIf="timeSheetData[idx].timingItemId" class="no-edit-span">Edit</span>
+                    <span *ngIf="timeSheetData[idx].timingItemId && timeSheetData[idx].elementName.trim().toUpperCase() != 'SORP'" class="no-edit-span">Delete</span>
+                </div>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-paginator rows="{{timePaginatorRow}}" first="{{timePaginatorFirst}}" totalRecords="{{timeSheetTotal}}" [rowsPerPageOptions]="[10,20,30]" pageLinkSize="3" (onPageChange)="timeSheetPaginate($event)"></p-paginator>
+    <!-- add/edit Timesheet -->
+    <p-dialog class="dialog" header="Modify Element Info" [(visible)]="modifyDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div *ngIf="addType === 'custom'">
+            <div class="program-search ui-grid">
+                <div class="ui-grid-col-4">
+                    <label class="required">Element Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="25" pInputText [(disabled)]="isSorpOrNot" [(ngModel)]="dialogElementName" />
+                </div>
+            </div>
+            <div class="program-search ui-grid">
+                <div class="ui-grid-col-4">
+                    <label class="required">Element ID :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText disabled [(ngModel)]="dialogElementId" />
+                </div>
+            </div>
+            <div class="program-search ui-grid">
+                <div class="ui-grid-col-4">
+                    <label class="required">Plan Date :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd"
+                        styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectPlanDate"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="addType !== 'custom'">
+            <div class="program-search ui-grid">
+                <div class="ui-grid-col-4">
+                    <label class="required">Element Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText readonly [(ngModel)]="dialogElementName" (click)="openChoose()" />
+                </div>
+            </div>
+            <div class="program-search ui-grid">
+                <div class="ui-grid-col-4">
+                    <label class="required">Element ID :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText disabled [(ngModel)]="dialogElementId" />
+                </div>
+            </div>
+            <div class="program-search ui-grid">
+                <div class="ui-grid-col-4">
+                    <label class="required">Plan Date :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd"
+                        styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectPlanDate"></p-calendar>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="modifyFlag === 'addTimeSheet'" class="program-search ui-grid">
+            <!-- <button type="button" pButton (click)="toggleAddType()" label="Change Add Type"></button> -->
+            <div class="ui-grid-col-4">
+                <label>Add Type :</label>
+            </div>
+            <div class="ui-grid-col-8">
+                <p-dropdown class="drop-down" (onChange)="toggleAddType($event)" autoWidth="false" [options]="modifyFlagOption" [(ngModel)]="addType"></p-dropdown>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="modifyCancel()" label="Cancel"></button>
+                <button [(disabled)]="!selectPlanDate || !dialogElementName || !dialogElementId" type="button" pButton (click)="modifySave()"
+                    label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- adjustTimeSheet -->
+    <p-dialog class="dialog" header="Adujst" [(visible)]="adjuestDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="program-search ui-grid">
+            <div class="ui-grid-col-4">
+                <label class="required">Current Element :</label>
+            </div>
+            <div class="ui-grid-col-8">
+                <input disabled pInputText [(ngModel)]="dialogCurrentElement" />
+            </div>
+        </div>
+        <div class="program-search ui-grid">
+            <div class="ui-grid-col-4">
+                <label class="required">Adjsut Type :</label>
+            </div>
+            <div class="ui-grid-col-8">
+                <p-dropdown class="drop-down" autoWidth="false" [options]="adjustTypeOption" [(ngModel)]="selectedAdjustType"></p-dropdown>
+            </div>
+            <div class="program-search ui-grid">
+                <div class="ui-grid-col-4">
+                    <label class="required">Plan Date :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input disabled pInputText [(ngModel)]="diaologDisabledPlanDate" />
+                </div>
+            </div>
+            <div class="program-search ui-grid">
+                <div class="ui-grid-col-4">
+                    <label class="required">Adjustment Plan Date :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd"
+                        styleClass="calendar-input" [readonlyInput]="true" (onSelect)="onDateSelect($event)" [(ngModel)]="selectAdjustmentPlanDate"></p-calendar>
+                </div>
+            </div>
+            <div class="program-search ui-grid">
+                <div class="ui-grid-col-4">
+                    <label class="required">Adjustment Days :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText disabled type="number" [(ngModel)]="dialogPlantDate" />
+                </div>
+            </div>
+            <p-footer>
+                <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                    <button type="button" pButton (click)="batchAdjustCancel()" label="Cancel"></button>
+                    <button type="button" [(disabled)]="!dialogPlantDate || !selectedAdjustType || !dialogCurrentElement" pButton (click)="batchAdjustSave()"
+                        label="Confirm"></button>
+                </div>
+            </p-footer>
+        </div>
+    </p-dialog>
+    <p-dialog header="Meta Graphic Config" class="dialog" [(visible)]="chooseGvdpDetailDialog" modal="modal" width="700" [responsive]="true">
+        <span style="margin-left:1rem;">Element Name:</span>
+        <input (keyup)="elementNameEnterSearch($event)" maxlength="100" pInputText type="text" [(ngModel)]="dialogElementNameForSearch"
+            style="width:150px;" />
+        <span style="margin-left:1rem;">Element ID:</span>
+        <input (keyup)="ementNameEnterSearch($event)" maxlength="100" pInputText type="text" [(ngModel)]="dialogElementIdforsearch"
+            style="width:150px;" />
+        <button pButton type="button" (click)="checkElement()" label="Search" style="margin-bottom:0.5rem;"></button>
+        <p-dataTable [value]="GraphicData" (onRowDblclick)="bindData($event)" class="data-table" [rowHover]=true scrollable="true"
+            scrollHeight="28rem">
+            <p-column styleClass="ui-grid-col-2" header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                    <span *ngIf="timeSheetData[idx].timingItemId">{{idx + 1}}</span>
+                </template>
+            </p-column>
+            <p-column field="elementId" header="Element ID"></p-column>
+            <p-column field="elementName" header="Element Name"></p-column>
+            <p-column header="Graphic">
+                <template pTemplate="body" let-item="rowData">
+                    <div class="wrap1" *ngIf="item.graphicType==0" style="margin:0.5rem auto;">
+                        <div class="box1" [ngStyle]="{'background-color':item.graphicColor}"></div>
+                        <div class="box2" [ngStyle]="{'border-top-color':item.graphicColor}"></div>
+                    </div>
+                    <div class="wrap2" *ngIf="item.graphicType==1" style="margin:0.5rem auto;">
+                        <div class="box3" [ngStyle]="{'border-bottom-color':item.graphicColor}"></div>
+                        <div class="box4" [ngStyle]="{'background-color':item.graphicColor}"></div>
+                    </div>
+                    <div class="wrap3" *ngIf="item.graphicType==2" [ngStyle]="{'background-color':item.graphicColor}" style="margin:0.5rem auto;">
+                    </div>
+                    <div class="wrap4" *ngIf="item.graphicType==4" style="margin:0.5rem auto">
+                        <div class="box5" [ngStyle]="{'background-color':item.graphicColor}"></div>
+                    </div>
+                    <div class="wrap5" *ngIf="item.graphicType==3" style="margin:0.5rem auto;">
+                        <div class="box6" [ngStyle]="{'border-bottom-color':item.graphicColor}"></div>
+                        <div class="box7" [ngStyle]="{'border-top-color':item.graphicColor}"></div>
+                    </div>
+                </template>
+            </p-column>
+            <p-column field="graphicColor" header="Graphic Color"></p-column>
+            <p-column field="displayPosition" header="Display Row No"></p-column>
+        </p-dataTable>
+        <p-paginator totalRecords="{{elementPaginatorTotal}}" first="{{elementPaginatorFirst}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginateForSearch($event)"></p-paginator>
+    </p-dialog>
+    <!-- 可视化弹窗 -->
+    <p-dialog class="dialog dialog-view" header="Preview Timesheet" *ngIf="previewDialog" [(visible)]="previewDialog">
+        <!-- 弹框展示图片 -->
+        <iframe [src]="specialURL" width="100%" height="100%"></iframe>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="Timesheet Delete" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+    <p-confirmDialog></p-confirmDialog>
+</div>

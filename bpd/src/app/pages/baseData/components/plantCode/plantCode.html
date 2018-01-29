@@ -1,0 +1,116 @@
+<div class="ui-grid plant-code-content">
+    <button *ngIf="localStorageAuthority" pButton type="button" class="content-add" (click)="addClick()" label="Add"></button>
+    <button pButton type="button" class="content-add" (click)="exportClick()" label="Export"></button>
+    <p-dataTable class="ui-grid-row data-table" [rows]="10" [value]="baseData" [paginator]="true">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                {{idx + 1}}
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="company" header="Company"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="base" header="Base"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="plantCode" header="Plant Code(WBS L2)"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="plantDescription" header="Plant" ></p-column>
+        <p-column styleClass="ui-grid-col-3" field="plantComment" header="Memo"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2">
+            <template pTemplate="header">
+                
+            </template>
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                <span class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- <div style="margin-top: 1rem;">
+        It测试用,下一版就没了
+    </div>
+    <button pButton type="button" class="content-add" (click)="testClick()" label="test"></button>
+    <label for="">{{testData.userName}} - {{testData.userCode}}</label> -->
+    <!--添加页面-->
+    <p-dialog class="dialog" header="Plant Code" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="plantDescription">Plant :</label></div>
+                <div class="ui-grid-col-8">
+                    <!-- <p-dropdown class="drop-down" autoWidth="false" [options]="plantOption" [(ngModel)]="dialogDescription"></p-dropdown> -->
+                    <input pInputText maxlength="20" (change)="dialogDescription = checkEnglish(dialogDescription)" id="plantCode" [(ngModel)]="dialogDescription" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="plantCode">Plant code :</label></div>
+                <div class="ui-grid-col-8"><input pInputText (change)="dialogCode = checkEnglish(dialogCode)" (blur)="codeBlur()" id="plantCode" maxlength="1" required ng-required="true" [(ngModel)]="dialogCode" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="plantComment">Memo :</label></div>
+                <div class="ui-grid-col-8"><input pInputText id="plantComment" maxlength="100" [(ngModel)]="dialogComment" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="plantComment">Base :</label></div>
+                <div class="ui-grid-col-8"><input pInputText id="plantComment" maxlength="2" [(ngModel)]="dialogBase" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="plantComment">Company :</label></div>
+                <div class="ui-grid-col-8"><input pInputText id="plantComment" maxlength="3" [(ngModel)]="dialogCompany" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <!--添加页面按钮-->
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogCode" pButton  (click)="addSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+
+    <!--修改页面-->
+    <p-dialog class="dialog" header="Plant Code" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="plantDescription">Plant :</label></div>
+                <div class="ui-grid-col-8">
+                    <!-- <p-dropdown class="drop-down" autoWidth="false" [options]="plantOption" [(ngModel)]="dialogDescription"></p-dropdown> -->
+                    <input pInputText disabled id="plantCode" [(ngModel)]="dialogDescription" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="plantCode" class="required">Plant code :</label></div>
+                <div class="ui-grid-col-8"><input (blur)="codeBlur()" (change)="dialogCode = checkEnglish(dialogCode)" pInputText id="plantCode" maxlength="1" [(ngModel)]="dialogCode" /></div>
+            </div>
+            
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="plantComment">Memo :</label></div>
+                <div class="ui-grid-col-8"><input pInputText id="plantComment" maxlength="100" [(ngModel)]="dialogComment" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="plantComment">Base :</label></div>
+                <div class="ui-grid-col-8"><input pInputText id="plantComment" maxlength="2" [(ngModel)]="dialogBase" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="plantComment">Company :</label></div>
+                <div class="ui-grid-col-8"><input pInputText id="plantComment" maxlength="3" [(ngModel)]="dialogCompany" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <!-- 修改页面按钮 -->
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="editCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogCode" pButton  (click)="editSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除界面 -->
+    <p-dialog class="dialog" header="Plant Code" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

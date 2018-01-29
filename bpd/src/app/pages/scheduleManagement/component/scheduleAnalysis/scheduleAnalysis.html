@@ -1,0 +1,281 @@
+<div class="schedule-analysis">
+    <div class="button-tab ui-grid">
+        <div class="ui-grid-col-2">
+            <!--  [(disabled)]="!selectedProjectData.length" -->
+            <button type="button" pButton (click)="projectComparisionClick()" label="Comparision"></button>
+        </div>
+        <label class="ui-grid-col-1 align-center">Classification :</label>
+        <div class="ui-grid-col-2">
+            <p-dropdown class="drop-down" placeholder="Please Choose" (onChange)="dropDownChange($event)" autoWidth="false" [options]="classificationOption"
+                [(ngModel)]="selectedClassification"></p-dropdown>
+        </div>
+        <label class="ui-grid-col-1 align-center">Project Code :</label>
+        <div class="ui-grid-col-2">
+            <input pInputText (keyup)="singleClickEnterSearch($event)" [(ngModel)]="dialogSearchProjectCode" />
+        </div>
+        <label class="ui-grid-col-1 align-center">Model Year :</label>
+        <div class="ui-grid-col-2">
+            <input pInputText (keyup)="singleClickEnterSearch($event)" [(ngModel)]="dialogSearchModelYear" />
+        </div>
+        <div class="ui-grid-col-1">
+            <button type="button" pButton (click)="searchSingleClick()" label="Search"></button>
+        </div>
+    </div>
+    <p-dataTable scrollable="true" scrollHeight="29.5rem;" (onRowClick)="onProjectRowClick($event)" selectionMode="single" class="ui-grid data-table project-info-table"
+        [value]="projectSingleData" [(selection)]="selectedSingleProjectData" dataKey="vin">
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="projectCode" header="Costbook Code"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="programCode" header="Program Code"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="projectName" header="Project Name"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="levelName" header="Classification"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="categoryName" header="Category"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="modelYear" header="Model Year"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="plantCode" header="Plant"></p-column>
+        <!-- <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="projectStatus" header="Status"></p-column> -->
+    </p-dataTable>
+    <p-paginator rows="10" [rowsPerPageOptions]="[10,20,30]" totalRecords="{{projectPaginatorTotal}}" first="{{projectPaginatorFirst}}" pageLinkSize="3" (onPageChange)="projectPaginate($event)"></p-paginator>
+    <!-- tabView -->
+    <div class="tab-view-content">
+        <p-tabView class="tab-view">
+            <p-tabPanel header="Timesheet Data">
+                <time-sheet-version [changeAdProjectCode]="changeAdProjectCode">
+                </time-sheet-version>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+    <!-- project comparision dialog -->
+    <p-dialog class="dialog project-comparision-dialog" header="Project Comparision" [(visible)]="projectComparisionDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div *ngIf="comparisionStep == 'stepOne'" class="dropdown-step ui-grid-responsive ui-fluid">
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label>Program Code:</label>
+                </div>
+                <div class="ui-grid-col-2">
+                    <input pInputText (keyup)="compareElementClickEnterSearch($event)" [(ngModel)]="dialogMutipleProgramCode" />
+                </div>
+                <div class="ui-grid-col-2">
+                    <label>Project Name:</label>
+                </div>
+                <div class="ui-grid-col-2">
+                    <input pInputText (keyup)="compareElementClickEnterSearch($event)" [(ngModel)]="dialogMutipleProjectName" />
+                </div>
+                <div class="ui-grid-col-1">
+                    <button type="button" pButton (click)="searchMutipleClick()" label="Search"></button>
+                </div>
+                <div class="ui-grid-col-3">
+                </div>
+            </div> -->
+            <p-dataTable (onRowClick)="onProjectRowClick($event)" class="ui-grid data-table project-info-table" [value]="projectMultipleData"
+                [(selection)]="selectedMultipleProjectData" dataKey="vin" scrollable="true" scrollHeight="30rem">
+                <p-column [style]="{'width':'2.5rem'}" selectionMode="multiple"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="projectCode" header="Costbook Code" [sortable]="true"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="programCode" header="Program Code" [sortable]="true"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="projectName" header="Project Name" [sortable]="true"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="levelName" header="Classification" [sortable]="true"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="categoryName" header="Category" [sortable]="true"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="modelYear" header="Model Year" [sortable]="true"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="plantCode" header="Plant" [sortable]="true"></p-column>
+                <!-- <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="projectStatus" header="Status"></p-column> -->
+            </p-dataTable>
+            <!-- <p-paginator rows="10" totalRecords="{{projectPaginatorTotal}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="projectPaginate($event)"></p-paginator> -->
+        </div>
+        <div *ngIf="comparisionStep == 'stepTwo'" class="dropdown-step ui-grid-responsive ui-fluid">
+            <div class="project-drop-down ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label>Comparision Type:</label>
+                </div>
+                <div class="ui-grid-col-2">
+                    <p-dropdown class="drop-down" (onChange)="comparisionDropDownChange($event)" autoWidth="false" [options]="comparisionOption"
+                        [(ngModel)]="selectedComparision"></p-dropdown>
+                </div>
+            </div>
+            <div *ngIf="selectedComparision == 'generality'" class="generality">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-2">
+                        <label>Element Name:</label>
+                    </div>
+                    <div class="ui-grid-col-2">
+                        <input pInputText (keyup)="compareElementClickEnterSearch($event)" [(ngModel)]="dialogCompareElementName" />
+                    </div>
+                    <div class="ui-grid-col-2">
+                        <label>Element ID:</label>
+                    </div>
+                    <div class="ui-grid-col-2">
+                        <input pInputText (keyup)="compareElementClickEnterSearch($event)" [(ngModel)]="dialogCompareElementCode" />
+                    </div>
+                    <div class="ui-grid-col-1">
+                        <button type="button" pButton (click)="searchCompareElementClick()" label="Search"></button>
+                    </div>
+                    <div class="ui-grid-col-3">
+                    </div>
+                </div>
+                <p-dataTable scrollable="true" scrollHeight="29.5rem" [(selection)]="choosedGeneralityData" class="ui-grid data-table project-info-table"
+                    [value]="elementData">
+                    <p-column [style]="{'width':'2.5rem'}" selectionMode="multiple"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="elementId" header="Element ID"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="elementName" header="Element Name"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="planDate" header="Date"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="week" header="Week"></p-column>
+                </p-dataTable>
+                <!-- <p-paginator rows="10" totalRecords="{{}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator> -->
+            </div>
+            <div *ngIf="selectedComparision == 'week'" class="week">
+                <div class="ui-grid" style="margin-bottom: 1rem;">
+                    <div class="ui-grid-col-1">
+                        <button type="button" pButton (click)="addCustomerClick()" label="Add"></button>
+                    </div>
+                    <div class="ui-grid-col-11"></div>
+                </div>
+                <p-dataTable class="ui-grid data-table project-info-table" [value]="customerElementData">
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="fromElementName" header="From Element"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="toElementName" header="To Element"></p-column>
+                    <p-column header="">
+                        <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                            <span class="edit-span" (click)="deleteCustomerClick(idx,data)">Delete</span>
+                        </template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+        </div>
+        <div *ngIf="comparisionStep == 'stepThree'" class="compare-step">
+            <div *ngIf="selectedComparision == 'generality'" class="generality">
+                <button type="button" pButton (click)="exportGeneralityData()" label="Export"></button>
+                <!--  resizableColumns="true" columnResizeMode="expand"-->
+                <!-- <p-dataTable class="data-table ui-grid" [value]="compareAnalysisData">
+                    <p-column styleClass="ui-grid-col-2" header="Program Name" field="program"></p-column>
+                    <p-column styleClass="ui-grid-col-2" header="Model Year" field="modelYear"></p-column>
+                    <p-column styleClass="ui-grid-col-2" header="Version" field="version"></p-column>
+                    <p-column *ngFor="let list of compareAnalysisDataList" styleClass="ui-grid-col-2" field="{{list}}" header="{{list}}"></p-column>
+                </p-dataTable> -->
+                <div class="table-layout">
+                    <table class="myTable">
+                        <thead>
+                            <tr>
+                                <th rowspan="2">Program Name</th>
+                                <th rowspan="2">Model Year</th>
+                                <th rowspan="2">Version</th>
+                                <th *ngFor="let list of compareAnalysisDataList" colspan="2">{{list}}</th>
+                            </tr>
+                            <tr>
+                                <th *ngFor="let list of compareAnalysisDateWeekList">{{list}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let listData of compareAnalysisData">
+                                <td>{{listData.program}}</td>
+                                <td>{{listData.modelYear}}</td>
+                                <td>{{listData.version}}</td>
+                                <td *ngFor="let list of compareAnalysisDataListAll">{{listData[list]}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div *ngIf="selectedComparision == 'week'" class="week">
+                <button type="button" pButton (click)="exportWeekData()" label="Export"></button>
+                <p-dataTable (onRowClick)="onProjectRowClick($event)" selectionMode="single" class="ui-grid data-table project-info-table"
+                    [value]="compareData">
+                    <p-column styleClass="ui-grid-col-2" header="NO">
+                        <template let-idx="rowIndex" pTemplate="body">
+                            <span *ngIf="compareData[idx].modelYear">{{idx + 1}}</span>
+                        </template>
+                    </p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="program" header="Program Code"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="modelYear" header="Model Year"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="version" header="Version"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="{{list}}" *ngFor="let list of compareDataList" header="{{list}}"></p-column>
+                </p-dataTable>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton *ngIf="comparisionStep != 'stepThree'" (click)="projectComparisionCancel()" label="Cancel"></button>
+                <button type="button" pButton (click)="projectComparisionSave()" label="{{comparisionNextStep}}"></button>
+                <button type="button" pButton *ngIf="comparisionStep != 'stepOne'" (click)="projectComparisionPrevious()" label="Previous"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- Add Comparision Element -->
+    <p-dialog class="dialog" header="Add Comparision Element Adujst" [(visible)]="addElementDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid">
+            <div class="ui-grid-col-4">
+                <label>From Element :</label>
+            </div>
+            <div class="ui-grid-col-6">
+                <input disabled pInputText [(ngModel)]="dialogFromElementName" />
+            </div>
+            <div class="ui-grid-col-2">
+                <button type="button" pButton (click)="chooseFromElementClick()" label="Select"></button>
+            </div>
+        </div>
+        <div class="ui-grid">
+            <div class="ui-grid-col-4">
+                <label>To Element :</label>
+            </div>
+            <div class="ui-grid-col-6">
+                <input disabled pInputText [(ngModel)]="dialogToElementName" />
+            </div>
+            <div class="ui-grid-col-2">
+                <button type="button" pButton (click)="chooseToElementClick()" label="Select"></button>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="addCustomerCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogFromElementName || !dialogToElementName" pButton (click)="addCustomerSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- Select ELement -->
+    <p-dialog class="dialog select-element-dialog" header="Select Element" [(visible)]="selectElementDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-2">
+                <label>Element Name:</label>
+            </div>
+            <div class="ui-grid-col-2">
+                <input pInputText (keyup)="compareElementClickEnterSearch($event)" [(ngModel)]="dialogCompareElementName" />
+            </div>
+            <div class="ui-grid-col-2">
+                <label>Element ID:</label>
+            </div>
+            <div class="ui-grid-col-2">
+                <input pInputText (keyup)="compareElementClickEnterSearch($event)" [(ngModel)]="dialogCompareElementCode" />
+            </div>
+            <div class="ui-grid-col-1">
+                <button type="button" pButton (click)="searchCompareElementClick()" label="Search"></button>
+            </div>
+            <div class="ui-grid-col-3">
+            </div>
+        </div>
+
+        <p-dataTable scrollable="true" scrollHeight="29.5rem" class="ui-grid data-table project-info-table" (onRowDblclick)="selectElementSave()"
+            [(selection)]="selectedFromToElement" selectionMode="single" (onRowClick)="onSelectFromToElementRowClick($event)"
+            [value]="elementData">
+            <!-- <p-column [style]="{'width':'2.5rem'}" selectionMode="multiple"></p-column> -->
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="elementId" header="Element ID"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="elementName" header="Element Name"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="planDate" header="Date"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="week" header="Week"></p-column>
+        </p-dataTable>
+        <!-- <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="selectElementSave()" label="Confirm"></button>
+            </div>
+        </p-footer> -->
+    </p-dialog>
+    <p-dialog class="dialog dialog-delete" header="Schedule Analysis" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

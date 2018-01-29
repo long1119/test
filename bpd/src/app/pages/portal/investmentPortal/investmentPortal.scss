@@ -1,0 +1,385 @@
+@import '../../sass/privateStyle';
+.body-main{
+    .card1{
+      border: 1px solid $table-head;
+      .card-header{
+        // font-weight: bold;
+        color: white;
+        background-color: $table-head;
+        border-radius: 5px 5px 0 0;
+        font-size: 2rem;
+      }
+      // .card-header:hover{
+      //   color: black;
+      // }
+      .card-block{
+        .box{
+          height: 100px;
+          color: white;
+          padding: 10px 5px;
+          position: relative;
+          // font-weight: bold;
+          .txt{
+            // height: 40px;
+            // width: 40px;
+            position: absolute;
+            top: 40px;
+            left: 160px;
+            font-size: 2rem;
+            cursor: pointer;
+          }
+          .bottom{
+            position: absolute;
+            height: 30px;
+            width: 100%;
+            line-height: 30px;
+            bottom: 0;
+            left: 0;
+            padding-left: 5px;
+          }
+          .cover{
+            position: absolute;
+            height: 30px;
+            width: 100%;
+            bottom: 0;
+            left: 0;
+            padding-right: 25px;
+            padding-top: 10px;
+            .hand{
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+    .card2 {
+      border: 1px solid #4B98DC;
+      .card-header {
+        .title{
+          // font-weight: bold;
+          font-size: 2rem;
+        }
+        .right-icon{
+          position: absolute;
+          right: 2rem;
+        }
+        position: relative;
+        background-color: #4B98DC;
+        border-radius: 5px 5px 0 0;
+        color: white;
+      }
+      .card-block{
+        position: relative;
+        width: 100%;
+        height: 120px;
+        display: flex;
+        display: -webkit-flex;
+        .item{
+          width: 14%;
+          height: 90%;
+          margin: 0.28%;
+          border: 2px solid #E1E1E1;
+          text-align: center;
+          color: blue;
+          font-weight: bold;
+        }
+        .item img{
+          width: 50%;
+          height: 75%;
+          margin-bottom: 5px;
+        }
+      }
+    }
+    .card3{
+      border: 1px solid #4B98DC;
+      .card-header{
+        color: white;
+        border-radius: 5px 5px 0 0;
+        background-color: #4B98DC;
+        height:auto;
+        position: relative;
+        display: flex;
+        display: -webkit-flex;
+        .searchText{
+          display: inline-block;
+          width: 90px;
+          margin: 0 0.5rem 0 1rem;
+        }
+        .title{
+          font-size: 2rem;
+        }
+        .right-icon{
+          position: absolute;
+          right: 2rem;
+        }
+      }
+      .card-block{
+        overflow-x: auto;
+        table{
+          .progressBar{
+            width: 100%;
+            height: 20px;
+            margin: auto 0;
+            background-color: #D7D7D7;
+            .progress-child{
+              height: 100%;
+              background-color: #009900;
+              text-align: center;
+              line-height: 20px;
+            }
+          }
+        }
+      }
+    }
+    .dialog-wrap{
+      height: 500px;
+      // overflow-y: auto;
+      .header-content{
+        margin: 0;
+        height: 30px;
+        text-align: center;
+        background-color: #F2F2F2;
+        .header-txt{
+          cursor: pointer;
+          line-height: 30px;
+          font-weight: bold;
+          padding: 0;
+        } 
+        .header-txt:hover{
+          text-decoration: underline;
+          color: red;
+        }
+      }
+      .body{
+        border: 1px solid #6FADE2;
+        height: 440px;
+        overflow-y: auto;
+        .txt{
+            font-size: 1.2rem;
+        }
+        .body-content1{
+            height:195px;
+           .image{
+               width: 65px;
+               height: 65px;
+               margin: 35px 5px;
+               img{
+                   width:100%;
+                   height:100%;
+               }
+           }
+           .main-body{
+               padding-left: 20px;
+           }
+           .text{
+               padding-bottom: 0.1rem;
+           }
+        }
+      }
+      .body1{
+        border: 1px solid #4B98DC;
+        table{
+          .thead-inverse{
+            background-color: $table-head;
+            color: white;
+          }
+        }
+      }
+      .body2{
+        .head-title{
+          background-color: #4B98DC;
+          border-radius: 5px 5px 0 0;
+          height: 30px;
+          color: white;
+          padding: 0.8rem 0.5rem;
+          // line-height:30px;
+          text-align:center;
+          margin: 0;
+        }
+        .monthCalendar{
+          .body-title{
+            display: flex;
+            display: -webkit-flex;
+            margin: 0;
+            .title{
+              // width:14.28%;
+              width:131.65px;
+              height: 30px;
+              background-color: #E6F7FF;
+              box-sizing: border-box;
+              line-height: 30px;
+              text-align: center;
+              font-weight: bold;
+              border: 1px solid white;
+            }
+          }
+          .body-body{
+            height: 340px;
+            overflow-y: auto;
+            display: flex;
+            display: -webkit-flex;
+            flex-wrap: wrap;
+            margin: 0;
+            .body{
+              // width:14.28%;
+              width: 131.65px;
+              height: 90px;
+              overflow-y: auto;
+              overflow-x: hidden;
+              border: 1px solid #F0F0F0;
+              box-sizing: border-box;
+              cursor: pointer;
+              .child{
+                // background-color: lime;
+                margin:0.1rem;
+              }
+            }
+            .border{
+              border:1px solid #4B98DC;
+            }
+          }
+        }
+        .dayCalendar{
+          max-height: 360px;
+          overflow-y: auto;
+          .day-item:hover{
+            box-shadow: 0px 0px 0px gray,
+            5px 5px 5px gray,
+            0px 5px 5px gray,
+            -5px 5px 5px gray;
+            cursor: pointer;
+          }
+          .day-item{
+            padding: 0;
+            margin: 0.5rem;
+            background-color: #5695CD;
+            border-radius: 5px 5px 0 0;
+            color: white;
+            .day-title{
+              font-weight: bold;
+              text-align: center;
+              height: 30px;
+              line-height: 30px;
+              border-bottom: 2px solid white;
+            }
+          }
+          .day-body{
+            display: flex;
+            display: -webkit-flex;
+            flex-wrap: wrap;
+            .left{
+              width: 50%;
+              box-sizing: border-box;
+              padding: 1rem 2rem;
+            }
+            .right{
+              width: 50%;
+              box-sizing: border-box;
+              padding: 1rem 2rem;
+            }
+          }
+        }
+      }
+      .bodyOne{
+        border: 2px groove #9A9A9A;
+        height: 460px;
+        .withBorder{
+          border: 1px solid #AAAAAA;
+          height: 100%;
+        }
+      }
+      .bodyTwo{
+        .head-title{
+          background-color: #4B98DC;
+          color: white;
+          height: 40px;
+          padding-left: 1rem;
+          line-height: 40px;
+        }
+        .head-body{
+          max-height:420px;
+          overflow-y: auto;
+        }
+        .show-data{
+          margin: 0.5rem 0;
+          .pie-card{
+            border-radius:5px 5px 0 0;
+            border: 1px solid #37A9E1;
+            padding: 0;
+            .pie-title{
+              background-color: #37A8E1;
+              color: white;
+              border-radius:5px 5px 0 0;
+              height: 30px;
+              line-height: 30px;
+            }
+          }
+        }
+      }
+      .bodyThree{
+        .head-title{
+          background-color: #4B98DC;
+          color: white;
+          height: 50px;
+          padding-left: 0.5rem;
+        }
+        .head-body{
+          max-height:410px;
+          overflow-y: auto;
+        }
+      }
+      .bodyFour{
+        overflow: auto;
+        .table{
+          .thead-inverse{
+            background-color: #4B98DC;
+            color: white;
+          }
+        }
+      }
+    }
+    .table-bordered td{
+      border: 1px solid #D9D9D9 !important;
+      height: 36px;
+      padding: 0.5rem;
+    }
+    .table-bordered th{
+      border: 1px solid #D9D9D9 !important;
+      padding: 0.5rem;
+    }
+    .tab-view > div {
+      margin-top: 0;
+    }
+    .blue{
+      color:#6BB2F3;
+      text-align:center;
+      cursor:pointer;
+    }
+    .clickStyle{
+      background-color: #186BA0;
+      color: white;
+      .blue{
+        color: white;
+      }
+    }
+    .overStyle{
+      background-color: rgba(220,220,220,0.5);
+    }
+    .dialog{
+      & > div {
+        .ui-dialog-content{
+            max-height: 60rem;
+        }
+      }
+    }
+    .dialog-view {
+      & > div {
+        width: 100vw;
+        height:100vh;
+        .ui-dialog-content{
+          height:100%;
+          padding: 1rem 1rem 4rem 1rem;
+        }
+      }
+    }
+}

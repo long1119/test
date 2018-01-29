@@ -1,0 +1,39 @@
+<div class="region-define-column">
+    <p-dataTable scrollable="true" scrollHeight="30rem" class="ui-grid data-table" [value]="baseData">
+        <!-- <p-header>{{selectedListName}}</p-header> -->
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="baseData[idx].reservedFieldName">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="reservedFieldName" header="Reserve Field Name"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-4" field="defineFieldName" header="Actual Field Name"></p-column>
+        <!-- authorityData.rrrr == 'true' -->
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="baseData[idx].reservedFieldName" class="edit-span" (click)="editClick(idx,data)">Edit</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- 编辑界面 -->
+    <p-dialog class="dialog" header="Buget Template" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6"><label class="required" for="regionCode">Reserve Field Name :</label></div>
+                <div class="ui-grid-col-6"><input disabled pInputText id="regionCode" [(ngModel)]="reserseName" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-6"><label for="regionType">Actual Field Name :</label></div>
+                <div class="ui-grid-col-6"><input maxlength="36" pInputText id="regionType" [(ngModel)]="costomName" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="editCancle()" label="Cancel"></button>
+                <button type="button" pButton  (click)="editSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="growMessage" life="{{growLife}}"></p-growl>
+</div>

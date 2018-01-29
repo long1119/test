@@ -1,0 +1,286 @@
+<div style="width:20%;float:left;">
+    <p-dataTable [rows]="10" [value]="gridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="50rem" (onRowClick)="programGridRowClick($event)" selectionMode="single" [(selection)]="selectedStore">
+        <p-header>
+            <div class="previous-head">Program Info</div>
+            <button pButton type="button" class="previous-button" icon="fa-search" (click)="lookUpBtn()"></button>
+        </p-header>
+        <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="modelYear" header="Model Year" styleClass="ui-grid-col-2 align-center"></p-column>
+    </p-dataTable>
+    <p-paginator rows="15" totalRecords="{{gridStoreLen}}" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator>
+</div>
+<div style="width:79%;float:right;">
+    <p-tabView class="tabView" (onChange)="handleChange($event)">
+    <p-tabPanel header="PQRR Status">
+        <p-dataTable [rows]="10" [value]="statusStore" class="data-table" scrollable="true" scrollHeight="43rem">
+            <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+            <p-column field="pqrrMilestoneName" header="PQRR Milestone" styleClass="ui-grid-col-3 align-center">
+                <template *ngIf="userRoot" pTemplate="body" let-item="rowData">
+                    <span *ngIf="item.id" class="editBtn" (click)="showSummary(item)">{{item.pqrrMilestoneName}}</span>
+                </template>
+            </p-column>
+            <p-column field="pqrrDate" header="PQRR Date" styleClass="ui-grid-col-3 align-center"></p-column>
+            <p-column *ngIf="userRoot" header="Status" styleClass="ui-grid-col-2 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <span *ngIf="item.pqrrStatus != 4">
+                        <i (click)="changeColor(item)" *ngIf="item.pqrrStatus == 1" class="fa fa-circle green"></i>
+                        <i (click)="changeColor(item)" *ngIf="item.pqrrStatus == 2" class="fa fa-warning yellow"></i>
+                        <i (click)="changeColor(item)" *ngIf="item.pqrrStatus == 3" class="fa fa-close red"></i>
+                    </span>
+                    <p-dropdown *ngIf="item.pqrrStatus == 4" autoWidth="false" [style]="{'width':'120px'}" [options]="preReviewSatusStore" [(ngModel)]="item.pqrrStatus" (onChange)="pqrrChange($event,item)" appendTo="body">
+                        <template let-pic pTemplate="item">
+                            <i *ngIf="pic.value == '1'" class="fa fa-circle" style="color:rgb(98,198,6);font-size:18px;"></i>
+                            <i *ngIf="pic.value == '2'" class="fa fa-warning" style="color:#e8c806;font-size:18px;"></i>
+                            <i *ngIf="pic.value == '3'" class="fa fa-close" style="color:red;font-size:18px;"></i>
+                        </template>
+                    </p-dropdown>
+                </template>
+            </p-column>
+            <p-column *ngIf="!userRoot" header="Status" styleClass="ui-grid-col-2 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <i *ngIf="item.pqrrStatus == 1" class="fa fa-circle green"></i>
+                    <i *ngIf="item.pqrrStatus == 2" class="fa fa-warning yellow"></i>
+                    <i *ngIf="item.pqrrStatus == 3" class="fa fa-close red"></i>
+                </template>
+            </p-column>
+            <p-column header="Re-PQRR Date" styleClass="ui-grid-col-3 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <p-calendar *ngIf="item.pqrrStatus == 3" [(ngModel)]="item.rePqrrDate" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" [disabled]="item.deleteFlag == 1" id="calendarP" appendTo="body"></p-calendar>
+                </template>
+            </p-column>
+            <p-column header="Re-PQRR Status" styleClass="ui-grid-col-2 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <span *ngIf="item.pqrrStatus == 3 && item.preReviewSatus != '0'">
+                        <i (click)="changePreColor(item)" *ngIf="item.preReviewSatus == 1" class="fa fa-circle green"></i>
+                        <i (click)="changePreColor(item)" *ngIf="item.preReviewSatus == 2" class="fa fa-warning yellow"></i>
+                        <i (click)="changePreColor(item)" *ngIf="item.preReviewSatus == 3" class="fa fa-close red"></i>
+                    </span>
+                    <p-dropdown *ngIf="item.pqrrStatus == 3 && item.preReviewSatus == '4'" autoWidth="false" [style]="{'width':'120px'}" [options]="preReviewSatusStore" [(ngModel)]="item.preReviewSatus" (onChange)="prepqrrChange($event,item)" appendTo="body">
+                        <template let-pic pTemplate="item">
+                            <i *ngIf="pic.value == '1'" class="fa fa-circle" style="color:rgb(98,198,6);font-size:18px;"></i>
+                            <i *ngIf="pic.value == '2'" class="fa fa-warning" style="color:#e8c806;font-size:18px;"></i>
+                            <i *ngIf="pic.value == '3'" class="fa fa-close" style="color:red;font-size:18px;"></i>
+                        </template>
+                    </p-dropdown>
+                </template>
+            </p-column>
+            <p-column field="delivPalnCount" header="Deliverable (Plan)" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="delivActualCount" header="Deliverable (Actual)" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column header="Green" styleClass="ui-grid-col-2 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <p-progressBar *ngIf="item.id" class="progressBar" [value]="item.green?item.green:'0'"></p-progressBar>
+                </template>
+            </p-column>
+            <p-column header="Red" styleClass="ui-grid-col-2 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <p-progressBar *ngIf="item.id" class="progressBar" [value]="item.red?item.red:'0'"></p-progressBar>
+                </template>
+            </p-column>
+            <p-column header="Yellow" styleClass="ui-grid-col-2 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <p-progressBar *ngIf="item.id" class="progressBar" [value]="item.yellow?item.yellow:'0'"></p-progressBar>
+                </template>
+            </p-column>
+            <p-column *ngIf="userRoot" header="" styleClass="ui-grid-col-2 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <span *ngIf="item.id && item.deleteFlag != '1'" class="editBtn" style="margin-right:0" (click)="submitBtn(item)">Submit</span>
+                    <span *ngIf="item.id && item.deleteFlag == '1'" class="editBtn" style="margin-right:0" (click)="returnBtn(item)">Return</span>
+                </template>
+            </p-column>
+        </p-dataTable> 
+    </p-tabPanel>
+    <!-- <p-tabPanel header="Timesheet">
+           
+    </p-tabPanel> -->
+    <p-tabPanel header="Re-Schedule"> 
+        <p-dataTable [rows]="15" [value]="scheduleStore" class="data-table" scrollable="true" scrollHeight="43rem">
+            <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+            <p-column field="pqrrMilestoneName" header="PQRR Milestone" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="preReviewDate" header="Pre-Review Date" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="pqrrDate" header="PQRR Date" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column field="rePqrrDate" header="Re-PQRR Date" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column *ngIf="userRoot" header="" styleClass="ui-grid-col-2 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <span *ngIf="item.id && item.deleteFlag == '0'" style="margin-right:0" class="editBtn" (click)="scheduleEditBtn(item)">Edit</span>
+                    <span *ngIf="item.id && item.deleteFlag == '1'" style="margin-right:0" class="noEditBtn">Edit</span>
+                </template>
+            </p-column>
+        </p-dataTable> 
+        <!-- <div *ngIf="userRoot" class="lookUpFooter" style="margin:0">
+            <button style="margin:10px;" pButton type="button" (click)="scheduleSaveBtn()" label="Confirm"></button>
+        </div> -->
+    </p-tabPanel>
+</p-tabView>
+</div>
+<p-dialog header="Locate Project" [(visible)]="lookUpDisplay" width="350" modal="modal" class="dialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Program Code:</span>
+                <input style="width:69%" class="input" type="text" pInputText [(ngModel)]="programCodeSearch" maxlength="8">
+            </div>
+        </div>
+    </div>
+    <div class="lookUpFooter">
+        <button pButton type="button" (click)="lookUpSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="lookUpCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Summary" [(visible)]="commentDisplay" width="750" modal="modal" class="dialog">
+    <table class="summaryTable">
+        <thead>
+            <tr>
+                <th></th>
+                <th *ngFor = "let item of summaryStore" (click)="toDept($event)">{{item.dept}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="background-color:green;color:#fff;">
+                <td>Green</td>
+                <td *ngFor = "let item of summaryStore">{{item.green}}</td>
+            </tr>
+            <tr>
+                <td>White</td>
+                <td *ngFor = "let item of summaryStore">{{item.white}}</td>
+            </tr>
+            <tr style="background-color:#e8c806;color:#fff;">
+                <td>Yellow</td>
+                <td *ngFor = "let item of summaryStore">{{item.yellow}}</td>
+            </tr>
+            <tr style="background-color:red;color:#fff;">
+                <td>Red</td>
+                <td *ngFor = "let item of summaryStore">{{item.red}}</td>
+            </tr>
+        </tbody>
+    </table>
+</p-dialog>
+<p-dialog header="Set PQRR Date" [(visible)]="setDateDisplay" width="550" modal="modal" class="dialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon w105 required">Pre-Review Date:</span>
+                <p-calendar [(ngModel)]="ReviewDate" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}"></p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon w105 required">PQRR Date:</span>
+                <p-calendar [(ngModel)]="PQRRDate" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon w105 requiredNone">Re-PQRR Date:</span>
+                <p-calendar [(ngModel)]="REPQRRDate" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="2000:2030"></p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="lookUpFooter">
+        <button pButton type="button" [(disabled)]="!ReviewDate || !PQRRDate" (click)="setDateSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="setDateCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+
+<!-- jianhui dialog -->
+<p-dialog class="dialog" [(visible)]="setStatus" model="model" width="900" [responsive]="true" [closable]="false">
+    <p-header>
+        <span style="font-size:1.25em">Set Deliverable Status</span>
+        <span class="fa fa-close closeRefreshBtn" (click)="setStatusHide()"></span>
+    </p-header>
+    <p-dataTable [rows]="10" [value]="Deliverables" class="data-table" scrollable="true" scrollHeight="30rem">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="elementId" header="Element Id" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column field="delivName" header="Deliverable Name" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column field="subject" header="Description" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column header="Status" styleClass="ui-grid-col-2 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="!userRoot">
+                    <i *ngIf="item.status == 1" class="fa fa-circle green"></i>
+                    <i *ngIf="item.status == 2" class="fa fa-warning yellow"></i>
+                    <i *ngIf="item.status == 3" class="fa fa-close red"></i>
+                </span>
+                <span *ngIf="userRoot">
+                    <i *ngIf="item.status == 1" (click)="changeDelivColor(item)" class="fa fa-circle green"></i>
+                    <i *ngIf="item.status == 2" (click)="changeDelivColor(item)" class="fa fa-warning yellow"></i>
+                    <i *ngIf="item.status == 3" (click)="changeDelivColor(item)" class="fa fa-close red"></i>
+                    <p-dropdown *ngIf="(!item.status || item.status == 0) && item.id" autoWidth="false" [style]="{'width':'120px'}" [options]="preReviewSatusStore" [(ngModel)]="item.status" (onChange)="selectionChange($event,item)" appendTo="body">
+                        <template let-pic pTemplate="item">
+                            <i *ngIf="pic.value == '1'" class="fa fa-circle" style="color:rgb(98,198,6);font-size:18px;"></i>
+                            <i *ngIf="pic.value == '2'" class="fa fa-warning" style="color:#e8c806;font-size:18px;"></i>
+                            <i *ngIf="pic.value == '3'" class="fa fa-close" style="color:red;font-size:18px;"></i>
+                        </template>
+                    </p-dropdown>
+                </span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <div class="deliverTitle" style="margin-top:5px">
+        Download Template File and Upload {{programCodeStr}} {{pqrrMilestoneNameStr}} Deliverable File 
+    </div>
+    <div class="deliverTitle blue">
+        Notes: please download the template file for detail deliverable requirerment
+    </div>
+    <p-dataTable [rows]="10" [value]="DeliverablesTable" class="data-table" scrollable="true" scrollHeight="5.9rem">
+        <p-column field="fileName" header="Template File Name(download)" styleClass="ui-grid-col-3 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id" class="editBtn" (click)="downloadFile(item)">{{item.fileName}}</span>
+            </template>
+        </p-column>
+        <p-column field="fileName" header="Deliverable File Name" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column field="programCode" header="" styleClass="ui-grid-col-2 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id && item.programCode" class="editBtn" style="margin-right:0" (click)="downloadFileTpl(item)">{{item.programCode}}</span>
+                <i *ngIf="item.id && item.programCode && userRoot" (click)="delDeliv(item)" class="fa fa-close" style="color:red;font-size:18px;margin-left:5px"></i>
+                <span *ngIf="item.id && !item.programCode && userRoot" class="editBtn" style="margin-right:0" (click)="uploadDeliv(item)">upload</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+</p-dialog>
+
+<p-dialog class="dialog" header="Select Department" [(visible)]="selectDeptDialog" width="450">
+    <div style="height:300px;overflow:scroll;">
+        <div class="ui-g">
+            <div *ngFor="let item of deptStore" class="ui-g-12" style="margin:0;"><p-checkbox name="folderGroup" value="{{item.deptName}}" label="{{item.deptName}}" [(ngModel)]="selectedDeptValue"></p-checkbox></div>
+        </div>
+    </div>
+    <div class="footer" style="margin-right:20px !important">
+        <button pButton type="button" [(disabled)]="!selectedDeptValue.length" (click)="selectDeptSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="selectDeptDialog=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+
+<p-dialog header="Set Suggestion" [(visible)]="setSuggestionDisplay" width="450" modal="modal" class="generalDialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon" style="width:90px;float:left;">Suggestion:</span>
+                <textarea style="width:300px;height:55px" type="text" pInputTextarea [(ngModel)]="suggestion" maxlength="100"></textarea>
+            </div>
+        </div>
+    </div>
+    <div style="text-align:right;">
+        <button pButton type="button" (click)="setSuggestionSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="setSuggestionCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+
+<p-dialog class="dialog" header="Deliverable Template" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+    <p-fileUpload mode="basic" name="file" url="{{uploadURL}}" accept="xlsm" maxFileSize="50000000"
+        (onUpload)="onBasicUpload($event)"></p-fileUpload>
+</p-dialog>
+<!-- 信息提示页 -->
+<p-dialog class="dialog" header="Deliverable Template" [(visible)]="messageDialog">
+    <p-dataTable class="ui-grid-row data-table" [value]="messageData">
+        <p-column styleClass="ui-grid-col-3" field="colIndex" header="Col" [sortable]="true">
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="rowIndex" header="Row" [sortable]="true"></p-column>
+        <p-column styleClass="ui-grid-col-6" field="errorInfo" header="errorInfo" [sortable]="true"></p-column>
+    </p-dataTable>
+</p-dialog>
+
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+<p-confirmDialog></p-confirmDialog>

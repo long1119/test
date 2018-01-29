@@ -1,0 +1,50 @@
+<div class="time-sheet-version-info">
+    <p-dataTable class="ui-grid data-table project-info-table" selectionMode="single" [value]="versionData" [(selection)]="selectedVersionData" scrollable="true" scrollHeight="30rem">
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" header="Master Timesheet Version">
+            <template let-data="rowData" pTemplate="body">
+                <span class="edit-span" (click)="showViewable(data)">{{data.version}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-4" field="approvalDate" header="Master Timesheet Approval Date"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-4" field="fileName" header="Launch Plan"></p-column>
+        <!--  *ngIf="localStorageAuthority" -->
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-4" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="versionData[idx]" class="edit-span" (click)="editClick(idx,data)">File Upload</span>
+                <span *ngIf="versionData[idx] && !data.fileName" class="no-edit-span" (click)="downloadClick(idx,data)">Download</span>
+                <span *ngIf="versionData[idx] && data.fileName" class="edit-span" (click)="downloadClick(idx,data)">Download</span>
+                <span *ngIf="versionData[idx]" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+        <p-column *ngIf="!localStorageAuthority" styleClass="ui-grid-col-4" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="versionData[idx] && !data.approvalDate" class="no-edit-span" (click)="downloadClick(idx,data)">Download</span>
+                <span *ngIf="versionData[idx] && data.approvalDate" class="edit-span" (click)="downloadClick(idx,data)">Download</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- 可视化弹窗 -->
+    <p-dialog class="dialog view-able-diaolog" *ngIf="viewAbleDialog" header="{{viewHeader}} Master Timesheet" [(visible)]="viewAbleDialog" [responsive]="true"
+        showEffect="fade" [modal]="true" width="1200">
+        <iframe [src]="specialURL" width="100%" height="500"></iframe>
+    </p-dialog>
+    <!-- 文件上传弹窗 -->
+    <p-dialog class="dialog view-able-diaolog" header="File Upload" [(visible)]="fileUpLoadDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+            <p-fileUpload mode="basic" name="file" url="/bpd-proj/bpd/att/upload?attId={{UuId}}&bussinessId={{selectedTimingId}}&sourceType=launchPlan" accept="xlsm" (onBeforeUpload)="onBasicBeforeUpload($event)" (onSelect)="onBasicSelect($event)" (onUpload)="onBasicUpload($event)"></p-fileUpload>
+    </p-dialog>
+    <p-dialog class="dialog view-able-diaolog" header="Launch Plan File Delete" [(visible)]="deleteDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo()" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes(true)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

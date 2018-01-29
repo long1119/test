@@ -1,0 +1,71 @@
+<div class="ui-grid investment-parameter">
+    <button *ngIf="localStorageAuthority" pButton type="button" class="content-add" (click)="addClick()" label="Add"></button>
+    <p-dataTable  (onRowClick)="onRowClick($event)" selectionMode="single" class="ui-grid-row data-table" [value]="baseData" [(selection)]="selectedData" [paginator]="true" rows="10">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                {{idx + 1}}
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="investAssumeCatName" header="Parameter Group"></p-column>
+        <p-column styleClass="ui-grid-col-6" field="description" header="Description"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                <span class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <program-parameter [changedCatName]="changedCatName" [changedCatId]="changedCatId" [changedDropDown]="baseData"></program-parameter>
+    <!-- 添加页面显示 -->
+    <p-dialog class="dialog" header="Parameter" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label class="required" for="regionCode">ParameterGroup :</label></div>
+                <div class="ui-grid-col-7"><input maxlength="36" pInputText id="regionCode" [(ngModel)]="dialogParameterGroup" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label for="regionType">Description :</label></div>
+                <div class="ui-grid-col-7"><input maxlength="200" pInputText id="regionType" [(ngModel)]="dialogDescription" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogParameterGroup" pButton  (click)="addSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 编辑页面 -->
+    <p-dialog class="dialog" header="Parameter" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label for="regionCode">ParameterGroup :</label></div>
+                <div class="ui-grid-col-7"><input maxlength="36" pInputText id="regionCode" [(ngModel)]="dialogParameterGroup" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-5"><label for="regionType">Description :</label></div>
+                <div class="ui-grid-col-7"><input maxlength="200" pInputText id="regionType" [(ngModel)]="dialogDescription" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="editCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogParameterGroup" pButton  (click)="editSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="Parameter" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+       <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo()" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+      <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl> 
+</div>

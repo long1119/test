@@ -1,0 +1,1044 @@
+<div class="body-main">
+    <!-- to do task card -->
+    <div class="card card-inverse card-outline-info card1">
+        <div class="card-header">
+            To Do Task
+        </div>
+        <div class="card-block">
+            <div class="ui-g">
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #4285C0;">
+                            Making Project Budget
+                        <div *ngIf="investmentPortal.length>0" class="txt" (click)="openInvestment1()">{{investmentPortal[0].makingBudget}}</div>
+                        <div class="bottom" style="background-color: #2065A4;">
+                            Budget
+                        </div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg hand" (click)="openInvestment1()"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #04BACE;">
+                        Waiting for Approving Investment
+                        <div *ngIf="investmentPortal.length>0" class="txt" (click)="openInvestment2()">{{investmentPortal[1].waitingBudget}}</div>
+                        <div class="bottom" style="background-color: #0393A3;">Budget</div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg hand" (click)="openInvestment2()"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #2399A3;">
+                        Meeting Notification
+                        <div *ngIf="investmentPortal.length>0" class="txt" (click)="openInvestment3()">{{investmentPortal[2].meeting}}</div>
+                        <div class="bottom" style="background-color: #208A93;">Meeting</div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg hand" (click)="openInvestment3()"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui-g-3">
+                    <div class="box" style="background-color: #458B8B;">
+                        Close Investment
+                        <div *ngIf="investmentPortal.length>0" class="txt" (click)="openInvestment4()">{{investmentPortal[3].closeInvestment}}</div>
+                        <div class="bottom" style="background-color: #3A7676;">Close Report</div>
+                        <div class="cover align-right">
+                            <label class="fa fa-arrow-circle-o-right fa-lg hand" (click)="openInvestment4()"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- quick short card -->
+    <div class="card card2" *ngIf="mixedRouter.size">
+        <div class="card-header">
+            <span class="title"></span>
+            <!-- <label class="fa fa-cog fa-lg right-icon"></label> -->
+        </div>
+        <!-- <div class="garbageBox" (drop)="drop(event)" (dragover)="allowDrop(event)"></div> -->
+        <div class="card-block">
+            <div *ngIf="mixedRouter.has('project-member')" class="item" routerLink="/pages/project-member">
+                <img src="assets/img/programPortal/pet.png">
+                <br><span style="cursor:pointer;">Cost Member</span>
+            </div>
+            <div *ngIf="mixedRouter.has('investment-status')" class="item" routerLink="/pages/investment-status">
+                <img src="assets/img/programPortal/circle.png">
+                <br><span style="cursor:pointer;">Investment Status</span>
+            </div>
+            <div *ngIf="mixedRouter.has('bench-mark')" class="item" routerLink="/pages/bench-mark">
+                <img src="assets/img/programPortal/radar.png">
+                <br><span style="cursor:pointer">Investment comparison</span>
+            </div>
+            <div *ngIf="mixedRouter.has('investment-document')" class="item" routerLink="/pages/investment-document">
+                <img src="assets/img/programPortal/shared.png">
+                <br><span style="cursor:pointer">Shared Documents</span>
+            </div>
+        </div>
+    </div>
+    <!-- investment status card -->
+    <div class="card card3">
+        <div class="card-header">
+            <div style="width:17%;padding:1rem 0;">
+                <span class="title">Investment Status</span>
+            </div>
+            <!-- <label class="fa fa-cog fa-lg right-icon"></label> -->
+            <div>
+                <span class="searchText">Project Code:</span>
+                <input (keyup)="lookUpEnterSearch($event)" pInputText type="text" [(ngModel)]="prjCode" style="color:black;"/>
+                <span class="searchText">Project Name:</span>
+                <input (keyup)="lookUpEnterSearch($event)" pInputText type="text" [(ngModel)]="projectName" style="color:black;"/>
+                <span class="searchText">Project Type:</span>
+                <input (keyup)="lookUpEnterSearch($event)" pInputText type="text" [(ngModel)]="projectType2" style="color:black;"/><br/>
+                <span class="searchText">SOP:</span>
+                <input (keyup)="lookUpEnterSearch($event)" pInputText type="text" [(ngModel)]="sop" style="color:black;"/>
+                <span class="searchText">Platform:</span>
+                <input (keyup)="lookUpEnterSearch($event)" pInputText type="text" [(ngModel)]="platform" style="color:black;"/>
+                <span class="searchText">Status:</span>
+                <!-- <input (keyup)="lookUpEnterSearch($event)" pInputText type="text" [(ngModel)]="status1" style="color:black;"/> -->
+                <div style="width:143px;display:inline-block;"><p-dropdown [options]="statuss" [style]="{'width':'143px'}" [(ngModel)]="status1"></p-dropdown></div>
+                <button pButton type="button" (click)="lookUp()" label="Search" style="background-color: #F2F2F2;color: black;"></button>
+            </div>
+        </div>
+        <div class="card-block">
+            <table class="table table-bordered">
+                <thead class="thead-inverse" style="background-color:#F2F2F2;color:black;">
+                    <tr>
+                        <th style="vertical-align:middle;">Project Code</th>
+                        <th style="vertical-align:middle;">Project Name</th>
+                        <th style="vertical-align:middle;">Project Type</th>
+                        <th style="vertical-align:middle;">SOP</th>
+                        <th style="vertical-align:middle;">PlatForm</th>
+                        <th style="text-align:center;">Current Budget<br>(MRMB)</th>
+                        <th style="text-align:center;">Release Budget<br>(MRMB)</th>
+                        <th style="text-align:center;">Total Cost<br>(MRMB)</th>
+                        <th style="vertical-align:middle;">Rel%</th>
+                        <th style="text-align:center;">Tol%<br>(vs Cur)</th>
+                        <th style="text-align:center;">Bal. vs.<br>Rel(MRMB)</th>
+                        <th style="text-align:center;">Close Actual<br>(MRMB)</th>
+                        <th style="vertical-align:middle;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let option of investmentStatusTable;let i=index">
+                        <td style="color:#0055FF;cursor:pointer;"><span (click)="open(option.projectCode,option.projectType,option.adProjectCode,i,option.programCode)">{{option.projectCode}}</span></td>
+                        <td>{{option.projectName}}</td>
+                        <td>{{option.projectTypeName}}</td>
+                        <td>{{option.sop}}</td>
+                        <td>{{option.platForm}}</td>
+                        <td style="text-align:right;">{{option.currentBudget|number:'1.2-2'}}</td>
+                        <td style="text-align:right;">{{option.releaseBudget|number:'1.2-2'}}</td>
+                        <td style="text-align:right;">{{option.totalCost|number:'1.2-2'}}</td>
+                        <td *ngIf="option.rel>=0" style="text-align:center;">{{option.rel}}%</td>
+                        <td style="vertical-align:middle;"><div *ngIf="option.tol>=0" class="progressBar"><div class="progress-child" [ngStyle]="{'width':option.tol+'%'}">{{option.tol}}</div></div></td>
+                        <td style="text-align:right;">{{option.bal|number:'1.2-2'}}</td>
+                        <td style="text-align:right;">{{option.closeActual|number:'1.2-2'}}</td>
+                        <td style="text-align:center;">{{(option.status==0)?'Open':'Close'}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+        </div>
+    </div>
+    <!-- card1中的弹框 -->
+    <p-dialog class="dialog" header="To do Task" [(visible)]="display" modal="modal" width="1000" [responsive]="true">
+    <div class="dialog-wrap">
+        <div class="ui-g header-content">
+            <!-- <div class="ui-g-2 header-txt" (click)="openBody()" [ngStyle]="{'color':flag==0?'red':''}">NOD</div> -->
+            <div class="ui-g-2 header-txt" *ngIf="flag==1" (click)="openBody1()" [ngStyle]="{'color':flag==1?'red':''}">Investment Budget</div>
+            <div class="ui-g-2 header-txt" *ngIf="flag==2" (click)="openBody2()" [ngStyle]="{'color':flag==2?'red':''}">Meeting</div>
+            <div class="ui-g-2 header-txt" *ngIf="flag==3" (click)="openBody3()" [ngStyle]="{'color':flag==3?'red':''}">Close Investment</div>
+        </div>
+        <div [ngSwitch]="flag">
+            <!-- <div *ngSwitchCase="0" class="body"> -->
+                <!-- <div class="ui-g top-content">
+                    <div class="ui-g-4">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;padding-left:1rem;">Project Code:</div>
+                        <div class="ui-g-8">
+                            <input id="input" type="text" pInputText [(ngModel)]="pCode" style="width:90%;">
+                        </div>
+                    </div>
+                    <div class="ui-g-4">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;">Approve Status:</div>
+                        <div class="ui-g-8">
+                            <p-dropdown class="dropdown" [options]="status" [(ngModel)]="selectedStatus"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="ui-g-2" style="padding-top:1rem;">
+                        <button pButton type="button" (click)="check()" label="Search"></button>
+                    </div>
+                </div>
+                <div class="ui-g body-content1">
+                    <div class="ui-g-1">
+                        <div class="image">
+                            <img src="assets/img/programPortal/chess.png">
+                        </div>
+                    </div>
+                    <div class="ui-g-5 main-body">
+                        <p class="title" style="color:blue;text-align:center;font-weight:bold;">Wating For Approving Node</p>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Nod No:</label></div>
+                            <div class="ui-g-6 text">{{1}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Project Name:</label></div>
+                            <div class="ui-g-6 text">{{2}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Project Code:</label></div>
+                            <div class="ui-g-6 text">{{3}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>SORP/EOP:</label></div>
+                            <div class="ui-g-6 text">{{4}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Approved Investment:</label></div>
+                            <div class="ui-g-6 text">{{5}}</div>
+                        </div>
+                    </div>
+                    <div class="ui-g-6">
+                        <div style="width:160px;height:30px;text-align:center;background-color:#F2F2F2;border-radius:5px 5px 0 0;padding:0.5rem;">
+                            <label>Decision Description:</label>
+                        </div>
+                        <div style="width:450px;height:130px;border:1px solid #E1E1E1;overflow:hidden;">
+                            {{0}} 
+                        </div>
+                    </div>
+                </div>
+                <hr style="border:1px dashed #858585;margin:0 0.5rem;">
+                <div class="ui-g body-content1">
+                    <div class="ui-g-1">
+                        <div class="image">
+                            <img src="assets/img/programPortal/chess.png">
+                        </div>
+                    </div>
+                    <div class="ui-g-5 main-body">
+                        <p class="title" style="color:blue;text-align:center;font-weight:bold;">Wating For Approving Node</p>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Nod No:</label></div>
+                            <div class="ui-g-6 text">{{1}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Project Name:</label></div>
+                            <div class="ui-g-6 text">{{2}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Project Code:</label></div>
+                            <div class="ui-g-6 text">{{3}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>SORP/EOP:</label></div>
+                            <div class="ui-g-6 text">{{4}}</div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6 text"><label>Approved Investment:</label></div>
+                            <div class="ui-g-6 text">{{5}}</div>
+                        </div>
+                    </div>
+                    <div class="ui-g-6">
+                        <div style="width:160px;height:30px;text-align:center;background-color:#F2F2F2;border-radius:5px 5px 0 0;padding:0.5rem;">
+                            <label>Decision Description:</label>
+                        </div>
+                        <div style="width:450px;height:130px;border:1px solid #E1E1E1;">
+                            
+                        </div>
+                    </div>
+                </div> -->
+            <!-- </div> -->
+            <div *ngSwitchCase="1" class="body1">
+                <div class="ui-g top-content" style="margin:0;padding:0 2rem;">
+                    <div class="ui-g-5">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;padding-left:1rem;">Project Code:</div>
+                        <div class="ui-g-8">
+                            <input (keyup)="checkEnterSearch($event)" id="input" type="text" pInputText [(ngModel)]="projectCode" style="width:90%;">
+                        </div>
+                    </div>
+                    <div class="ui-g-5" *ngIf="hideAndVisible">
+                        <div class="ui-g-4 txt" style="margin-top:0.3rem;">Approve Status:</div>
+                        <div class="ui-g-8">
+                            <p-dropdown class="dropdown" [options]="status" [(ngModel)]="selectedStatus"></p-dropdown>
+                        </div>
+                    </div>
+                    <div class="ui-g-2" style="padding-top:1rem;">
+                        <button pButton type="button" (click)="check()" label="Search"></button>
+                    </div>
+                </div>
+                <p-dataTable [rows]="10" [value]="InvestmentBudgetTable" class="data-table" [rowHover]=true scrollable="true" scrollHeight="28rem">
+                    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                    <p-column header="Title" styleClass="ui-grid-col-2 align-center">
+                        <template pTemplate="body" let-item="rowData">
+                            <span *ngIf="selectedStatus!=2" style="color:#0082FF;cursor:pointer;" [routerLink]="['../../../pages/budgeting',{'projectCode':item.projectCode1,'adProjectCode':item.projectCode,'budgetVersionName':item.budgetVersionName,'status':item.status,'statusCount':item.statusCount,'projectName':item.projectName,'projectManager':item.projectManager,'projectType':item.projectType,'plantCode':item.plantCode,'plantName':item.plantName}]">{{item.title}}</span>
+                            <span *ngIf="selectedStatus==2" style="color:#0082FF;cursor:pointer;" [routerLink]="['../../../pages/budget-review',{'projectCode':item.projectCode1,'adProjectCode':item.projectCode,'budgetVersionName':item.budgetVersionName,'projectManager':item.projectManager,'status':item.status,'statusCount':item.statusCount,'projectName':item.projectName,'projectType':item.projectType,'plantCode':item.plantCode,'plantName':item.plantName}]" (click)="openInvestmentBudget()">{{item.title}}</span>
+                        </template>
+                    </p-column>
+                    <p-column field="userName" header="Pricipal" styleClass="ui-grid-col-2"></p-column>
+                    <p-column field="versionDate" header="Expiration Time" styleClass="ui-grid-col-2"></p-column>
+                    <p-column field="projectCode1" header="Project Code" styleClass="ui-grid-col-2"></p-column>
+                </p-dataTable>
+                <!-- <div>
+                    <table class="table table-bordered">
+                        <colgroup>
+                            <col width="44">
+                            <col width="500">
+                            <col width="100">
+                            <col width="150">
+                            <col width="140">
+                            <col width="17">
+                        </colgroup>
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>No</th>
+                                <th>Title</th>
+                                <th>Pricipal</th>
+                                <th>Expiration Time</th>
+                                <th>Project Code</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div style="max-height:340px;overflow-y:auto;">
+                    <table class="table-bordered">
+                        <colgroup>
+                            <col width="44">
+                            <col width="500">
+                            <col width="100">
+                            <col width="150">
+                            <col width="140">
+                            <col width="17">
+                        </colgroup>
+                        <tbody>
+                            <tr *ngFor="let option of InvestmentBudgetTable;let i=index">
+                                <td>{{i+1}}</td>
+                                <td *ngIf="selectedStatus!=2" style="color:#0082FF;cursor:pointer;" [routerLink]="['../../../pages/budgeting',{'projectCode':option.projectCode1,'adProjectCode':option.projectCode,'budgetVersionName':option.budgetVersionName,'status':option.status,'statusCount':option.statusCount,'projectName':option.projectName,'projectManager':option.projectManager,'projectType':option.projectType,'plantCode':option.plantCode,'plantName':option.plantName}]" (click)="openInvestmentBudget()">{{option.title}}</td>
+                                <td *ngIf="selectedStatus==2" style="color:#0082FF;cursor:pointer;" [routerLink]="['../../../pages/budget-review',{'projectCode':option.projectCode1,'adProjectCode':option.projectCode,'budgetVersionName':option.budgetVersionName,'projectManager':option.projectManager,'status':option.status,'statusCount':option.statusCount,'projectName':option.projectName,'projectType':option.projectType,'plantCode':option.plantCode,'plantName':option.plantName}]" (click)="openInvestmentBudget()">{{option.title}}</td>
+                                <td>{{option.userName}}</td>
+                                <td>{{option.versionDate}}</td>
+                                <td>{{option.projectCode1}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> -->
+            </div>
+            <div *ngSwitchCase="2" class="body2">
+                <div class="ui-g" style="margin:0;">
+                    <div class="ui-g-4">
+                        <button pButton type="button" (click)="lookMonth()" label="Month Calendar"></button>
+                        <button pButton type="button" (click)="lookDay()" label="Day Calendar"></button>
+                    </div>
+                    <div class="ui-g-4" style="padding:0;">
+                        <div class="ui-g-4">Meeting Type:</div>
+                        <div class="ui-g-8"><p-dropdown [options]="types" [(ngModel)]="selectedType"></p-dropdown></div>
+                    </div>
+                    <div class="ui-g-2">
+                        <button pButton type="button" (click)="checkCalendar()" label="Search"></button>
+                    </div>
+                </div>
+                <div class="head-title">
+                    <span style="font-weight:bold;">{{Today}}</span>
+                    <i class="fa fa-arrow-left fa-lg" aria-hidden="true" style="float:left;cursor:pointer;" (click)="pre()"></i>
+                    <i class="fa fa-arrow-right fa-lg" aria-hidden="true" style="float:right;cursor:pointer;" (click)="next()"></i>
+                </div>
+                <div *ngIf="monthCalendar" class="monthCalendar" style="margin:0;">
+                    <div class="body-title">
+                        <div class="title">Monday</div>
+                        <div class="title">Tuesday</div>
+                        <div class="title">Wednesday</div>
+                        <div class="title">Thursday</div>
+                        <div class="title">Friday</div>
+                        <div class="title">Saturday</div>
+                        <div class="title">Sunday</div>
+                    </div>
+                    <div class="body-body" id="calendar">
+                        <div class="body" *ngFor="let option of calendarTable" id={{option}} (click)="gotoDay(option)" [ngClass]="{'border': giveBorder(option)}">
+                            <div style="height:1rem;text-align:center;">{{option}}</div>
+                            <div *ngFor="let item of calendarData">
+                                <div class="child" *ngIf="item.meetingTime==option" [ngStyle]="{'background-color':item.timeFlag>newTime ? 'lime':'gray'}">{{item.meetingName}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="dayCalendar" class="dayCalendar" style="margin:0;">
+                    <div class="day-all ui-g">
+                        <div class="ui-g-4" *ngFor="let option of dayData">
+                            <div class="day-item">
+                                <div class="day-title" [ngStyle]="{'color':option.flag}">{{option.meetingName}}</div>
+                                <div class="day-body">
+                                    <div class="left">Subject:</div> <div class="left">{{option.meetingName}}</div>
+                                    <div class="left">Begin Time:</div> <div class="left">{{option.meetingTime}}</div>
+                                    <div class="left">Time:</div> <div class="left">{{option.minutes}} minutes</div>
+                                    <div class="left">End Time:</div> <div class="left">{{option.endTime}}</div>
+                                    <div class="left">Venue:</div> <div class="left">{{option.venue}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngSwitchCase="3" class="body3">
+                <div class="first" *ngIf="first">
+                    <div class="ui-g">
+                        <div class="ui-g-2" style="padding-top:0.8rem;padding-left:4rem;">Project Type:</div>
+                        <div class="ui-g-2">
+                            <p-dropdown [options]="projectTypes" [(ngModel)]="choosedType"></p-dropdown>
+                        </div>
+                        <div class="ui-g-2" style="padding-top:0.8rem;padding-left:4rem;">Project Code:</div>
+                        <div class="ui-g-2">
+                            <input (keyup)="sousuoEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCode1"> 
+                        </div>
+                        <div class="ui-g-2">
+                            <button pButton type="button" (click)="sousuo()" label="Search"></button>
+                        </div>
+                    </div>
+                    <p-dataTable [rows]="10" [value]="projectTable" class="data-table" [rowHover]=true scrollable="true" scrollHeight="28rem">
+                        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                        <p-column field="projectCode" header="Project Code" styleClass="ui-grid-col-2"></p-column>
+                        <p-column field="projectName" header="Project Name" styleClass="ui-grid-col-2"></p-column>
+                        <p-column field="projectTypeName" header="Project Type" styleClass="ui-grid-col-2"></p-column>
+                        <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2"></p-column>
+                        <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2"></p-column>
+                        <p-column field="sorp" header="SORP" styleClass="ui-grid-col-2"></p-column>
+                        <p-column field="approveInvestment" header="Approved Investment (MRMB)" styleClass="ui-grid-col-2"></p-column>
+                        <p-column field="investmentCharacter" header="Investment Character" styleClass="ui-grid-col-2"></p-column>
+                        <p-column field="userName" header="Investment Manager" styleClass="ui-grid-col-2"></p-column>
+                        <p-column field="projectStatus" header="Status" styleClass="ui-grid-col-2"></p-column>
+                        <p-column header="" styleClass="ui-grid-col-2 align-center">
+                            <template pTemplate="body" let-item="rowData">
+                                <span class="blue" (click)="openBox(item.projectCode,item.adProjectCode,item.projectType)">Preview Report</span>
+                            </template>
+                        </p-column>
+                    </p-dataTable>
+                    <p-paginator totalRecords="{{totalRecord2}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate2($event)"></p-paginator>
+                    <!-- <div style="width:952px;">
+                        <table class="table-bordered">
+                            <colgroup>
+                                <col width="30">
+                                <col width="88">
+                                <col width="100">
+                                <col width="85">
+                                <col width="92">
+                                <col width="66">
+                                <col width="80">
+                                <col width="78">
+                                <col width="78">
+                                <col width="98">
+                                <col width="53">
+                                <col width="86">
+                                <col width="17">
+                            </colgroup>
+                            <thead style="background-color:#4B98DC;color:white;">
+                                    <tr>
+                                        <th style="vertical-align:middle;">No</th>
+                                        <th style="vertical-align:middle;">Project Code</th>
+                                        <th style="vertical-align:middle;">Project Name</th>
+                                        <th style="vertical-align:middle;">Project Type</th>
+                                        <th style="vertical-align:middle;">Classification</th>
+                                        <th style="vertical-align:middle;">Category</th>
+                                        <th style="vertical-align:middle;">SORP</th>
+                                        <th style="text-align:center;">Approved<br>Investment<br>(MRMB)</th>
+                                        <th style="text-align:center;">Investment<br>Character</th>
+                                        <th style="text-align:center;">Investment<br>Manager</th>
+                                        <th style="vertical-align:middle;">Status</th>
+                                        <th style="text-align:center;"></th>
+                                        <th style="background-color:white;"></th>
+                                    </tr>
+                            </thead>
+                        </table>
+                    </div>
+                    <div style="width:952px;">
+                        <div style="max-height:320px;overflow-y:auto;">
+                            <table class="table-bordered">
+                                <colgroup>
+                                    <col width="30">
+                                    <col width="88">
+                                    <col width="100">
+                                    <col width="85">
+                                    <col width="92">
+                                    <col width="66">
+                                    <col width="80">
+                                    <col width="78">
+                                    <col width="78">
+                                    <col width="98">
+                                    <col width="53">
+                                    <col width="86">
+                                    <col width="17">
+                                </colgroup>
+                                <tbody (mouseout)="outTable()" style="cursor:pointer;">
+                                    <tr *ngFor="let option of projectTable;let i=index" [ngClass]="{'clickStyle':i==tableFlag,'overStyle':i==tableFlag2}" (click)="gotoClick(i)" (mouseover)="gotoCover(i)">
+                                        <td>{{i+1}}</td>
+                                        <td>{{option.projectCode}}</td>
+                                        <td>{{option.projectName}}</td>
+                                        <td>{{option.projectTypeName}}</td>
+                                        <td>{{option.levelName}}</td>
+                                        <td>{{option.categoryName}}</td>
+                                        <td>{{option.sorp}}</td>
+                                        <td>{{option.approveInvestment}}</td>
+                                        <td>{{option.investmentCharacter}}</td>
+                                        <td>{{option.userName}}</td>
+                                        <td>{{option.projectStatus}}</td>
+                                        <td class="blue" (click)="openBox(option.projectCode,option.adProjectCode,option.projectType)">Preview Report</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p-paginator totalRecords="{{totalRecord2}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate2($event)"></p-paginator>
+                    </div> -->
+                </div>
+                <div class="second" *ngIf="second">
+                    <div class="ui-g" style="background-color:#F2F2F2;">
+                        <div class="ui-g-4">{{projectCode2}} Close Report</div>
+                        <div class="ui-g-2">
+                            <button disabled="!powerOfModify" pButton type="button" (click)="export()" label="Export"></button>
+                        </div>
+                        <div class="ui-g-2">
+                            <button disabled="!powerOfModify" pButton type="button" (click)="tijiao()" label="Commit"></button>
+                        </div>
+                    </div>
+                    <table class="table-bordered">
+                        <colgroup>
+                            <col width="102">
+                            <col width="212">
+                            <col width="157">
+                            <col width="157">
+                            <col width="157">
+                            <col width="157">
+                            <col width="17">
+                        </colgroup>
+                        <thead style="background-color: #4B98DC;color:white;">
+                            <tr>
+                                <th>AREA</th>
+                                <th>区域</th>
+                                <th style="text-align:center;">Approved Budget<br>批准预算</th>
+                                <th style="text-align:center;">Total Cost<br>使用金额</th>
+                                <th style="text-align:center;">Balance<br>余额</th>
+                                <th style="text-align:center;">Percent<br>使用百分比</th>
+                                <th *ngIf="reportTable?.length>9"></th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div style="width:960px;max-height:360px;overflow-y:auto;">
+                        <table class="table-bordered">
+                            <colgroup>
+                                <col width="102">
+                                <col width="212">
+                                <col width="157">
+                                <col width="157">
+                                <col width="157">
+                                <col width="157">
+                            </colgroup>
+                            <tbody>
+                                <tr *ngFor="let option of reportTable">
+                                    <td>{{option.regionCategoryNameEnglish}}</td>
+                                    <td>{{option.regionCategoryNameChinese}}</td>
+                                    <td style="text-align:right;">{{option.apprBudget}}</td>
+                                    <td style="text-align:right;">{{option.totalCost}}</td>
+                                    <td style="text-align:right;">{{option.currentBudget}}</td>
+                                    <td style="text-align:right;">{{option.releasedBudget+'%'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- <table class="table table-bordered">
+                        <thead class="thead-inverse" style="background-color:#4B98DC;color:white;">
+                            <tr>
+                                <th>AREA</th>
+                                <th>区域</th>
+                                <th>Approved Budget<br>批准预算</th>
+                                <th>Total Cost<br>使用金额</th>
+                                <th>Balance<br>余额</th>
+                                <th>Percent<br>使用百分比</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let option of reportTable">
+                                <td>{{option.regionCategoryCode}}</td>
+                                <td>{{option.regionCategoryName}}</td>
+                                <td>{{option.apprBudget}}</td>
+                                <td>{{option.totalCost}}</td>
+                                <td>{{option.currentBudget}}</td>
+                                <td>{{option.releasedBudget}}</td>
+                            </tr>
+                        </tbody>
+                    </table> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    </p-dialog>
+
+    <!-- card3中的弹框 -->
+    <p-dialog class="dialog" header="project {{prjCode}} detail" [(visible)]="showKanban" model="model" width="1000" [responsive]="true">
+    <div class="dialog-wrap">
+        <p-tabView (onChange)="handleChange($event)" class="tab-view">
+            <p-tabPanel header="Investment Status">
+                <div class="bodyTwo">
+                    <div class="head-title">{{prjCode}} Investment Status</div>
+                    <div class="head-body">
+                    <div class="ui-g show-data">
+                        <div class="ui-g-6" *ngIf="investmentTable.length">
+                            <div class="ui-g-12 pie-card">
+                                <div class="pie-title">The use of investment statistics</div>
+                                <p-chart *ngIf="fuck" type="pie" [data]="pieData"></p-chart>
+                            </div>
+                        </div>
+                        <div class="ui-g-6" *ngIf="investmentTable.length">
+                            <div class="ui-g-12 pie-card">
+                                <div class="pie-title">The use of investment statistics</div>
+                                <p-chart *ngIf="fuck" type="bar" [data]="barData"></p-chart>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-bordered">
+                        <thead class="thead-inverse" style="background-color:#F2F2F2;color:black;">
+                            <tr>
+                                <th>Group</th>
+                                <th style="text-align:center;">Current Budget</th>
+                                <th style="text-align:center;">Total Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let option of investmentTable;let i=index">
+                                <td>{{option.group}}</td>
+                                <td style="text-align:right;">{{option.currentBudget}}</td>
+                                <td style="text-align:right;">{{option.totalCost}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Project Info">
+                <div class="bodyOne" *ngFor="let item of oneOfInvestmentTable">
+                    <div class="bodyOne-Ar" *ngIf="projectType==300">
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Project Code:</div>
+                                <div class="ui-g-7 withBorder">{{item.projectCode}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">InvestmentYear:</div>
+                                <div class="ui-g-7 withBorder">{{item.arYear}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Project Name:</div>
+                                <div class="ui-g-7 withBorder">{{item.projectName}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">InvestmentManager:</div>
+                                <div class="ui-g-7 withBorder">{{item.userName}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <div class="ui-g-2">Project Summary:</div>
+                                <div class="ui-g-8 withBorder" style="height:80px;">{{item.projectSummary}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bodyOne-Vehicle" *ngIf="projectType==110">
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Project Code:</div>
+                                <div class="ui-g-7 withBorder">{{item.projectCode}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">AVD Code:</div>
+                                <div class="ui-g-7 withBorder">{{item.adProjectCode}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Project Name:</div>
+                                <div class="ui-g-7 withBorder">{{item.projectName}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Program Code:</div>
+                                <div class="ui-g-7 withBorder">{{item.prProgramCode}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Approved Investment:</div>
+                                <div class="ui-g-7 withBorder">{{item.approveInvestment}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Approved Date:</div>
+                                <div class="ui-g-7 withBorder">{{item.approveInvestmentDate}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Investment Character:</div>
+                                <div class="ui-g-7 withBorder">{{item.investmentCharacter}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Investment Manager:</div>
+                                <div class="ui-g-7 withBorder">{{item.projMangerName}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                            <div class="ui-g-2">Project Summary:</div>
+                            <div class="ui-g-8 withBorder" style="height:80px;">{{item.projectSummary}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bodyOne-Facility" *ngIf="projectType==200">
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Project Code:</div>
+                                <div class="ui-g-7 withBorder">{{item.projCode}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">AVD Code:</div>
+                                <div class="ui-g-7 withBorder">{{item.adProjCode}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Project Name:</div>
+                                <div class="ui-g-7 withBorder">{{item.projName}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Classification:</div>
+                                <div class="ui-g-7 withBorder">{{item.levelName}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Land Area:</div>
+                                <div class="ui-g-7 withBorder">{{item.landArea}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Building Area:</div>
+                                <div class="ui-g-7 withBorder">{{item.buildArea}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">SORP:</div>
+                                <div class="ui-g-7 withBorder">{{item.sop}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Investment Manager:</div>
+                                <div class="ui-g-7 withBorder">{{item.userName}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">PLANT:</div>
+                                <div class="ui-g-7 withBorder">{{item.planeName}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                            <div class="ui-g-2">Project Summary:</div>
+                            <div class="ui-g-8 withBorder" style="height:80px;">{{item.projSum}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bodyOne-PowerTrain" *ngIf="projectType==120">
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Project Code:</div>
+                                <div class="ui-g-7 withBorder">{{item.projectCode}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">AVD Code:</div>
+                                <div class="ui-g-7 withBorder">{{item.adProjectCode}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Project Name:</div>
+                                <div class="ui-g-7 withBorder">{{item.projectName}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Program Code:</div>
+                                <div class="ui-g-7 withBorder">{{item.prProgramCode}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Platform:</div>
+                                <div class="ui-g-7 withBorder">{{item.modelPlatform}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">PTModel:</div>
+                                <div class="ui-g-7 withBorder">{{item.ptModel}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">RPO:</div>
+                                <div class="ui-g-7 withBorder">{{item.rpo}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Model Year:</div>
+                                <div class="ui-g-7 withBorder">{{item.modelYear}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Classification:</div>
+                                <div class="ui-g-7 withBorder">{{item.levelName}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">PT Count:</div>
+                                <div class="ui-g-7 withBorder">{{item.ptCount}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Investment Charactor:</div>
+                                <div class="ui-g-7 withBorder">{{item.investmentCharacter}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Investment Manager:</div>
+                                <div class="ui-g-7 withBorder">{{item.projManagerName}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Approved Investment:</div>
+                                <div class="ui-g-7 withBorder">{{item.approveInvestment}}</div>
+                            </div>
+                            <div class="ui-g-6">
+                                <div class="ui-g-5">Approved Date:</div>
+                                <div class="ui-g-7 withBorder">{{item.approveInvestmentDate}}</div>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                            <div class="ui-g-2">Project Summary:</div>
+                            <div class="ui-g-8 withBorder" style="height:80px;">{{item.projectSummary}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-tabPanel>
+            <p-tabPanel header="Module Year" [disabled]="projectType != 110">
+                <div class="bodyFour">
+                    <table class="table table-bordered">
+                        <thead class="thead-inverse">
+                            <tr>
+                                <th>No</th>
+                                <th>Project Code</th>
+                                <th>Program Code</th>
+                                <th>Model Year</th>
+                                <th style="text-align:center">Project Name</th>
+                                <th>Category</th>
+                                <th style="text-align:center;">Classification</th>
+                                <th>Project Manager</th>
+                                <!-- <th>Status</th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let option of modelYearTable;let i=index">
+                                <td>{{i+1}}</td>
+                                <td>{{option.projectCode}}</td>
+                                <td>{{option.programCode}}</td>
+                                <td style="color:blue;cursor:pointer;" (click)="openModelYear(option.adProjectCode,option.timingId)">{{option.myYear}}</td>
+                                <td style="text-align:center;">{{option.projectName}}</td>
+                                <td>{{option.categoryName}}</td>
+                                <td style="text-align:center;">{{option.levelName}}</td>
+                                <td>{{option.userName}}</td>
+                                <!-- <td>{{option.status}}</td> -->
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p-paginator totalRecords="{{totalRecord1}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate1($event)"></p-paginator>
+                </div>
+            </p-tabPanel>
+            <!-- <p-tabPanel header="Summary Report">
+                <div class="bodyThree">
+                    <div class="head-title ui-g">
+                        <div class="ui-g-3">
+                            <div class="ui-g-10">{{prjCode}} Investment Summary</div>   
+                        </div>
+                        <div class="ui-g-4">
+                            <div class="ui-g-5">Budget Version:</div>
+                            <div class="ui-g-7">
+                                <p-dropdown [options]="version" [(ngModel)]="selectedVersion"></p-dropdown>
+                            </div>
+                        </div>
+                        <div class="ui-g-4">
+                            <div class="ui-g-5" style="padding-left:3rem">Currency:</div>
+                            <div class="ui-g-7">
+                                <p-dropdown [options]="currency" [(ngModel)]="selectedCurrency"></p-dropdown>
+                            </div>
+                        </div>
+                        <button pButton type="button" (click)="checkSummary()" label="Search" style="background-color:#F2F2F2;color:black;height:30px;margin-top:1rem;"></button>
+                    </div>
+                    <div class="head-body">
+                    <table class="table table-bordered">
+                        <thead style="background-color:#c8c8c8;">
+                            <tr>
+                                <th>regionCategory</th>
+                                <th>categoryName</th>
+                                <th *ngFor="let option of investGroupList;let i=index" [ngStyle]="{'text-align':i>1?'center':'left'}">{{option}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let option of summaryTable;let i=index">
+                                <td>{{option.regionCatagory}}</td>
+                                <td>{{option.categoryName}}</td>
+                                <td *ngFor="let title of investGroupList" style="text-align:right;">{{option[title]}}</td>
+                            </tr>
+                            <tr *ngIf="totalSum.length>0">
+                                <td>Misc</td>
+                                <td>不可预见费</td>
+                                <td *ngFor="let item of totalPercent" style="text-align:right;">{{item}}</td>
+                            </tr>
+                            <tr *ngIf="totalSum.length>0">
+                                <td>Total</td>
+                                <td>总计</td>
+                                <td *ngFor="let item of totalSum;let i=index" style="text-align:right;">{{item}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>   
+            </p-tabPanel> -->
+        </p-tabView>
+    </div>
+    </p-dialog>
+    <!-- module year 弹框 -->
+    <!-- <p-dialog class="dialog" header="Module Year" [(visible)]="showModuleYear" model="model" width="1000" [responsive]="true">
+        <p-tabView class="tab-view">
+            <p-tabPanel header="Timesheet Data">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Status</th>
+                            <th>Element</th>
+                            <th>Period(day)</th>
+                            <th>Element Type</th>
+                            <th>Plan Date</th>
+                            <th>Week</th>
+                            <th>Finish Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of timeSheetData;let i=index">
+                            <td><span style="width:20px;height:20px;border-radius:50%;" [ngStyle]="{'background-color':'red'}"></span></td>
+                            <td>{{option.element}}</td>
+                            <td>{{option.period}}</td>
+                            <td>{{option.elementType}}</td>
+                            <td>{{option.planDate}}</td>
+                            <td>{{option.week}}</td>
+                            <td>{{option.finishDate}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-tabPanel>
+            <p-tabPanel header="Delivables">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Status</th>
+                            <th>Element ID</th>
+                            <th>Delivable Name</th>
+                            <th>Owner</th>
+                            <th>Customer</th>
+                            <th>Plan Finish Date</th>
+                            <th>Finish Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of DelivablesData;let i=index">
+                            <td><span style="width:20px;height:20px;border-radius:50%;" [ngStyle]="{'background-color':'red'}"></span></td>
+                            <td>{{option.elementId}}</td>
+                            <td>{{option.delivableName}}</td>
+                            <td>{{option.owner}}</td>
+                            <td>{{option.customer}}</td>
+                            <td>{{option.planFinishDate}}</td>
+                            <td>{{option.finishDate}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-tabPanel>
+            <p-tabPanel header="Approve Log">
+                <table class="table table-bordered">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>No</th>
+                            <th>Flow Step</th>
+                            <th>Approver</th>
+                            <th>Approve Date</th>
+                            <th>Approve Status</th>
+                            <th>Suggestion</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of approveLogData;let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{option.flowStep}}</td>
+                            <td>{{option.approver}}</td>
+                            <td>{{option.approveDate}}</td>
+                            <td>{{option.approveStatus}}</td>
+                            <td>{{option.suggestion}}</td>
+                        </tr>
+                    </tbody>
+                </table>   
+            </p-tabPanel>
+            <p-tabPanel header="Files">
+                <table class="table table-bordered">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>File Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of filesData;let i=index">
+                            <td>{{option.files}}</td>
+                        </tr>
+                    </tbody>
+                </table>   
+            </p-tabPanel>
+            <p-tabPanel header="show picture">
+                Content 3    
+            </p-tabPanel>
+        </p-tabView>
+    </p-dialog> -->
+    <!-- card2 里的文档弹框 -->
+    <!-- <p-dialog class="dialog" header="Shared Documents" [(visible)]="showDocuments" model="model" width="1000" [responsive]="true">
+        <div class="ui-g">
+            <div class="ui-g-1" style="margin:0;">File Name:</div>
+            <div class="ui-g-2" style="margin:0;">
+                <input id="input" type="text" pInputText [(ngModel)]="fileName"> 
+            </div>
+            <div class="ui-g-2" style="margin:0;">
+                <button pButton type="button" (click)="checkUp()" label="Search"></button>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <thead class="thead-inverse" style="background-color:#4B98DC;color:white;">
+                <tr>
+                    <th>No</th>
+                    <th>Upload User</th>
+                    <th>Upload Date</th>
+                    <th>File Name</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of documentTable;let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{item.uploadUser}}</td>
+                    <td>{{item.uploadDate}}</td>
+                    <td>{{item.fileName}}</td>
+                    <td>{{item.description}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </p-dialog> -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="3000"></p-growl>
+    <p-dialog class="dialog dialog-view" header="Model Year" [(visible)]="showModelYear" model="model" [responsive]="true">
+        <iframe [src]="specialURL" width="100%" height="100%"></iframe>
+    </p-dialog>
+</div>

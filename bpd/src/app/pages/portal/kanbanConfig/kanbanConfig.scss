@@ -1,0 +1,126 @@
+@import '../../sass/privateStyle';
+kanban-config {
+	.editBtn, .noEditBtn {
+	    margin-right: 10px;
+	    display: inline-block;
+	    text-align: center;
+	}
+	.editBtn, .delBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+	}
+	.noEditBtn {
+		color: #bfbdbd;
+	}
+	.header {
+		padding: 5px 0;
+		font-weight: bold;
+		position: relative;
+		text-align: center;
+		height: 35px;
+		line-height: 35px;
+		button {
+		    position: absolute;
+		    top: 50%;
+		    left: 20px;
+		    transform: translateY(-50%);
+		}
+		.programCodeSearch {
+			margin: 0 20px 0 10px;
+		}
+		input {
+			width: 10rem;
+		}
+	}
+	.topBar {
+		padding: 10px;
+		p-dropdown {
+		    display: inline-block;
+		    width: 150px;
+		    margin-left: 10px;
+		    margin-right: 20px;
+		}
+		.projectCodeSerch {
+			margin: 0 20px 0 10px;
+		}
+		input {
+			width: 10rem;
+		}
+	}
+	.footer {
+		text-align: right;
+	    margin-right: 40px;
+	    margin-top: 15px;
+	    button {
+	    	height: 30px;
+	    	width: 75px;
+	    }
+	}
+	.ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+	.noMargin {
+		& > div {
+			margin-top: 0;
+		}
+	}
+	.dialogCommon {
+		.required {
+	         margin: -.8rem;
+	         &:before {
+	             padding-right: .3rem;
+	             content: "*";
+	             color: red;
+	         }
+	     }
+		.ui-dialog-titlebar {
+		    background: #4B98DC;
+		    color: #fff;
+		    font-size: 12px;
+		}
+		.ui-dialog-titlebar a {
+			color: #fff;
+		}
+		.ui-inputgroup {
+			& > span {
+			    width: 100px;
+			    float: left;
+			    padding-top: 5px;
+			}
+			& > textarea {
+				width: 660px;
+			    float: right;
+			}
+			& > input {
+				width: 77%;
+			    float: right;
+			}
+			& > p-dropdown {
+				width: 77%;
+			    float: right;
+			}
+			.ui-inputgroup-addon-executive {
+				width: 20rem;
+				display: inline-block;
+			}
+			.executive-dropdown {
+				width: 50%;
+			}
+		}
+		.ui-fluid .ui-dropdown {
+		    width: 100% !important;
+		}
+	}
+	p-confirmDialog {
+		.ui-dialog.ui-widget .ui-dialog-titlebar {
+			background: #2399e5;
+			color: #fff;
+			a {
+				color: #fff;
+			}
+		}
+	 	.ui-dialog.ui-widget .ui-dialog-content {
+			padding: 1em 2em;
+		}
+	}
+}

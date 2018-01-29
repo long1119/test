@@ -1,0 +1,234 @@
+<div class="score-card-work-flow">
+    <div class="topBar">
+        Plan date:
+        <input type="text" style="width:130px" pInputText [(ngModel)]="plandateValue" disabled="true">
+    </div>
+    <p-dataTable [rows]="10" [value]="scoreCardTargetStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem">
+        <p-column field="id" header="NO" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column *ngIf="editFlag" field="colorStatus" header="Color Status" styleClass="ui-grid-col-2 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <i *ngIf="item.colorStatus == 'G'" (click)="changeColor(item)" class="fa fa-circle green"></i>
+                <i *ngIf="item.colorStatus == 'Y'" (click)="changeColor(item)" class="fa fa-circle yellow"></i>
+                <i *ngIf="item.colorStatus == 'R'" (click)="changeColor(item)" class="fa fa-circle red"></i>
+                <i *ngIf="item.colorStatus == 'W'" (click)="changeColor(item)" class="fa fa-circle white"></i>
+                <i *ngIf="!item.colorStatus" (click)="changeColor(item)" style="width:100%;height:100%" class="editBtn margin0">-</i>
+            </template>
+        </p-column>
+        <p-column *ngIf="!editFlag" field="colorStatus" header="Color Status" styleClass="ui-grid-col-2 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <i *ngIf="item.colorStatus == 'G'" class="fa fa-circle green"></i>
+                <i *ngIf="item.colorStatus == 'Y'" class="fa fa-circle yellow"></i>
+                <i *ngIf="item.colorStatus == 'R'" class="fa fa-circle red"></i>
+                <i *ngIf="item.colorStatus == 'W'" class="fa fa-circle white"></i>
+                <i *ngIf="!item.colorStatus" style="width:100%;height:100%" class="editBtn margin0">-</i>
+            </template>
+        </p-column>
+        <p-column field="metricGroup" header="Metrics Group" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="indexName" header="Metrics" styleClass="ui-grid-col-5"></p-column>
+        <p-column field="targetVolume" header="Target" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="statusVolume" header="Status" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="deptName" header="Department" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="ownerName" header="Owner" styleClass="ui-grid-col-2"></p-column>
+        <p-column *ngIf="editFlag" header="" styleClass="ui-grid-col-3 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id" class="editBtn" (click)="targetEditBtn(item)">Edit</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-dialog header="Review Log Of {{pqrrMilestone}}" [(visible)]="editSingleDisplay" width="800" minHeight=800 [responsive]="true"
+        modal="modal" class="dialogCommon">
+        <div>
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12 ui-md-12">
+                    <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon required" style="height:50px;line-height:50px;">Metrics:</span>
+                        <textarea type="text" pInputTextarea style="height:50px;" [(ngModel)]="targetMetrics" disabled="true"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12 ui-md-6">
+                    <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon required">Group:</span>
+                        <input type="text" disabled="true" pInputText [(ngModel)]="targetGroup">
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon required">Department:</span>
+                        <input type="text" disabled="true" pInputText [(ngModel)]="targetDepartment">
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12 ui-md-6">
+                    <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon requiredNone">Owner:</span>
+                        <input type="text" pInputText readonly="true" [(ngModel)]="targetOwner" (click)="getUser()" [(disabled)]="isChange">
+                    </div>
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon requiredNone" *ngIf="targetItem.dataType != '4'">Target:</span>
+                        <span class="ui-inputgroup-addon requiredNone" *ngIf="targetItem.dataType == '4'">Target(%):</span>
+                        <input *ngIf="targetItem.dataType == '1'" type="text" pInputText [(ngModel)]="targetTarget" [(disabled)]="!targetDisplay">
+                        <input *ngIf="targetItem.dataType == '2'" type="number" pInputText [(ngModel)]="targetTarget" [(disabled)]="!targetDisplay"
+                            min="0" max="100">
+                        <p-calendar style="width: 75%; float: right;" *ngIf="targetItem.dataType == '3'" readonlyInput="true" [(ngModel)]="targetTarget" dateFormat="yy-mm-dd" [monthNavigator]="true"
+                            [yearNavigator]="true" yearRange="{{yearRange}}"></p-calendar>
+                        <input *ngIf="targetItem.dataType == '4'" type="number" min="0" max="100" pInputText [(ngModel)]="targetTarget" [(disabled)]="!targetDisplay">
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12 ui-md-6">
+                    <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon requiredNone" *ngIf="targetItem.dataType != '4'">Status:</span>
+                        <span class="ui-inputgroup-addon requiredNone" *ngIf="targetItem.dataType == '4'">Status(%):</span>
+                        <input *ngIf="targetItem.dataType == '1'" type="text" pInputText [(ngModel)]="targetStatus" [(disabled)]="isChange">
+
+                        <button *ngIf="targetItem.dataType == '2' && !readonlyStatus" [(disabled)]="isChange" pButton type="button" class="previous-button"
+                            icon="fa-search" (click)="clickStatus()" style="width:30px;float:right"></button>
+                        <input *ngIf="targetItem.dataType == '2' && !readonlyStatus" type="number" pInputText [(ngModel)]="targetStatus" [(disabled)]="isChange"
+                            min="0" max="100" style="width:69%">
+
+                        <input *ngIf="targetItem.dataType == '2' && readonlyStatus" type="number" pInputText [(ngModel)]="targetStatus" [(disabled)]="isChange"
+                            min="0" max="100" (click)="clickStatus()">
+                        <p-calendar style="width: 75%;float: right;" *ngIf="targetItem.dataType == '3'" readonlyInput="true" [(ngModel)]="targetStatus" dateFormat="yy-mm-dd" [monthNavigator]="true"
+                            [yearNavigator]="true" yearRange="{{yearRange}}"></p-calendar>
+
+                        <button *ngIf="targetItem.dataType == '4' && !readonlyStatus" pButton type="button" [(disabled)]="isChange" class="previous-button"
+                            icon="fa-search" (click)="clickStatus()" style="width:30px;float:right"></button>
+                        <input *ngIf="targetItem.dataType == '4' && !readonlyStatus" type="number" min="0" max="100" pInputText [(ngModel)]="targetStatus"
+                            [(disabled)]="isChange" style="width:69%">
+
+                        <input *ngIf="targetItem.dataType == '4' && readonlyStatus" type="number" min="0" max="100" pInputText [(ngModel)]="targetStatus"
+                            [(disabled)]="isChange" (click)="clickStatus()">
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui-g ui-fluid">
+                <div class="ui-g-12 ui-md-6">
+                    <div class="ui-inputgroup">
+                        <span class="ui-inputgroup-addon requiredNone">Memo:</span>
+                        <input type="text" pInputText [(ngModel)]="targetMemo">
+                    </div>
+                </div>
+            </div>
+
+            <div class="targetGrid">
+                <div class="topBar">
+                    <button pButton type="button" (click)="addTargetDataBtn()" label="Add"></button>
+                </div>
+                <p-dataTable [rows]="2" [value]="targetGridStore" class="data-table" scrollable="true" scrollHeight="6rem">
+                    <p-column field="subjectName" header="Subject" styleClass="ui-grid-col-1"></p-column>
+                    <p-column field="subtargetVolume" header="Sub Target" styleClass="ui-grid-col-1"></p-column>
+                    <p-column field="substatusVolume" header="Status" styleClass="ui-grid-col-1"></p-column>
+                    <p-column header="" styleClass="ui-grid-col-1 align-center">
+                        <template pTemplate="body" let-item="rowData" let-i="rowIndex">
+                            <span *ngIf="item.subjectName" class="editBtn" (click)="targetGridEditBtn(item,i)">Edit</span>
+                            <span *ngIf="item.subjectName" class="editBtn" (click)="targetGridDelBtn(item,i)">Delete</span>
+                        </template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+            <div class="footer">
+                <button pButton type="button" (click)="targerSaveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!targetMetrics || !targetGroup"></button>
+                <button pButton type="button" (click)="targetCancelBtn()" label="Cancel"></button>
+            </div>
+        </div>
+    </p-dialog>
+    <p-dialog class="dialog" header="BFS" [(visible)]="statusFlagDialog" [responsive]="true" [modal]="true" width="550">
+        <div class="topBar">
+            Program Code:
+            <input (keyup)="BFSEnterSearch($event)" type="text" pInputText [(ngModel)]="BFSProgramCode" class="searchInput" style="width:200px">
+            <button pButton type="button" (click)="BFSLookClick()" label="Search"></button>
+        </div>
+        <div class="ui-grid" style="padding:5px">
+            <p-dataTable [rowHover]=true class="data-table" [value]="bfsStore" rows="10" scrollable="true" scrollHeight="30rem" (onRowDblclick)="bfsDbclick($event)">
+                <p-column styleClass="ui-grid-col-2" field="programCode" header="Program"></p-column>
+                <p-column styleClass="ui-grid-col-3" field="targetVolume" header="Scenario"></p-column>
+                <p-column styleClass="ui-grid-col-3" field="statusVolume" header="Data"></p-column>
+            </p-dataTable>
+        </div>
+    </p-dialog>
+    <p-dialog header="Sub Target" [(visible)]="subTargetDisplay" width="400" [responsive]="true" modal="modal" class="dialog generalDialog">
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-12">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required">Subject:</span>
+                    <input type="text" pInputText [(ngModel)]="subSubjectValue" [(disabled)]="isAdd">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-12">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon required" *ngIf="targetItem.dataType != '4'">Sub Target:</span>
+                    <span class="ui-inputgroup-addon required" *ngIf="targetItem.dataType == '4'">Sub Target(%):</span>
+                    <input *ngIf="targetItem.dataType == '1'" type="text" pInputText [(ngModel)]="subTargetValue">
+                    <input *ngIf="targetItem.dataType == '2' || targetItem.dataType == '3'" type="number" pInputText [(ngModel)]="subTargetValue"
+                        min="0" max="100">
+                    <input *ngIf="targetItem.dataType == '4'" type="number" min="0" max="100" pInputText [(ngModel)]="subTargetValue">
+                </div>
+            </div>
+        </div>
+        <div class="ui-g ui-fluid">
+            <div class="ui-g-12 ui-md-12">
+                <div class="ui-inputgroup">
+                    <span class="ui-inputgroup-addon requiredNone" *ngIf="targetItem.dataType != '4'">Status:</span>
+                    <span class="ui-inputgroup-addon requiredNone" *ngIf="targetItem.dataType == '4'">Status(%):</span>
+                    <input *ngIf="targetItem.dataType == '1'" type="text" pInputText [(ngModel)]="statusValue">
+                    <input *ngIf="targetItem.dataType == '2' || targetItem.dataType == '3'" type="number" pInputText [(ngModel)]="statusValue"
+                        min="0" max="100">
+                    <input *ngIf="targetItem.dataType == '4'" type="number" min="0" max="100" pInputText [(ngModel)]="statusValue">
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <button *ngIf="!isAdd" pButton type="button" (click)="subTargetsaveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!subSubjectValue || !subTargetValue"></button>
+            <button *ngIf="isAdd" pButton type="button" (click)="subTargetsaveChangeBtn()" label="Confirm" style="margin-right:10px"
+                [(disabled)]="!subSubjectValue || !subTargetValue"></button>
+            <button pButton type="button" (click)="subTargetCancelBtn()" label="Cancel"></button>
+        </div>
+    </p-dialog>
+    <p-dialog class="dialog" header="Please Choose Your Manager" [(visible)]="managerSearchDialog" [responsive]="true" [modal]="true"
+        width="800">
+        <div class="topBar">
+            Department:
+            <input (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="managerDialogDepartment" class="searchInput"> User Name:
+            <input (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="managerDialogUserName" class="searchInput">
+            <button pButton type="button" (click)="managerLookClick()" label="Search"></button>
+        </div>
+        <div class="ui-grid" style="padding:5px">
+            <p-dataTable (onRowDblclick)="managerDbclick($event)" [rowHover]=true selectionMode="single" class="data-table" [value]="managerData"
+                rows="10" scrollable="true" scrollHeight="30rem">
+                <p-column styleClass="ui-grid-col-2" field="userName" header="User Name"></p-column>
+                <p-column field="employeeCode" header="Employee ID" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column styleClass="ui-grid-col-3" field="jobPosition" header="Job"></p-column>
+                <p-column styleClass="ui-grid-col-2" field="telephone" header="Telphone"></p-column>
+                <p-column styleClass="ui-grid-col-3" field="emailAddress" header="Email"></p-column>
+                <p-column styleClass="ui-grid-col-2" field="departmentName" header="Department"></p-column>
+                <p-column styleClass="ui-grid-col-2" field="masterName" header="Manager"></p-column>
+            </p-dataTable>
+            <p-paginator rows="{{managerDataRows}}" first="{{managerDataFirst}}" totalRecords="{{managerDataLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]"
+                (onPageChange)="managerPaginate($event)"></p-paginator>
+        </div>
+    </p-dialog>
+    <p-dialog class="dialog" header="Set Status" [(visible)]="setStatusDialog" width="450">
+    <div style="font-size:14px;font-weight:bold;margin-bottom:5px;background-color:#e6e6e6;padding:7px">Status:</div>
+    <div class="ui-g">
+        <p-radioButton class="radio-button" style="margin-left:40px" name="White" value="W" label="White" [(ngModel)]="authorizeRadio"></p-radioButton>
+        <p-radioButton class="radio-button" style="margin-left:40px" name="Yellow" value="Y" label="Yellow" [(ngModel)]="authorizeRadio"></p-radioButton>
+        <p-radioButton class="radio-button" style="margin-left:40px" name="Red" value="R" label="Red" [(ngModel)]="authorizeRadio"></p-radioButton>
+        <p-radioButton class="radio-button" style="margin-left:40px" name="Green" value="G" label="Green" [(ngModel)]="authorizeRadio"></p-radioButton>
+    </div>
+    <div class="footer">
+        <button pButton type="button" [(disabled)]="!authorizeRadio" (click)="setStatusSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="setStatusDialog=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+    <p-confirmDialog></p-confirmDialog>
+</div>

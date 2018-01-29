@@ -1,0 +1,94 @@
+<div class="topBar">
+    <button pButton type="button" [routerLink]="['../../../pages/kanban-pic',{}]" label="View Kanban"></button>
+    Program Code:<input type="text" (keyup)="enterSearch($event)" pInputText [(ngModel)]="programCodeSearch" class="projectCodeSerch">
+    Project Name:<input type="text" (keyup)="enterSearch($event)" pInputText [(ngModel)]="projectNameSearch" class="projectCodeSerch">
+    <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+</div>
+<p-dataTable [rows]="10" [value]="gridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem" (onRowClick)="gridRowClick($event)" selectionMode="single" [(selection)]="selectedStore">
+    <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="modelPlatform" header="Platform" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="projectName" header="Project Name" styleClass="ui-grid-col-3 align-left"></p-column>
+    <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="engine" header="Engine" styleClass="ui-grid-col-2 align-left"></p-column>
+</p-dataTable>
+<p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+<div class="header" style="background-color:#e6e6e6;">
+    <button pButton type="button" (click)="addBtn()" [(disabled)]="!addBtnShow" label="Add"></button>
+    Slave Projects of {{selectedStore.projectName}}
+</div>
+<p-dataTable [rows]="10" [value]="sonGridStore" class="data-table noMargin" [rowHover]=true scrollable="true" scrollHeight="30rem">
+    <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="modelPlatform" header="Platform" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="projectName" header="Project Name" styleClass="ui-grid-col-3 align-left"></p-column>
+    <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="engine" header="Engine" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="descripition" header="Description" styleClass="ui-grid-col-3 align-left"></p-column>
+    <p-column header="" styleClass="ui-grid-col-2 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" (click)="editBtn(item)">Edit</span>
+            <span *ngIf="item.id" class="editBtn" (click)="delBtn(item)">Delete</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator rows="{{sonGridStoreRows}}" first="{{sonGridStoreFirst}}" totalRecords="{{sonGridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="sonPaginate($event)"></p-paginator>
+
+<p-dialog header="Slave Projects of {{selectedStore.projectName}}" [(visible)]="display" width="500" modal="modal" class="dialogCommon">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Project Name:</span>
+                <p-dropdown *ngIf="isSave" autoWidth="false" [options]="projectNameStore" [(ngModel)]="projectNameValue" class="dropdown" filter="filter" (onChange)="selectionChange($event)" appendTo="body"></p-dropdown>
+                <input *ngIf="!isSave" type="text" disabled="true" pInputText [(ngModel)]="projectNameValue">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Program Code:</span>
+                <input type="text" disabled="true" pInputText [(ngModel)]="programCodeValue">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Category:</span>
+                <input type="text" disabled="true" pInputText [(ngModel)]="categoryValue">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Classification:</span>
+                <input type="text" disabled="true" pInputText [(ngModel)]="classificationValue">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Engine:</span>
+                <p-dropdown autoWidth="false" [options]="engineValueStore" [(ngModel)]="engineValue" class="dropdown" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Description:</span>
+                <input type="text" maxlength="8" pInputText [(ngModel)]="decription">
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button *ngIf="!projectNameValue || (!engineValue && !decription)" pButton type="button" disabled="true" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" *ngIf="projectNameValue && (engineValue || decription)" (click)="addSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="display=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="5000"></p-growl>
+<p-confirmDialog></p-confirmDialog>

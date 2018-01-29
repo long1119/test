@@ -1,0 +1,69 @@
+<div class="topBar">
+	<button *ngIf="userRoot" pButton type="button" (click)="AddBtn()" label="Add"></button>
+    PQRR Milestone:<p-dropdown autoWidth="false" [options]="PQRRSerchStore" [(ngModel)]="PQRRSerch" (onChange)="selectionChange($event)" filter="filter"></p-dropdown>
+</div>
+<p-dataTable [rows]="15" [value]="gridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="50rem">
+    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+    <p-column field="elementName" header="PQRR Milestone" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="elememntId" header="Element ID" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="delivName" header="Deliverable Name" styleClass="ui-grid-col-5 align-left"></p-column>
+    <p-column field="createUserName" header="Create User" styleClass="ui-grid-col-3 align-left"></p-column>
+    <p-column *ngIf="userRoot" header="" styleClass="ui-grid-col-2 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id && (item.createUser == loginUser)" class="editBtn" (click)="editBtn(item)">Edit</span>
+            <span *ngIf="item.id && (item.createUser != loginUser)" class="noEditBtn">Edit</span>
+            <span *ngIf="item.id && (item.createUser == loginUser)" class="delBtn" (click)="delBtn(item)">Delete</span>
+            <span *ngIf="item.id && (item.createUser != loginUser)" class="noEditBtn">Delete</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[15,30,45]" (onPageChange)="paginate($event)"></p-paginator>
+<p-dialog header="Deliverable Bill" [(visible)]="display" width="650" modal="modal" class="dialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required w105">PQRR Milestone:</span>
+                <p-dropdown autoWidth="false" [options]="PQRRMilestoneStore" [(ngModel)]="PQRRMilestone" filter="filter"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required w105">Delivable Name:</span>
+                <input class="input" type="text" pInputText [(ngModel)]="delivableName" maxlength="100">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required w105">Element Id:</span>
+                <input class="input" type="text" pInputText [(ngModel)]="elementId" maxlength="30">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required w105">Department:</span>
+                <p-dropdown autoWidth="false" [options]="departmentStore" [(ngModel)]="department"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup" style="height:55px">
+                <span class="ui-inputgroup-addon w105">Description:</span>
+                <textarea type="text" pInputTextarea style="width:63.3%;position:absolute;right:90px;height:80px;" [(ngModel)]="description" maxlength="1000"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button *ngIf="save" pButton type="button" (click)="saveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!PQRRMilestone || !delivableName || !elementId || !department"></button>
+        <button *ngIf="saveChange" pButton type="button" (click)="saveChangeBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!PQRRMilestone || !delivableName || !elementId || !department"></button>
+        <button pButton type="button" (click)="cancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="3000"></p-growl>
+<p-confirmDialog></p-confirmDialog>

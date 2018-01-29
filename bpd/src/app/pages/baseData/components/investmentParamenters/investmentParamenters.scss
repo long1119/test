@@ -1,0 +1,11 @@
+@import "../../../sass/privateStyle";
+.investment-parameter {
+    .content-add {
+        margin-bottom: 1rem;
+    }
+    .dialog{
+        &>div {
+            width: 30%;
+        }
+    }
+}

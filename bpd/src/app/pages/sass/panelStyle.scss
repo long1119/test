@@ -1,0 +1,15 @@
+.panel {
+    &>div {
+        .ui-panel-content-wrapper {
+            .ui-panel-content {
+                overflow: hidden;
+                &::before {
+                    content: "";
+                    height: 0;
+                    display: table;
+                    clear: both;
+                }
+            }
+        }
+    }
+}

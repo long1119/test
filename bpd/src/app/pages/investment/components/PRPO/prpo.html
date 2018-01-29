@@ -1,0 +1,111 @@
+
+<p-tabView (onChange)="handleChange($event)" class="tab-view">
+    <p-tabPanel header="PR">
+        <iframe [src]="specialUrl" width="100%" height="600"></iframe>
+    </p-tabPanel>
+    <p-tabPanel header="PO">
+        <iframe [src]="specialUrl1" width="100%" height="600"></iframe>
+    </p-tabPanel>
+    <p-tabPanel header="New PR">
+        <div class="topBar">
+            <span class="text" style="width:80px;">Npr No:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="nprNo" class="searchInput">
+            <span class="text" style="width:95px;">Title:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="title" class="searchInput">
+            <span class="text" style="width:95px;">Status:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="status" class="searchInput">
+            <span class="text">Process Name:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="processName" class="searchInput">
+            <span class="text">Company Name:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="companyName" class="searchInput">
+            <br>
+            <span class="text" style="width:80px;">Dept Name:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="deptName" class="searchInput">
+            <span class="text" style="width:95px;">Purchase Type:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="purchaseType" class="searchInput">
+            <span class="text" style="width:95px;">Expense Type:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="expenseType" class="searchInput">
+            <span class="text">Project Name:</span><input (keyup)="lookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="projectName" class="searchInput">
+            <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+        </div>
+        <p-dataTable [rows]="10" [value]="mainTable" class="data-table" [rowHover]=true selectionMode="single" [(selection)]="selectedStore" scrollable="true" scrollHeight="30rem">
+            <p-column field="nprNo" header="Npr No" [style]="{'width':'100px'}" styleClass="align-center"></p-column>
+            <p-column field="applyDate" header="Apply Date" styleClass="align-center" [style]="{'width':'130px'}"></p-column>
+            <p-column field="title" header="Title" styleClass="align-center" [style]="{'width':'150px'}"></p-column>
+            <p-column field="status" header="Status" styleClass="align-center" [style]="{'width':'80px'}"></p-column>
+            <p-column field="processName" header="Process Name" styleClass="align-center" [style]="{'width':'130px'}"></p-column>
+            <p-column field="supplementPrNo" header="Supplement PR No" styleClass="align-center" [style]="{'width':'130px'}"></p-column>
+            <p-column field="displayName" header="Display Name" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="companyName" header="Company Name" styleClass="align-center" [style]="{'width':'70px'}"></p-column>
+            <p-column field="deptName" header="Dept Name" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="sectionName" header="Section Name" styleClass="align-center" [style]="{'width':'105px'}"></p-column>
+            <p-column field="purchaseType" header="Purchase Type" styleClass="align-left" [style]="{'width':'120px'}"></p-column>
+            <p-column field="expenseType" header="Expense Type" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="projectName" header="Project Name" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="sgmProjectName" header="SGM Project Name" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="specialPurchaseItem" header="Special Purchase Item" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="currencySymbol" header="Currency Symbol" styleClass="align-center" [style]="{'width':'70px'}"></p-column>
+            <p-column field="exchangeRate" header="Exchange Rate" styleClass="align-center" [style]="{'width':'60px'}"></p-column>
+            <p-column field="payCompanyName" header="Pay Company Name" styleClass="align-center" [style]="{'width':'70px'}"></p-column>
+            <p-column field="isYesPo" header="Is Yes po" styleClass="align-center" [style]="{'width':'50px'}"></p-column>
+            <p-column field="poamount" header="PO Amount" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="reasonForSpecifiedBrand1" header="Reason For Specified Brand" styleClass="align-center" [style]="{'width':'100px'}">
+                <template pTemplate="body" let-item="rowData">
+                    <span (mouseover)="mouseover($event,item.reasonForSpecifiedBrand)" (mouseout)="mouseup()">{{item.reasonForSpecifiedBrand1}}</span>
+                </template>
+            </p-column>
+            <p-column field="reasonForSingleSource1" header="Reason For Single Source" styleClass="align-center" [style]="{'width':'100px'}">
+                <template pTemplate="body" let-item="rowData">
+                    <span (mouseover)="mouseover($event,item.reasonForSingleSource)" (mouseout)="mouseup()">{{item.reasonForSingleSource1}}</span>
+                </template>
+            </p-column>
+            <p-column field="statement1" header="Statement" styleClass="align-center" [style]="{'width':'100px'}">
+                <template pTemplate="body" let-item="rowData">
+                    <span (mouseover)="mouseover($event,item.statement)" (mouseout)="mouseup()">{{item.statement1}}</span>
+                </template>
+            </p-column>
+            <p-column field="isGem" header="Is Gem" styleClass="align-center" [style]="{'width':'50px'}"></p-column>
+            <p-column field="grandTotalCny" header="Grand Total Cny" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="requestType" header="Request Type" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="pristinePono" header="Pristine PO No" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="pristinePodesc" header="Pristine PO Desc" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="pristinePono" header="Pristine PO No" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="contractChangeAmount" header="Contract Change Amount" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+        </p-dataTable>
+        <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+    </p-tabPanel>
+    <p-tabPanel header="New PO">
+        <div class="topBar">
+            <span class="text" style="width:80px;">Npr No:</span><input (keyup)="lookUpEnterSearch1($event)" type="text" pInputText [(ngModel)]="nprNo1" class="searchInput">
+            <span class="text" style="width:95px;">Title:</span><input (keyup)="lookUpEnterSearch1($event)" type="text" pInputText [(ngModel)]="title1" class="searchInput">
+            <span class="text" style="width:95px;">Status:</span><input (keyup)="lookUpEnterSearch1($event)" type="text" pInputText [(ngModel)]="status1" class="searchInput">
+            <span class="text">Process Name:</span><input (keyup)="lookUpEnterSearch1($event)" type="text" pInputText [(ngModel)]="processName1" class="searchInput">
+            <span class="text">Company Name:</span><input (keyup)="lookUpEnterSearch1($event)" type="text" pInputText [(ngModel)]="companyName1" class="searchInput">
+            <br>
+            <span class="text" style="width:80px;">Dept Name:</span><input (keyup)="lookUpEnterSearch1($event)" type="text" pInputText [(ngModel)]="deptName1" class="searchInput">
+            <span class="text" style="width:95px;">Purchase Type:</span><input (keyup)="lookUpEnterSearch1($event)" type="text" pInputText [(ngModel)]="purchaseType1" class="searchInput">
+            <span class="text" style="width:95px;">Expense Type:</span><input (keyup)="lookUpEnterSearch1($event)" type="text" pInputText [(ngModel)]="expenseType1" class="searchInput">
+            <span class="text">Project Name:</span><input (keyup)="lookUpEnterSearch1($event)" type="text" pInputText [(ngModel)]="projectName1" class="searchInput">
+            <button pButton type="button" (click)="lookUpBtn1()" label="Search"></button>
+        </div>
+        <p-dataTable [rows]="10" [value]="mainTable1" class="data-table" [rowHover]=true selectionMode="single" [(selection)]="selectedStore" scrollable="true" scrollHeight="30rem">
+            <p-column field="nprNo" header="Npr No" [style]="{'width':'100px'}" styleClass="align-center"></p-column>
+            <p-column field="detailId" header="Detail ID" styleClass="align-center" [style]="{'width':'80px'}"></p-column>
+            <p-column field="goodsName1" header="Goods Name" styleClass="align-center" [style]="{'width':'80px'}">
+                <template pTemplate="body" let-item="rowData">
+                    <span (mouseover)="mouseover($event,item.goodsName)" (mouseout)="mouseup()">{{item.goodsName1}}</span>
+                </template>
+            </p-column>
+            <p-column field="specification" header="Specification" styleClass="align-center" [style]="{'width':'130px'}"></p-column>
+            <p-column field="wbsNo" header="Wbs No" styleClass="align-center" [style]="{'width':'130px'}"></p-column>
+            <p-column field="quntity" header="Quntity" styleClass="align-center" [style]="{'width':'60px'}"></p-column>
+            <p-column field="unit" header="Unit" styleClass="align-center" [style]="{'width':'60px'}"></p-column>
+            <p-column field="unitPrice" header="Unit Price" styleClass="align-center" [style]="{'width':'70px'}"></p-column>
+            <p-column field="totalPrice" header="Total Price" styleClass="align-center" [style]="{'width':'70px'}"></p-column>
+            <p-column field="currencySymbol" header="Currency Symbol" styleClass="align-center" [style]="{'width':'60px'}"></p-column>
+            <p-column field="purchaseType" header="Purchase Type" styleClass="align-left" [style]="{'width':'120px'}"></p-column>
+            <p-column field="costCenter" header="Cost Center" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="purExpAccountName" header="Pur Exp Account Name" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="poType" header="PO Type" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="gemDetailId" header="GEM Detail ID" styleClass="align-center" [style]="{'width':'100px'}"></p-column>
+            <p-column field="gemProjectName" header="GEM Project Name" styleClass="align-center" [style]="{'width':'130px'}"></p-column>
+            <p-column field="gemWbsNo" header="GEM Wbs No" styleClass="align-center" [style]="{'width':'130px'}"></p-column>
+            <p-column field="projectRate" header="Project Rate" styleClass="align-center" [style]="{'width':'70px'}"></p-column>
+            <p-column field="projectPrice" header="Project Price" styleClass="align-center" [style]="{'width':'70px'}"></p-column>
+        </p-dataTable>
+        <p-paginator totalRecords="{{totalRecord1}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate1($event)"></p-paginator>
+    </p-tabPanel>
+</p-tabView>
+<div id="messageDetail"></div>

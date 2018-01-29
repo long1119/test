@@ -1,0 +1,34 @@
+<div class="time-sheet-version">
+    <div class="button-tab">
+        <button type="button" [(disabled)]="!selectedVersionData.length" pButton (click)="comparisionClick()" label="Comparision"></button>
+    </div>
+    <!-- (onRowClick)="onProjectRowClick($event)" -->
+    <p-dataTable class="ui-grid data-table project-info-table"
+        [value]="versionData" [(selection)]="selectedVersionData">
+        <p-column [style]="{'width': '2.5rem'}" selectionMode="multiple">
+            <template let-data="rowData" pTemplate="body">
+                <span *ngIf="data.version"></span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="version" header="Version"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="approvalDate" header="Approval Date"></p-column>
+    </p-dataTable>
+    <!-- Version Comparision (onRowClick)="onProjectRowClick($event)" -->
+    <p-dialog class="dialog version-comparision-diaolog" header="Version Comparision" [(visible)]="versionComparisionDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <button type="button" pButton (click)="exportVersionData()" label="Export"></button>
+        <p-dataTable scrollable="true" scrollHeight="30rem" selectionMode="multiple" class="ui-grid data-table project-info-table"
+                [value]="elementData" dataKey="headLists?[0].value">
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="elementId" header="Element ID" [sortable]="true"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="elementName" header="Element Name" [sortable]="true"></p-column>
+            <p-column *ngFor="let list of headLists" styleClass="ui-grid-col-5" field="{{list.value}}" header="{{list.label}}" [sortable]="true"></p-column>
+        </p-dataTable>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="versionComparisionCancel()" label="Close"></button>
+                <!-- <button type="button" pButton  -->
+                    <!-- (click)="versionComparisionSave()" label="Confirm"></button> -->
+            </div>
+        </p-footer>
+    </p-dialog>
+</div>

@@ -1,0 +1,21 @@
+@import '../../../sass/privateStyle';
+.nod-content {
+    .search-tab {
+        &>label {
+            text-align: center;
+            margin-top: .4rem;
+        }
+        &>div {
+            margin-top: .1rem;
+        }
+    }
+    .calendar-input {
+        width: 100%;
+        span {
+            width: 100%;
+            input {
+                width: 100%;
+            }
+        }
+    }
+}

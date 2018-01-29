@@ -1,0 +1,393 @@
+<p-tabView class="tabView" (onChange)="handleChange($event)">
+    <p-tabPanel header="RedZone Target">
+        <div *ngIf="userRoot" class="topBar">
+            <button pButton type="button" (click)="targetAddBtn()" label="Add"></button>
+        </div>
+        <p-dataTable [rows]="10" [value]="targetStore" class="data-table" scrollable="true" scrollHeight="30rem" (onRowClick)="targetGridRowClick($event)" selectionMode="single" [(selection)]="targetSelectedStore">
+            <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+            <p-column field="subject" header="Subject" styleClass="ui-grid-col-4 align-center"></p-column>
+            <p-column field="crdnTargetYear" header="Year" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="lastUpdateUser" header="Update User" styleClass="ui-grid-col-3"></p-column>
+            <p-column field="lastUpdateDate" header="Update Date" styleClass="ui-grid-col-3"></p-column>
+            <p-column *ngIf="userRoot" header="" styleClass="ui-grid-col-3 align-center">
+                <template pTemplate="body" let-item="rowData">
+                    <span *ngIf="item.id" class="editBtn" (click)="targetEditBtn(item)">Edit</span>
+                    <span *ngIf="item.id" class="editBtn delBtn" (click)="targetDelBtn(item)">Delete</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+        <p-paginator totalRecords="{{targetStoreLen}}" [rowsPerPageOptions]="[10,20,30]" rows="{{targetStoreRows}}" first="{{targetStoreFirst}}" pageLinkSize="3" (onPageChange)="targetPaginate($event)"></p-paginator>
+        <div *ngIf="showTargetSon">
+            <div class="targetSonTitle">RedZone Target of {{targetSelectedStore.crdnTargetYear}}</div>
+            <table class="gridTableMain">
+                <thead>
+                    <tr>
+                        <th>Group</th>
+                        <th>Target</th>
+                        <th>MD Target</th>
+                        <th>Project</th>
+                        <th>VLD</th>
+                        <th>Programs Target</th>
+                        <th *ngIf="userRoot"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor = "let item of targetSonStore; let i = index">
+                        <td *ngIf="i == step1GroupArr.indexOf(item['crdnTargetGroup'])" [attr.rowspan]="step1GroupArr.lastIndexOf(item['crdnTargetGroup']) - step1GroupArr.indexOf(item['crdnTargetGroup']) + 1">{{item.crdnTargetGroup}}</td>
+
+                        <td *ngIf="i == step1GroupArr.indexOf(item['crdnTargetGroup'])" [attr.rowspan]="step1GroupArr.lastIndexOf(item['crdnTargetGroup']) - step1GroupArr.indexOf(item['crdnTargetGroup']) + 1">{{item.groupTargetStr}}</td>
+
+                        <td *ngIf="i==0" [attr.rowspan]="targetSonStore.length">{{item.mdTargetStr}}</td>
+                        <td>{{item.projectsStr}}</td>
+                        <td>
+                            <span *ngIf="userRoot">
+                                <span *ngIf="item.id && item.vld" class="editBtn" (click)="targetToVldBtn(item)">{{item.vld}}</span>
+                                <span *ngIf="item.id && !item.vld" class="editBtn" (click)="targetToVldBtn(item)" style="display:inline-block;width:100%;height:100%;">-</span>
+                            </span>
+                            <span *ngIf="!userRoot">
+                                {{item.vld}}
+                            </span>
+                        </td>
+                        <td>{{item.projectsTargetStr}}</td>
+                        <td *ngIf="userRoot">
+                            <span *ngIf="item.id" class="editBtn" (click)="targetSonEditBtn(item)">Edit</span>
+                            <span *ngIf="item.id" class="editBtn delBtn" (click)="targetSonDelBtn(item)">Delete</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p-paginator totalRecords="{{targetSonStoreLen}}" rows="{{targetSonStoreRows}}" first="{{targetSonStoreFirst}}" (onPageChange)="targetSonPaginate($event)"></p-paginator>
+        </div>
+    </p-tabPanel>
+    <p-tabPanel header="RedZone Status">
+        <div class="topBar">
+            Year:
+            <p-dropdown autoWidth="false" [options]="addTargetYearStore" [(ngModel)]="redZoneYearSerch"></p-dropdown>
+            Quarter:
+            <p-dropdown autoWidth="false" [options]="redZoneSeasonSerchStore" [(ngModel)]="redZoneSeasonSerch"></p-dropdown>
+            <button pButton type="button" (click)="redZoneLookUpBtn()" label="Search"></button>
+        </div>
+        <div class="targetSonTitle">{{redZoneYearSerch}} Red/Yellow/Green Zone Status</div>
+        <div style="overflow:hidden;">
+            <div style="width:40%;float:left;height:35rem;">
+                <div style="height:35rem;border:1px solid #c9c9c9;position:relative;">
+                    <!-- <div *ngIf="reload" id="container" style="width:500px;height:160px;position:absolute;left:50%;transform:translateX(-50%);"></div> -->
+                    <iframe *ngIf="reload" id="childFrame" style="width:100%;height:100%;border-width:0px;" src="assets/chart/chart.html"></iframe>
+                </div>
+            </div>
+            <div style="width:59%;float:right;height:35rem;">
+                <div style="overflow:hidden;">
+                    <div style="width:33.33%;height:35rem;border:1px solid #c9c9c9;float:left;position:relative;">
+                        <!-- <div *ngIf="reload" echarts [options]="leftPipOptions" style="width:200px;height:130px;position:absolute;left:50%;transform:translateX(-50%);"></div> -->
+                        <iframe *ngIf="reload" id="leftChildFrame" style="width:100%;height:80%;border-width:0px;" src="assets/chart/leftChart.html"></iframe>
+                        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);">
+                            <table class="gridTable">
+                                <tbody>
+                                    <tr>
+                                        <td style="background-color:#fb4444;">Red</td>
+                                        <td>{{leftPipData['red']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#f3f32f;">Yellow</td>
+                                        <td>{{leftPipData['yellow']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#0dc30d;">Green</td>
+                                        <td>{{leftPipData['green']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#d0d0d0;">Total</td>
+                                        <td>{{leftTotal}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div style="width:33.33%;height:35rem;border:1px solid #c9c9c9;float:left;position:relative;">
+                        <!-- <div *ngIf="reload" echarts [options]="middlePipOptions" style="width:200px;height:130px;position:absolute;left:50%;transform:translateX(-50%);"></div> -->
+                        <iframe *ngIf="reload" id="middleChildFrame" style="width:100%;height:80%;border-width:0px;" src="assets/chart/middleChart.html"></iframe>
+                        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);">
+                            <table class="gridTable">
+                                <tbody>
+                                    <tr>
+                                        <td style="background-color:#fb4444;">Red</td>
+                                        <td>{{middlePipData['red']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#f3f32f;">Yellow</td>
+                                        <td>{{middlePipData['yellow']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#0dc30d;">Green</td>
+                                        <td>{{middlePipData['green']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#d0d0d0;">Total</td>
+                                        <td>{{middleTotal}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div style="width:33.33%;height:35rem;border:1px solid #c9c9c9;float:left;position:relative;">
+                        <!-- <div *ngIf="reload" echarts [options]="rightPipOptions" style="width:200px;height:130px;position:absolute;left:50%;transform:translateX(-50%);"></div> -->
+                        <iframe *ngIf="reload" id="rightChildFrame" style="width:100%;height:80%;border-width:0px;" src="assets/chart/rightChart.html"></iframe>
+                        <div style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);">
+                            <table class="gridTable">
+                                <tbody>
+                                    <tr>
+                                        <td style="background-color:#fb4444;">Red</td>
+                                        <td>{{rightPipData['red']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#f3f32f;">Yellow</td>
+                                        <td>{{rightPipData['yellow']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#0dc30d;">Green</td>
+                                        <td>{{rightPipData['green']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="background-color:#d0d0d0;">Total</td>
+                                        <td>{{rightTotal}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="targetSonTitle">{{redZoneYearSerch}} Total Target <button pButton type="button" (click)="exportOne()" [(disabled)]="!redZoneTargetStore.length" label="Export"></button></div>
+        <table class="gridTableMain">
+            <thead>
+                <tr>
+                    <th rowspan="2">Group</th>
+                    <th colspan="2">{{redZoneYearSerch}} Total</th>
+                    <th colspan="2">{{redZoneYearSerch}} Total MD</th>
+                    <th rowspan="2" style="width:22%;min-width:22%;max-width:22%">Programs</th>
+                    <th rowspan="2" style="width:13%;min-width:13%;max-width:13%">VLD</th>
+                    <th rowspan="2">{{redZoneYearSerch}} Target</th>
+                    <th rowspan="2">Red Zone</th>
+                    <th rowspan="2">Total DN</th>
+                    <th rowspan="2">{{redZoneYearSerch}} Actual</th>
+                </tr>
+                <tr>
+                    <th>Target</th>
+                    <th>Actual</th>
+                    <th>Target</th>
+                    <th>Actual</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor = "let item of redZoneTargetStore; let i = index">
+                    <td *ngIf="i == groupYearArr.indexOf(item['crdnTargetGroup'])" [attr.rowspan]="groupYearArr.lastIndexOf(item['crdnTargetGroup']) - groupYearArr.indexOf(item['crdnTargetGroup']) + 1">{{item.crdnTargetGroup}}</td>
+
+                    <td *ngIf="i == groupYearArr.indexOf(item['crdnTargetGroup'])" [attr.rowspan]="groupYearArr.lastIndexOf(item['crdnTargetGroup']) - groupYearArr.indexOf(item['crdnTargetGroup']) + 1">{{item.groupTargetStr}}</td>
+
+                    <td *ngIf="i == groupYearArr.indexOf(item['crdnTargetGroup'])" [attr.rowspan]="groupYearArr.lastIndexOf(item['crdnTargetGroup']) - groupYearArr.indexOf(item['crdnTargetGroup']) + 1" [ngStyle]="{'background-color':item.totalColor}">{{item.groupActualStr}}</td>
+
+                    <td *ngIf="i==0" [attr.rowspan]="redZoneTargetStore.length">{{item.mdTargetStr}}</td>
+                    <td *ngIf="i==0" [attr.rowspan]="redZoneTargetStore.length" [ngStyle]="{'background-color':item.mdColor}">{{item.mdActualStr}}</td>
+                    <td>{{item.projectsStr}}</td>
+                    <td>{{item.vld}}</td>
+                    <td>{{item.projectsTargetStr}}</td>
+                    <td>{{item.red}}</td>
+                    <td>{{item.total}}</td>
+                    <td [ngStyle]="{'background-color':item.color}">{{item.projectsActualStr}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="targetSonTitle">{{redZoneYearSerch}} Q{{redZoneSeasonSerch}} Total Target <button pButton type="button" (click)="exportTwo()" [(disabled)]="!redZoneTargetStore.length" label="Export"></button></div>
+        <table class="gridTableMain">
+            <thead>
+                <tr>
+                    <th rowspan="2">Group</th>
+                    <th colspan="2">{{redZoneYearSerch}} Q{{redZoneSeasonSerch}} Total</th>
+                    <th colspan="2">{{redZoneYearSerch}} Q{{redZoneSeasonSerch}} MD</th>
+                    <th rowspan="2" style="width:22%;min-width:22%;max-width:22%">Programs</th>
+                    <th rowspan="2" style="width:13%;min-width:13%;max-width:13%">VLD</th>
+                    <th rowspan="2">{{redZoneYearSerch}} Target</th>
+                    <th rowspan="2">Red Zone</th>
+                    <th rowspan="2">Total DN</th>
+                    <th rowspan="2">{{redZoneYearSerch}} Q{{redZoneSeasonSerch}} Actual</th>
+                </tr>
+                <tr>
+                    <th>Target</th>
+                    <th>Actual</th>
+                    <th>Target</th>
+                    <th>Actual</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor = "let item of redZoneJDTargetStore; let i = index">
+                    <td *ngIf="i == groupArr.indexOf(item['crdnTargetGroup'])" [attr.rowspan]="groupArr.lastIndexOf(item['crdnTargetGroup']) - groupArr.indexOf(item['crdnTargetGroup']) + 1">{{item.crdnTargetGroup}}</td>
+
+                    <td *ngIf="i == groupArr.indexOf(item['crdnTargetGroup'])" [attr.rowspan]="groupArr.lastIndexOf(item['crdnTargetGroup']) - groupArr.indexOf(item['crdnTargetGroup']) + 1">{{item.groupTargetStr}}</td>
+
+                    <td *ngIf="i == groupArr.indexOf(item['crdnTargetGroup'])" [attr.rowspan]="groupArr.lastIndexOf(item['crdnTargetGroup']) - groupArr.indexOf(item['crdnTargetGroup']) + 1" [ngStyle]="{'background-color':item.totalColor}">{{item.groupActualStr}}</td>
+
+                    <td *ngIf="i==0" [attr.rowspan]="redZoneJDTargetStore.length">{{item.mdTargetStr}}</td>
+                    <td *ngIf="i==0" [attr.rowspan]="redZoneJDTargetStore.length" [ngStyle]="{'background-color':item.mdColor}">{{item.mdActualStr}}</td>
+                    <td>{{item.projectsStr}}</td>
+                    <td>{{item.vld}}</td>
+                    <td>{{item.projectsTargetStr}}</td>
+                    <td>{{item.red}}</td>
+                    <td>{{item.total}}</td>
+                    <td [ngStyle]="{'background-color':item.color}">{{item.projectsActualStr}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </p-tabPanel>
+</p-tabView>
+<p-dialog header="Select Programs" [(visible)]="programDisplay" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="topBar">
+        Brand:
+        <p-dropdown autoWidth="false" [options]="brandSerchStore" [(ngModel)]="brandSerch"></p-dropdown>
+        Platform:
+        <p-dropdown autoWidth="false" [options]="platformSerchStore" [(ngModel)]="platformSerch"></p-dropdown>
+        Program Code:<input type="text" pInputText [(ngModel)]="projectCodeSearch" class="searchInput">
+        <button pButton type="button" (click)="programLookUpBtn()" label="Search"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="programStore" class="data-table" scrollable="true" scrollHeight="30rem" (onRowDblclick)="programDbclick($event)">
+        <!-- <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column> -->
+        <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="modelPlatform" header="Platform" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="vldName" header="VLD" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="brandName" header="Brand" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="bodyStyle" header="Body Style" styleClass="ui-grid-col-1"></p-column>
+    </p-dataTable>
+    <p-paginator totalRecords="{{programStoreLen}}" [rowsPerPageOptions]="[10,20,30]" rows="{{programStoreRows}}" first="{{programStoreFirst}}" pageLinkSize="3" (onPageChange)="programPaginate($event)"></p-paginator>
+</p-dialog>
+<p-dialog header="Select Users" [(visible)]="userDisplay" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="topBar">
+        Department:
+        <input (keyup)="userEnterSearch($event)" style="width:120px" type="text" pInputText [(ngModel)]="departmentSearch">
+        User Name:
+        <input (keyup)="userEnterSearch($event)" style="width:120px" type="text" pInputText [(ngModel)]="userNameSearch">
+        <button pButton type="button" (click)="userLookUpBtn()" label="Search"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="userStore" class="data-table" scrollable="true" scrollHeight="30rem" (onRowDblclick)="userDbclick($event)">
+        <p-column field="userName" header="User Name" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="employeeCode" header="Employee ID" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="jobPosition" header="Job" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="telephone" header="TelePhone" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="emailAddress" header="Email" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="departmentName" header="Department" styleClass="ui-grid-col-1"></p-column>
+        <p-column field="masterName" header="Manager" styleClass="ui-grid-col-1"></p-column>
+    </p-dataTable>
+<p-paginator totalRecords="{{userStoreLen}}" [rowsPerPageOptions]="[10,20,30]" rows="{{userStoreRows}}" first="{{userStoreFirst}}" pageLinkSize="3" (onPageChange)="userPaginate($event)"></p-paginator>
+</p-dialog>
+<p-dialog header="RedZone Target" [(visible)]="addTargetDisplay" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog" (onAfterHide)="onHideFun()">
+    <div style="min-height:40rem">
+        <div class="topBar" *ngIf="addTarget">
+        Subject:
+        <input style="width:160px" type="text" disabled="true" pInputText [(ngModel)]="addTargetSubject">
+        Year:
+        <p-dropdown autoWidth="false" [options]="addTargetYearStore" [(ngModel)]="addTargetYear" (onChange)="selectionChange($event)"></p-dropdown>
+    </div>
+    <div>
+        <button pButton type="button" (click)="addTargetSonBtn()" label="Add"></button>
+    </div>
+    <table class="gridTableMain">
+        <thead>
+            <tr>
+                <th>Group</th>
+                <th>Target</th>
+                <th>MD Target</th>
+                <th>Project</th>
+                <th>VLD</th>
+                <th>Programs Target</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor = "let item of targetSonStore; let i = index">
+                <td *ngIf="i == step1GroupArr.indexOf(item['crdnTargetGroup'])" [attr.rowspan]="step1GroupArr.lastIndexOf(item['crdnTargetGroup']) - step1GroupArr.indexOf(item['crdnTargetGroup']) + 1">{{item.crdnTargetGroup}}</td>
+
+                <td *ngIf="i == step1GroupArr.indexOf(item['crdnTargetGroup'])" [attr.rowspan]="step1GroupArr.lastIndexOf(item['crdnTargetGroup']) - step1GroupArr.indexOf(item['crdnTargetGroup']) + 1">{{item.groupTargetStr}}</td>
+
+                <td *ngIf="i==0" [attr.rowspan]="targetSonStore.length">{{item.mdTargetStr}}</td>
+                <td>{{item.projectsStr}}</td>
+                <td>
+                    <span *ngIf="item.id && item.vld" style="margin-right:0" class="editBtn" (click)="targetToVldBtn(item)">{{item.vld}}</span>
+                    <span *ngIf="item.id && !item.vld" style="margin-right:0" class="editBtn" (click)="targetToVldBtn(item)" style="display:inline-block;width:100%;height:100%;">-</span>
+                </td>
+                <td>{{item.projectsTargetStr}}</td>
+                <td>
+                    <span *ngIf="item.id" class="editBtn" (click)="targetSonEditBtn(item)">Edit</span>
+                    <span *ngIf="item.id" class="editBtn delBtn" (click)="targetSonDelBtn(item)">Delete</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p-paginator totalRecords="{{targetSonStoreLen}}" rows="{{targetSonStoreRows}}" first="{{targetSonStoreFirst}}" (onPageChange)="targetSonPaginate($event)"></p-paginator>
+    </div>
+</p-dialog>
+<p-dialog header="RedZone {{selectSonTarget.crdnTargetYear}} Target Item" [(visible)]="editTargetSonDisplay" width="450" minHeight=800 [responsive]="true" modal="modal" class="dialog generalDialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Group:</span>
+                <p-dropdown autoWidth="false" [options]="groupStore" [(ngModel)]="groupValue" (onChange)="bindData()" appendTo="body"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Target:</span>
+                <input type="number" min="0" (keydown)="msgservice.checkNumValue($event,100)" pInputText [(ngModel)]="targetValue">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">MD Target:</span>
+                <input type="number" min="0" pInputText (keydown)="msgservice.checkNumValue($event,100)" [(ngModel)]="mdTargetValue">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Projects Name:</span>
+                <input type="text" pInputText [(ngModel)]="projectsNameValue" maxlength="15">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required" style="float:left;margin-top:10px;">Programs:</span>
+                <p-dataGrid [value]="selectProgramStore" class="dataView">
+                    <template let-items pTemplate="item">
+                        <div class="dataViewContainer">
+                            <div>{{items.programCode}}
+                                <i class="fa fa-close" (click)="delProgram(items)" style="cursor:pointer"></i>
+                            </div>
+                        </div>
+                    </template>
+                </p-dataGrid>
+                <button style="background-color:#2399e5;color:#fff;border:1px solid #2399e5" (click)=selectPrograms()>Select</button>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Programs Target:</span>
+                <input type="number" min="0" pInputText (keydown)="msgservice.checkNumValue($event,100)" [(ngModel)]="programsTargetValue">
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button *ngIf="!normal" pButton type="button" (click)="getTargetSonValueBtn()" label="Confirm" [(disabled)]="!groupValue || !targetValue || !mdTargetValue || !projectsNameValue || !selectProgramStore.length || !programsTargetValue" style="margin-right:10px"></button>
+        <button *ngIf="normal" pButton type="button" (click)="saveTargetSonEditBtn()" label="Confirm" [(disabled)]="!groupValue || !targetValue || !mdTargetValue || !projectsNameValue || !selectProgramStore.length || !programsTargetValue" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="cancelTargetSonEditBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+<p-confirmDialog></p-confirmDialog>

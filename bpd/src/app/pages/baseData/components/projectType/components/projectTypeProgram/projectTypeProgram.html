@@ -1,0 +1,53 @@
+<div class="project-type-program">
+    <button pButton type="button" [ngClass]="{'content-add': true}" (click)="addClick()" label="Upload"></button>
+    <!-- <button pButton *ngIf="localStorageAuthority" type="button" [ngClass]="{'content-add': true}" (click)="addClick()" label="Upload"></button> -->
+    <p-dataTable class="ui-grid data-table project-info-table" selectionMode="single" [value]="arTemplateData" [(selection)]="selectedVersionData" scrollable="true" scrollHeight="30rem">
+        <!-- <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" header="Version">
+            <template let-data="rowData" pTemplate="body">
+                <span class="edit-span" (click)="showViewable(data)">{{data.version}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-4" field="status" header="Approval Date"></p-column> -->
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-7" field="fileName" header="File Name"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-7" field="createUserName" header="Create User"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-7" field="createTime" header="Date"></p-column>
+        <!--  *ngIf="localStorageAuthority" -->
+        <p-column styleClass="ui-grid-col-5" header="">
+        <!-- <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-5" header=""> -->
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="data.attId" class="edit-span" (click)="editClick(idx,data)">File Upload</span>
+                <span *ngIf="data.attId && !data.createTime" class="no-edit-span" (click)="downloadClick(idx,data)">Download</span>
+                <span *ngIf="data.attId && data.createTime" class="edit-span" (click)="downloadClick(idx,data)">Download</span>
+                <span *ngIf="data.attId" class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- 添加界面 -->
+    <p-dialog class="dialog" header="PT Reference Info" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <p-fileUpload mode="basic" name="file" url="/bpd-proj/bpd/att/upload?attId={{uuId}}&bussinessId={{projectType}}" accept="xlsm" maxFileSize="1000000"
+            (onBeforeUpload)="onBasicBeforeUpload($event)" (onSelect)="onBasicSelect($event)" (onUpload)="onBasicUpload($event)"></p-fileUpload>
+    </p-dialog>
+    <!-- 错误展示 -->
+    <p-dialog class="dialog" styleClass="parameter-dialog" header="Project Type Program" [(visible)]="errDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <p-dataTable scrollable="true" scrollHeight="30rem" class="ui-grid-row data-table" [value]="errMessage">
+            <p-column styleClass="ui-grid-col-5" field="colIndex" header="Col"></p-column>
+            <p-column styleClass="ui-grid-col-4" field="rowIndex" header="Row"></p-column>
+            <p-column styleClass="ui-grid-col-4" field="errorInfo" header="Err Info"></p-column>
+        </p-dataTable>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="Delete Project Type Program" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete This Program?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo(idx,data)" label="No"></button>
+                <button type="button" pButton  (click)="deleteYes(idx,data)" label="Yes"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

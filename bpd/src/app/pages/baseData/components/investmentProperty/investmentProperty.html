@@ -1,0 +1,94 @@
+<div class="ui-grid investment-content">
+    <p-tabView class="tab-view">
+        <p-tabPanel header="Investment Property Group">
+            <property-group (groupNameOut)="rejName($event)" (groupIdOut)="rejPro($event)"></property-group>
+        </p-tabPanel>
+        <p-tabPanel header="Investment Property">
+            <button *ngIf="localStorageAuthority" pButton type="button" class="add-click" (click)="addClick()" label="Add"></button>
+            <!--  [paginator]="true" rows="10" -->
+            <p-dataTable [value]="investmentData" scrollable="true" scrollHeight="30rem" class="ui-grid-row data-table">
+                <p-column styleClass="ui-grid-col-1" header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                        {{idx + 1}}
+                    </template>
+                </p-column>
+                <p-column styleClass="ui-grid-col-3" field="investmentPropertyName" header="Property Name"></p-column>
+                <p-column styleClass="ui-grid-col-2" field="investmentProperty" header="Property Code(WBS L6)"></p-column>
+                <p-column styleClass="ui-grid-col-2" field="groupPropertyName" header="Property Group" ></p-column>
+                <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2">
+                    <template pTemplate="header">
+                        
+                    </template>
+                    <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                        <span class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                        <span class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+                    </template>
+                </p-column>
+            </p-dataTable>
+        </p-tabPanel>
+    </p-tabView>
+    
+    <!-- 添加页面 -->
+    <p-dialog class="dialog" header="Investment Property" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="propertyName">Property Name :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="36" pInputText id="propertyName" [(ngModel)]="dialogName" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="propertyCode">Property Code :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="2" pInputText id="propertyCode" [(ngModel)]="dialogCode" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="propertyGroup">Property Group :</label></div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="propertyGroupOption" [(ngModel)]="selectedPropertyGroup"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogCode || !dialogName" pButton  (click)="addSave()" label="Confrim"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 编辑页面 -->
+    <p-dialog class="dialog" header="Investment Property" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="propertyName">Property Name :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="36" pInputText id="propertyName" [(ngModel)]="dialogName" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="propertyCode">Property Code :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="2" pInputText id="propertyCode" [(ngModel)]="dialogCode" /></div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label disabled for="propertyGroup">Property Group :</label></div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" [options]="propertyGroupOption" [(ngModel)]="selectedPropertyGroup"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="editCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogCode || !dialogName" pButton  (click)="editSave()" label="Confrim"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="Investment Property" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo()" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+     <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

@@ -1,0 +1,15 @@
+<div class="approve-log">
+    <p-dataTable scrollable="true" scrollHeight="30rem" selectionMode="single" class="ui-grid data-table" [value]="approvedData">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="approvedData[idx].taskName">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="taskName" header="Step Name"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="user.userName" header="Approved User"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="defName" header="Flow Name"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="comments" header="Comments"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="isAgree" header="Is Agree"></p-column>
+        <!-- <p-column styleClass="ui-grid-col-3" field="endTime" header="End Time"></p-column> -->
+    </p-dataTable>
+</div>

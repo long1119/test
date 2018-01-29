@@ -1,0 +1,297 @@
+
+<div class="investmentStatusBody">
+    <div class="ui-g">
+        <div class="ui-g-1" style="padding-top:0.8rem;">Project Type:</div>
+        <div class="ui-g-2">
+            <p-dropdown [options]="projectTypes" [(ngModel)]="selectedType"></p-dropdown>
+        </div>
+        <div class="ui-g-1" style="padding-top:0.8rem;">Project Code:</div>
+        <div class="ui-g-2">
+            <input (keyup)="checkEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCode"> 
+        </div>
+        <div class="ui-g-1">
+            <button pButton type="button" (click)="check()" label="Search"></button>
+        </div>
+        <div class="ui-g-4"></div>
+        <div class="ui-g-1">
+            <p-checkbox style="float:right" [(ngModel)]="checked" binary="true" (onChange)="checkedChange()"></p-checkbox>
+        </div>
+    </div>
+    <p-dataTable [rows]="10" [value]="projectTable" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="projectCode" header="Project Code" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="projectName" header="Project Name" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="projectTypeName" header="Project Type" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="approveInvestmentDate" header="Approved Date" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="approveInvestment" header="Approved Investment (RMB)" styleClass="ui-grid-col-3 align-right"></p-column>
+        <p-column field="inevstmentCharavter" header="Investment Character" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="userName" header="Investment Manager" styleClass="ui-grid-col-2"></p-column>
+        <!-- <p-column field="projectStatus" header="Status" styleClass="ui-grid-col-2"></p-column> -->
+        <p-column header="" styleClass="ui-grid-col-2 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id" class="blue" (click)="openBox(item.projectCode,item.adProjectCode,item.projectType)">View</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+    <p-dialog class="dialog" header="Investment Status" [(visible)]="showStatus" model="model" width="1200" [responsive]="true">
+        <div class="bodyTwo">
+            <p-panel header="{{prjCode}} Investment Summary By Property" [toggleable]="true">
+                <p-header>
+                    <button pButton type="button" (click)="switch()" label="Switch Project" style="margin-left:20px;"></button>
+                </p-header>
+                <div class="ui-g show-data" *ngIf="investmentTable.length">
+                    <div class="ui-g-6">
+                        <div class="ui-g-12 pie-card">
+                            <div class="pie-title">The use of investment statistics</div>
+                            <!-- <p-chart *ngIf="fuck" type="pie" [data]="pieData"></p-chart> -->
+                            <div echarts *ngIf="fuck" [options] = "pieData" style="height:227px;"></div>
+                        </div>
+                    </div>
+                    <div class="ui-g-6">
+                        <div class="ui-g-12 pie-card">
+                            <div class="pie-title">The use of investment statistics</div>
+                            <p-chart *ngIf="fuck" type="bar" [data]="barData"></p-chart>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Group</th>
+                            <th style="text-align:center;">Current Budget</th>
+                            <th style="text-align:center;">Total Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of investmentTable;let i=index">
+                            <td>{{option.group}}</td>
+                            <td style="text-align:right;">{{option.currentBudget|number:'1.2-2'}}</td>
+                            <td style="text-align:right;">{{option.totalCost|number:'1.2-2'}}</td>
+                        </tr>
+                        <tr *ngIf="investmentTable.length<1">
+                            <td colspan="3" style="padding:0;">No records found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-panel>
+            <!-- <div class="head-title ui-g" style="margin:0;">
+                <div class="ui-g-6" style="padding-top:0.8rem;">{{prjCode}} Investment Summary By Property</div>
+                <div class="ui-g-2">
+                    <button pButton type="button" (click)="switch()" label="Switch Project" style="background-color:#F2F2F2;color:black;"></button>
+                </div>
+            </div>
+            <div class="ui-g show-data">
+                <div class="ui-g-6">
+                    <div class="ui-g-12 pie-card">
+                        <div class="pie-title">The use of investment statistics</div>
+                        <p-chart *ngIf="fuck" type="pie" [data]="pieData"></p-chart>
+                    </div>
+                </div>
+                <div class="ui-g-6">
+                    <div class="ui-g-12 pie-card">
+                        <div class="pie-title">The use of investment statistics</div>
+                        <p-chart *ngIf="fuck" type="bar" [data]="barData"></p-chart>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Group</th>
+                        <th style="text-align:center;">Current Budget</th>
+                        <th style="text-align:center;">Total Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let option of investmentTable;let i=index">
+                        <td>{{option.group}}</td>
+                        <td style="text-align:right;">{{option.currentBudget}}</td>
+                        <td style="text-align:right;">{{option.totalCost}}</td>
+                    </tr>
+                </tbody>
+            </table> -->
+            <p-panel header="{{prjCode}} Investment Summary By Region" [toggleable]="true" [style]="{'margin-top':'10px'}">
+                <table class="table table-bordered">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th colspan="2" style="vertical-align:middle;">AREA  区域</th>
+                            <th style="text-align:center;vertical-align:middle;">Appr.Budg.<br>(A)</th>
+                            <th style="text-align:center;vertical-align:middle;">Current Budg.<br>(B)</th>
+                            <th style="text-align:center;vertical-align:middle;">Release Budg.<br>(C)</th>
+                            <th style="text-align:center;vertical-align:middle;">Release Budg.%<br>(=C/B%)</th>
+                            <th style="text-align:center;vertical-align:middle;">Total Cost<br>(D)</th>
+                            <th style="text-align:center;">% vs.Cur.<br>(=D/C%)</th>
+                            <th style="text-align:center;vertical-align:middle;">To Be Spend<br>(E)</th>
+                            <th style="text-align:center;vertical-align:middle;">Forecast<br>(F)</th>
+                            <th style="text-align:center;vertical-align:middle;">% vs.Appr.<br>(=F/A%)</th>
+                            <th style="text-align:center;">% vs.Cur.<br>(=F/B%)</th>
+                            <th style="text-align:center;vertical-align:middle;">Fcst.Bal.vs.Rel<br>(=C-F)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of summaryTable">
+                            <td>{{option.regionCategoryNameEnglish}}</td>
+                            <td>{{option.regionCategoryNameChinese}}</td>
+                            <td style="text-align:right;">{{option.apprBudget|number:'1.2-2'}}</td>
+                            <td style="text-align:right;">{{option.currentBudget|number:'1.2-2'}}</td>
+                            <td style="text-align:right;">{{option.releasedBudget|number:'1.2-2'}}</td>
+                            <td style="text-align:right;">{{option.rb}}%</td>
+                            <td style="text-align:right;">{{option.totalCost|number:'1.2-2'}}</td>
+                            <td style="text-align:right;">{{option.tc}}%</td>
+                            <td style="text-align:right;">{{option.toBeSpend|number:'1.2-2'}}</td>
+                            <td style="text-align:right;">{{option.budgetForecast|number:'1.2-2'}}</td>
+                            <td style="text-align:right;">{{option.fa}}%</td>
+                            <td style="text-align:right;">{{option.fb}}%</td>
+                            <td style="text-align:right;">{{option.cf|number:'1.2-2'}}</td>
+                        </tr>
+                        <tr *ngIf="summaryTable.length<1">
+                            <td colspan="13" style="padding:0;">No records found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-panel>
+            <!-- <div class="head-title" style="height:40px;line-height:40px;">{{prjCode}} Investment Summary By Region</div>
+            <table class="table table-bordered">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Region Category</th>
+                        <th>Appr.Budg.</th>
+                        <th>Current Budg.</th>
+                        <th>Release Budg.</th>
+                        <th>Release Budg.%</th>
+                        <th>Total Cost</th>
+                        <th>%vs.Cur.</th>
+                        <th>To Be Spend</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let option of summaryTable">
+                        <td>{{option.regionCategoryName}}</td>
+                        <td>{{option.apprBudget}}</td>
+                        <td>{{option.currentBudget}}</td>
+                        <td>{{option.releasedBudget}}</td>
+                        <td>{{option.rb}}%</td>
+                        <td>{{option.totalCost}}</td>
+                        <td>{{option.tc}}</td>
+                        <td>{{option.toBeSpend}}</td>
+                    </tr>
+                </tbody>
+            </table> -->
+        </div>
+    </p-dialog>
+    <p-dialog class="dialog" header="Select Investment Project" [(visible)]="selectInvestmentDialog" width="1060">
+        <!-- <div class="ui-g">
+            <div class="ui-g-1" style="padding-top:0.8rem;font-size:0.8rem;">Project Type:</div>
+            <div class="ui-g-2">
+                <p-dropdown [options]="projectTypes" [(ngModel)]="selectedType"></p-dropdown>
+            </div>
+            <div class="ui-g-1" style="padding-top:0.8rem;font-size:0.8rem;">Project Code:</div>
+            <div class="ui-g-2">
+                <input (keyup)="checkEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCode"> 
+            </div>
+
+            <div class="ui-g-1" style="padding-top:0.8rem;font-size:0.8rem;">Project Name:</div>
+            <div class="ui-g-2">
+                <input (keyup)="checkEnterSearch($event)" type="text" pInputText [(ngModel)]="projectName"> 
+            </div>
+
+            <div class="ui-g-1" style="padding-top:0.8rem;font-size:0.8rem;">Classification:</div>
+            <div class="ui-g-2">
+                <input (keyup)="checkEnterSearch($event)" type="text" pInputText [(ngModel)]="Classification"> 
+            </div>
+
+            <div class="ui-g-1">
+                <button pButton type="button" (click)="check()" label="Search"></button>
+            </div>
+        </div> -->
+        <div class="topBar">
+            Project Type:<p-dropdown [options]="projectTypes" [(ngModel)]="selectedType"></p-dropdown>
+            Project Code:<input (keyup)="checkEnterSearch($event)" type="text" pInputText [(ngModel)]="projectCode"> 
+            Project Name:<input (keyup)="checkEnterSearch($event)" type="text" pInputText [(ngModel)]="projectName">
+            Classification:<input (keyup)="checkEnterSearch($event)" type="text" pInputText [(ngModel)]="Classification">
+            <button pButton type="button" (click)="check()" label="Search"></button>
+        </div>
+        <!-- <div style="width:1021px;margin:0 auto;">
+            <table class="table-bordered">
+                <colgroup>
+                    <col width="34">
+                    <col width="90">
+                    <col width="173">
+                    <col width="130">
+                    <col width="92">
+                    <col width="66">
+                    <col width="120">
+                    <col width="78">
+                    <col width="78">
+                    <col width="78">
+                    <col width="17">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <td style="vertical-align:middle;">No</td>
+                        <td style="vertical-align:middle;">Project Code</td>
+                        <td style="vertical-align:middle;">Project Name</td>
+                        <td style="vertical-align:middle;">Project Type</td>
+                        <td style="vertical-align:middle;">Classification</td>
+                        <td style="vertical-align:middle;">Category</td>
+                        <td style="vertical-align:middle;">Approved Date</td>
+                        <td style="text-align:center;">Approved<br>Investment<br>(MRMB)</td>
+                        <td style="text-align:center;">Investment<br>Character</td>
+                        <td style="text-align:center;">Investment<br>Manager</td>
+                        <td></td>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <div style="width:1016px;">
+            <div style="height:320px;overflow-y:auto;margin:0 auto;">
+                <table class="table-bordered table-hover">
+                    <colgroup>
+                        <col width="34">
+                        <col width="90">
+                        <col width="173">
+                        <col width="130">
+                        <col width="92">
+                        <col width="66">
+                        <col width="120">
+                        <col width="78">
+                        <col width="78">
+                        <col width="78">
+                    </colgroup>
+                    <tbody>
+                        <tr *ngFor="let option of projectTable;let i=index" (dblclick)="returnNeed(option.projectCode,option.adProjectCode,option.projectType,i)" style="cursor:pointer;">
+                            <td>{{i+1}}</td>
+                            <td>{{option.projectCode}}</td>
+                            <td>{{option.projectName}}</td>
+                            <td>{{option.projectTypeName}}</td>
+                            <td>{{option.levelName}}</td>
+                            <td>{{option.categoryName}}</td>
+                            <td>{{option.approveInvestmentDate}}</td>
+                            <td>{{option.approveInvestment}}</td>
+                            <td>{{option.inevstmentCharavter}}</td>
+                            <td>{{option.userName}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+        </div> -->
+        <p-dataTable [rows]="10" [value]="projectTable" class="data-table" [rowHover]=true (onRowDblclick)="returnNeed($event)" scrollable="true" scrollHeight="30rem">
+            <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+            <p-column field="projectCode" header="Project Code" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="projectName" header="Project Name" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="projectTypeName" header="Project Type" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="levelName" header="Classification" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="categoryName" header="Category" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="approveInvestmentDate" header="Approved Date" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="approveInvestment" header="Approved Investment (RMB)" styleClass="ui-grid-col-3 align-right"></p-column>
+            <p-column field="inevstmentCharavter" header="Investment Character" styleClass="ui-grid-col-2"></p-column>
+            <p-column field="userName" header="Investment Manager" styleClass="ui-grid-col-2"></p-column>
+            <!-- <p-column field="projectStatus" header="Status" styleClass="ui-grid-col-2"></p-column> -->
+        </p-dataTable>
+        <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+    </p-dialog>
+</div>

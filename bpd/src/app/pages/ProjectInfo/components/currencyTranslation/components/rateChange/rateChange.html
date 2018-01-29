@@ -1,0 +1,135 @@
+<div class="rate-change">
+    <div *ngIf="localStorageAuthority" class="rate-change-buttons">
+        <button pButton [(disabled)]="!changeProjectId" type="button" (click)="addClick()" label="Add"></button>
+        <button pButton [(disabled)]="!changeProjectId" type="button" (click)="fxClick()" label="View Fx Forcast"></button>
+        <button pButton [(disabled)]="!changeProjectId" type="button" (click)="deleteClick()" label="Delete"></button>
+        <div *ngIf="changeSop" style="float:right">SOP Time: {{changeSop}}</div>
+    </div>
+    <div class="table-layout">
+        <p-dataTable resizableColumns="true" columnResizeMode="expand" class="data-table ui-grid" [value]="rateChangeData" selectionMode="single">
+            <p-column header="NO" styleClass="column-width align-left">
+                <template let-idx="rowIndex" pTemplate="body">
+                    <span *ngIf="rateChangeData[idx].propertyGroupName">
+                    {{idx + 1}}
+                </span>
+                </template>
+            </p-column>
+            <p-column styleClass="trible-column-width align-left" field="propertyGroupName" header="Investment Property Group"></p-column>
+            <!--   -->
+            <p-column styleClass="double-column-width align-right" *ngFor="let list of yearListData" field="{{list}}" header="{{list}}"></p-column>
+        </p-dataTable>
+    </div>
+    <!-- <div class="content-changes">
+        <button pButton type="button" label="Average Rate"></button>
+    </div>
+    <p-dataTable class="data-table ui-grid" [value]="currencyData">
+        <p-column styleClass="ui-grid-col-2" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                {{idx + 1}}
+            </template>
+        </p-column>
+        <p-column field="currencyName" header="Currency" styleClass="ui-grid-4" [sortable]="true"></p-column>
+        <p-column field="averageExchangeRate" header="Average Rate" styleClass="ui-grid-4" [sortable]="true"></p-column>
+    </p-dataTable> -->
+    <!-- 添加界面 -->
+    <p-dialog class="dialog add-dialog" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <p-header>
+            <div>
+                <div class="dialog-count">1</div>
+                Select Investment Property
+            </div>
+            <div>
+                <div class="dialog-count">2</div>
+                Set Investment Weight
+            </div>
+        </p-header>
+        <div class="dialog-content">
+            <div class="ui-grid-col-1">
+                <label>SOP Time :</label>
+            </div>
+            <div class="ui-grid-col-2">
+                <input type="text"[(ngModel)]="changeSop">
+            </div>
+        </div>
+        <div class="dialog-content" *ngIf="!stepSelect">
+            <p-dataTable class="ui-grid data-table" [value]="categoryData" (onRowDblclick)="onParameterRowDblclick($event)"
+                [(selection)]="selectedParameter">
+                <div *ngIf="selectMode == 'mutiple'">
+                    <p-column [style]="{'width':'2.5rem'}" selectionMode="multiple">
+                    </p-column>
+                </div>
+                <p-column styleClass="ui-grid-col-2" header="NO">
+                    <template let-idx="rowIndex" pTemplate="body">
+                        <span *ngIf="categoryData[idx].groupPropertyName">
+                        {{idx + 1}}
+                        </span>
+                    </template>
+                </p-column>
+                <p-column styleClass="ui-grid-col-10" field="groupPropertyName" header="Investment Group"></p-column>
+            </p-dataTable>
+            <div class="ui-grid">
+                <div class="ui-grid-col-2">
+                    <label class="required input-label">Start Year :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-dropdown [(disabled)]="stepOne" [options]="starYearOption" [(ngModel)]="dialogStarYear"></p-dropdown>
+                </div>
+                <div class="ui-grid-col-2">
+                    <label class="required input-label">Year Count :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input [(disabled)]="stepOne" type="text"  (keydown)="messageService.checkNumValue($event, 20)" [(ngModel)]="dialogYearCount">
+                </div>
+            </div>
+        </div>
+        <div class="dialog-content" *ngIf="stepSelect">
+            <year-rate [yearEditableListData]="yearEditableListData" [rateChangeEditableData]="rateChangeEditableData" (editedDataOut)="editedDataRec($event)"></year-rate>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                <button type="button" *ngIf="!stepSelect" [(disabled)]="!dialogYearCount || !dialogStarYear || !selectedParameter.length" pButton
+                     (click)="nextStepClick()" label="Next Step"></button>
+                <button type="button" [(disabled)]="confirmCheck" *ngIf="stepSelect" pButton  (click)="addSave()" label="Confirm"></button>
+                <button type="button" *ngIf="stepSelect" pButton  (click)="priorStepClick()" label="Prior Step"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- Fx界面 -->
+    <p-dialog class="dialog add-dialog" resizableColumns="true" columnResizeMode="expand" [(visible)]="fxDialog"  [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="dialog-content">
+            <div class="ui-grid-col-2">
+                <label>Forcast Info :</label>
+            </div>
+            <div class="ui-grid-col-4">
+                <input readonly type="text"[(ngModel)]="changeForcastInfo">
+            </div>
+        </div>
+        <p-dataTable class="data-table" [value]="fxViewData">
+            <p-column header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                    <span *ngIf="fxViewData[idx].currencyName">
+                    {{idx + 1}}
+                </span>
+                </template>
+            </p-column>
+            <p-column field="currencyName" header="Currency Name"></p-column>
+            <p-column field="currencyCode" header="Currency Code"></p-column>
+            <p-column *ngFor="let list of fxYearListData" field="{{list}}" header="{{list}}"></p-column>
+        </p-dataTable>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="Ar Project Delete" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

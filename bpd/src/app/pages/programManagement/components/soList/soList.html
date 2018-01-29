@@ -1,0 +1,87 @@
+<div class="so-list">
+    <div class="ui-gird button-content">
+        <div *ngIf="localStorageAuthority" class="ui-grid-col-1">
+            <button pButton type="button" label="Import" (click)="addClick()"></button>
+        </div>
+        
+        <div class="ui-grid-col-1">
+            <button pButton type="button" label="Export" (click)="exportClick()"></button>
+        </div>
+    </div>
+    <div class="ui-grid button-content">
+        <!-- <div class="ui-grid-col-1">
+            <label for="">Brand:</label>
+        </div>
+        <div class="ui-grid-col-1">
+            <p-dropdown class="drop-down" autoWidth="false" [options]="brandOption" [(ngModel)]="selectedBrand"></p-dropdown>
+        </div> -->
+        <div class="ui-grid-col-1">
+            <label for="">Model Year:</label>
+        </div>
+        <div class="ui-grid-col-1">
+            <p-dropdown class="drop-down" autoWidth="false" [options]="modelYearOption" [(ngModel)]="selectedModelYear"></p-dropdown>
+        </div>
+        <div class="ui-grid-col-2">
+            <label for="">Name Plate/Brand:</label>
+        </div>
+        <div class="ui-grid-col-2">
+            <p-dropdown class="drop-down" autoWidth="false" [options]="namePlateOption" [(ngModel)]="selectedNamePlate" filter="true"></p-dropdown>
+        </div>
+        <div class="ui-grid-col-1">
+            <label for="">VPPS:</label>
+        </div>
+        <div class="ui-grid-col-2">
+            <p-dropdown class="drop-down" autoWidth="false" [options]="vppsOption" [(ngModel)]="selectedVpps"></p-dropdown>
+        </div>
+        <div class="ui-grid-col-1">
+            <label for="">RPO:</label>
+        </div>
+        <div class="ui-grid-col-1">
+            <input (keyup)="lookupEnterSearch($event)" pInputText id="regionCode" [(ngModel)]="dialogRpo" />
+        </div>
+        <div class="ui-grid-col-1">
+            <button pButton type="button" label="Search" (click)="lookUpClick()"></button>
+        </div>
+    </div>
+    <p-dataTable class="ui-grid data-table" [value]="soListData" [rows]="10">
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" header="No">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="soListData[idx].modelYear">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-3" field="nameplateBrand" header="Name Plate/Brand"></p-column>
+        <!-- <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="brand" header="Brand"></p-column> -->
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="modelYear" header="Model Year"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="volumes" header="Volumes"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="vpps" header="VPPS"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="rpo" header="RPO"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="optionName" header="Option Name"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="restrictions" header="Restrictions"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="cSalePercent" header="Percentage"></p-column>
+    </p-dataTable>
+    <p-paginator rows="10" first="{{soListFontFirst}}" totalRecords="{{soListPaginatorTotal}}" (onPageChange)="soListPaginate($event)"></p-paginator>
+    <!-- 添加界面 -->
+    <p-dialog class="dialog" header="S&O List" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <!-- <p-dropdown class="drop-down" autoWidth="false" [options]="listTypeOption" [(ngModel)]="selectedListType"></p-dropdown> -->
+        <!-- ?type={{selectedListType}} -->
+        <p-fileUpload mode="basic" name="file" url="/bpd-proj/bpd/soList/importSOList" accept="xlsm" maxFileSize="1000000"
+            (onSelect)="onBasicSelect($event)" (onError)="onBasicUploadError($event)" (onUpload)="onBasicUpload($event)"></p-fileUpload>
+    </p-dialog>
+    <!-- 信息提示页 -->
+    <p-dialog class="dialog" header="S&O List" [(visible)]="messageDialog">
+        <p-dataTable class="ui-grid-row data-table" [value]="messageData" scrollable="true" scrollHeight="30rem">
+            <p-column styleClass="ui-grid-col-3" field="colIndex" header="Col">
+            </p-column>
+            <p-column styleClass="ui-grid-col-3" field="rowIndex" header="Row"></p-column>
+            <p-column styleClass="ui-grid-col-6" field="errorInfo" header="errorInfo"></p-column>
+        </p-dataTable>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="messageDetermine()" label="Close"></button>
+                <button type="button" pButton  (click)="messageVeto()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="growMessage" life="{{growLife}}"></p-growl>
+</div>

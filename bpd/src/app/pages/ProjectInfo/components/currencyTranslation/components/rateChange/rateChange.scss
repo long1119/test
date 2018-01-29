@@ -1,0 +1,64 @@
+.rate-change {
+    .rate-change-buttons {
+        margin-bottom: 1rem;
+    }
+    .table-layout {
+    //     overflow: auto;
+        // width: 100%;
+            .ui-datatable table {
+                table-layout: auto;
+                .column-width {
+                    width: 4rem;
+                }
+                .trible-column-width {
+                    width: 10rem;
+                }
+                .double-column-width {
+                    width: 7rem;
+                }
+            }
+    }
+    .dialog {
+        &>div {
+            width: 70%;
+            .ui-dialog-titlebar {
+                padding: .5rem;
+            }
+            p-header {
+                height: 3rem;
+                &>div {
+                    text-align: left;
+                    line-height: 3rem;
+                    font-size: 1.5rem;
+                    float: left;
+                    width: 30%;
+                    .dialog-count {
+                        float: left;
+                        text-align: center;
+                        margin-right: 1rem;
+                        background-color: #fff;
+                        color: #000;
+                        height: 3rem;
+                        width: 3rem;
+                        border-radius: 50%;
+                    }
+                }
+            }
+            .input-label {
+                display: block;
+                margin-top: .4rem;
+                text-align: center; // line-height: 3rem; 
+            }
+        }
+    }
+    .add-dialog {
+        .ui-dialog {
+            // margin-top: -14rem;
+        }
+    }
+    .dialog-delete {
+        &>div {
+            width: 40%;
+        }
+    }
+}

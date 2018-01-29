@@ -1,0 +1,38 @@
+<div class="ar-sub-project-content">
+    <button *ngIf="localStorageAuthority" [disabled]="!changeCode" pButton type="button" class="program-add" (click)="addClick()"
+        label="Set Ar Region"></button>
+    <p-dataTable class="ui-grid data-table" [value]="regionData">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="regionData[idx].regionUserId">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="regionName" header="Region Name"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="regionManagerName" header="Region Manager Name"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="reportPersonName" header="Report Person Name"></p-column>
+    </p-dataTable>
+    <!-- <p-paginator rows="10" totalRecords="{{baseDataLen}}" pageLinkSize="3" (onPageChange)="paginate($event)"></p-paginator> -->
+    <!-- 添加界面 -->
+    <p-dialog class="dialog" header="Ar Special Region" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <p-dataTable class="ui-grid-row data-table" [value]="baseData" scrollable="true" scrollHeight="30rem" [(selection)]="selectedRegionData">
+            <p-column [style]="{'width':'2.5rem'}" selectionMode="multiple"></p-column>
+            <p-column styleClass="ui-grid-col-1" header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                    <!-- <span *ngIf="baseData[idx].rengionUserId"></span> -->
+                    {{idx + 1}}
+                </template>
+            </p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="regionName" header="Region Name"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="reportPersonName" header="Report Person Name"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="regionManagerName" header="Region Manager Name"></p-column>
+        </p-dataTable>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="addCancle()" label="Cancel"></button>
+                <button type="button" pButton (click)="addSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

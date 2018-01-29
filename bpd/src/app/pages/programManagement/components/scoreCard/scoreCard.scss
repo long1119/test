@@ -1,0 +1,143 @@
+@import '../../../sass/privateStyle';
+score-card {
+	.topBar {
+		padding: 10px;
+		p-dropdown {
+		    display: inline-block;
+		    width: 12rem;
+		    margin: 0 1rem;
+		}
+		.searchInput {
+			margin: 0 1rem;
+		}
+		input {
+			width: 70px;
+			margin: 0 1rem;
+		}
+		button {
+			margin-right: 1rem;
+		}
+	}
+	.topBar1 {
+		padding: 10px 0;
+		p-dropdown {
+		    display: inline-block;
+		    width: 20rem;
+		}
+	}
+	#yearDrop {
+		.ui-dropdown {
+			width: 110px !important;
+		}
+	}
+	#monthDrop {
+		.ui-dropdown {
+			width: 80px !important;
+		}
+	}
+	.footer {
+		text-align: right;
+	    padding-top: 10px;
+	}
+	.editBtn, .noEditBtn {
+	    margin-right: 10px;
+	    display: inline-block;
+	    text-align: center;
+	}
+	.editBtn, .delBtn {
+		color: rgb(55,138,240);
+		cursor: pointer;
+	}
+	.noEditBtn {
+		color: #bfbdbd;
+	}
+	.ui-datatable tbody > tr.ui-widget-content.ui-state-highlight .editBtn{
+		color: #fff;
+	}
+	.generalDialog {
+		.ui-dialog-titlebar {
+		    background: #4B98DC;
+		    color: #fff;
+		}
+		.ui-dialog-titlebar a {
+			color: #fff;
+		}
+		.ui-fluid .ui-inputtext {
+			width: 200px;
+		}
+		.ui-fluid .ui-dropdown {
+		    width: 200px !important;
+		}
+		.ui-inputgroup-addon {
+			width: 130px;
+			display: inline-block;
+		}
+		// .ui-dialog {
+		//     position: fixed;
+		// 	top: 20px !important;
+		// }
+	}
+	.ui-datatable-scrollable .ui-datatable-scrollable-header {
+		display: table !important;
+	}
+	.dialogCommon {
+		.required {
+	         margin: -.8rem;
+	         &:before {
+	             padding-right: .3rem;
+	             content: "*";
+	             color: red;
+	         }
+	     }
+		.ui-dialog-titlebar {
+		    background: #4B98DC;
+		    color: #fff;
+		}
+		.ui-dialog-titlebar a {
+			color: #fff;
+		}
+		.ui-inputgroup {
+			& > span {
+			    width: 100px;
+			    float: left;
+			    padding-top: 15px;
+			}
+			& > textarea {
+				width: 660px;
+			    float: right;
+			}
+			& > input {
+				width: 77%;
+			    float: right;
+			}
+			& > p-dropdown {
+				width: 77%;
+			    float: right;
+			}
+		}
+	}
+	.requiredNone {
+         //  width: 100%;
+         margin: -.8rem;
+         &:before {
+             padding-right: .3rem;
+             content: "*";
+             color: rgba(0,0,0,0);
+         }
+     }
+     .ui-fluid .ui-calendar {
+	    width: auto;
+	}
+	p-confirmDialog {
+		.ui-dialog.ui-widget .ui-dialog-titlebar {
+			background: #2399e5;
+			color: #fff;
+			a {
+				color: #fff;
+			}
+		}
+	 	.ui-dialog.ui-widget .ui-dialog-content {
+			padding: 1em 2em;
+		}
+	}
+}

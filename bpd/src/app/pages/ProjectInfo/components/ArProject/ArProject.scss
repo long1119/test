@@ -1,0 +1,87 @@
+@import "../../../sass/privateStyle";
+.ar-project-content {
+    .content-add {
+        margin-bottom: 1rem;
+    }
+    .data-table {
+        th.ui-state-default {
+            &>:hover {
+                color: #fff;
+                background-color: shade($table-head, 5%);
+            }
+            color: #fff;
+            font-size: 1.2rem;
+            background-color: $table-head;
+        }
+    }
+    .content-changes {
+        margin: 2rem 0 1rem 0;
+        border-bottom: 1px solid shade($ebontab, 15%);
+        button {
+            margin: 0 1rem 0 0; // padding: .3rem;
+            border: 2px solid shade($buttons, 15%);
+            border-radius: .3rem .3rem 0 0;
+            background-color: shade($buttons, 15%);
+            border-color: shade($buttons, 15%);
+            color: #fff; // border-radius: 20%;
+            &:hover {
+                border: 2px solid shade($buttons, 15%);
+            }
+            &:focus {
+                border: 2px solid shade($buttons, 15%);
+                background-color: shade($buttons, 15%);
+                border-color: shade($buttons, 15%);
+                color: #fff;
+            }
+        }
+    }
+    .dialog {
+        &>div {
+            // .ui-dialog-content {
+            //     height: 45rem;
+            //     overflow: auto;
+            // }
+            width: 70%;
+            &>div {
+                &>div {
+                    &>div {
+                        margin: 1rem 0;
+                    }
+                }
+            }
+        }
+        input {
+            width: 100%;
+        }
+        .dialog-search-input {
+            float: left;
+            width: 92%;
+        }
+        .dialog-search-button {
+            float: left;
+            width: 8%;
+            height: 2.3rem;
+            box-sizing: border-box;
+            margin: 0;
+        }
+        .ar-project-search {
+            &>::after {
+                content: "";
+                height: 0;
+                clear: both;
+                display: table;
+            }
+        }
+    }
+    .user-dialog {
+        // .ui-dialog-content {
+        //     height: 45rem;
+        //     overflow: auto;
+        // }
+    }
+    .dialog-delete {
+        &>div {
+            width: 40%;
+        }
+    }
+}

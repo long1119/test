@@ -1,0 +1,198 @@
+<div class="ui-grid wbs-content">
+    <div class="ui-grid-col-2 main-left">
+        <p-dataTable (onRowClick)="listClick($event)" selectionMode="single" class="ui-grid data-table data-table-list" [value]="listData"
+            scrollable="true" scrollHeight="30rem" [(selection)]="selectedListData">
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="regionCategoryNameEnglish" header="Region Type"></p-column>
+        </p-dataTable>
+    </div>
+    <div class="ui-grid-col-10 main-right">
+        <button pButton *ngIf="localStorageAuthority && flagAuthority" [disabled]="!selectedListData.regionGroupCode" type="button"
+            class="add-button" (click)="addClick()" label="Add"></button>
+        <button pButton *ngIf="localStorageAuthority && flagAuthority" [disabled]="addChildrenFlag" type="button" class="add-button"
+            (click)="addChildrenClick()" label="AddChild"></button>
+        <button pButton *ngIf="flagAuthority" type="button" class="add-button" (click)="exportBtn()" label="Export"></button>
+        <button pButton *ngIf="!flagAuthority" type="button" class="add-button" (click)="exportVppsClick()" label="Export"></button>
+        <p-treeTable class="ui-grid" (onNodeExpand)="nodeExpand($event)" (onNodeCollapse)="nodeCollapse($event)" selectionMode="single"
+            [(selection)]="selectedFile" (onNodeSelect)="nodeSelect($event)" (onNodeUnselect)="nodeUnselect($event)" [value]="baseData"
+            class="tree-table">
+            <p-header>{{ tableTitle }}</p-header>
+            <p-column styleClass="ui-grid-col-3" field="wbsCodeLive" header="Item Code(WBS L4-L5)"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="wbsName" header="Item Name"></p-column>
+            <p-column styleClass="ui-grid-col-4" field="wbsDescription" header="Description"></p-column>
+            <p-column styleClass="ui-grid-col-3" *ngIf="localStorageAuthority && flagAuthority" header="" styleClass="align-center">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <div *ngIf="data.data.disable != '1'">
+                        <span class="edit-span" *ngIf="data.parentId && selectedListData.catFlag == '1'" (click)="setVppsClick(idx,data)">Set VppsLevelFull</span>
+                        <span class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                        <span class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+                        <span *ngIf="data.data.parentId" class="edit-span" (click)="disableClick(idx,data)">Disable</span>
+                    </div>
+                    <div *ngIf="data.data.disable == '1'">
+                        <span class="no-edit-span" *ngIf="data.parentId && selectedListData.catFlag == '1'">Set VppsLevelFull</span>
+                        <span class="no-edit-span">Edit</span>
+                        <span class="no-edit-span">Delete</span>
+                        <span *ngIf="data.data.parentId" class="no-edit-span">Disable</span>
+                    </div>
+                </template>
+            </p-column>
+            <p-column styleClass="ui-grid-col-3" *ngIf="!(localStorageAuthority && flagAuthority) && selectedListData.catFlag == '1'"
+                header="" styleClass="align-center">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <span class="edit-span" *ngIf="data.parentId && selectedListData.catFlag == '1' && data.data.disable == '0'" (click)="setVppsClick(idx,data)">Set VppsLevelFull</span>
+                    <span class="edit-span" *ngIf="data.parentId && selectedListData.catFlag == '1' && data.data.disable == '1'">Set VppsLevelFull</span>
+                </template>
+            </p-column>
+        </p-treeTable>
+    </div>
+    <!-- 添加界面 -->
+    <p-dialog class="dialog" header="Investment Wbs" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">Item Code :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input type="number" maxlength="3" pInputText id="regionCode" [(ngModel)]="itemCode" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="regionType" class="required">Item Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" pInputText id="regionType" [(ngModel)]="itemName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="regionType">Description :</label>
+                </div>
+                <!-- <div class="ui-grid-col-8"><input pInputText id="regionType" [(ngModel)]="dialogDescription" /></div> -->
+            </div>
+            <div class="ui-grid-row">
+                <textarea type="text" pInputTextarea style="width:95%;height:80px;" [(ngModel)]="dialogDescription" maxlength="200"></textarea>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="addCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!itemCode || !itemName" pButton (click)="addSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 添加子界面 -->
+    <p-dialog class="dialog" header="Investment Wbs" [(visible)]="addChildrenDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="parentCode">Parent Code :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" required disabled pInputText id="parentCode" [(ngModel)]="parentCode" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="itemCode">Item Code :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input type="number" maxlength="3" pInputText id="itemCode" [(ngModel)]="itemCode" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionType">Item Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" required pInputText id="regionType" [(ngModel)]="itemName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="regionType">Description :</label>
+                </div>
+                <!-- <div class="ui-grid-col-8"><input pInputText id="regionType" [(ngModel)]="dialogDescription" /></div> -->
+            </div>
+            <div class="ui-grid-row">
+                <textarea type="text" pInputTextarea style="width:95%;height:80px;" [(ngModel)]="dialogDescription" maxlength="200"></textarea>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="addChildrenCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!itemCode || !itemName" pButton (click)="addChildrenSave()" label="Confrim"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-dialog class="dialog vpps-dialog" header="Investment Wbs" [(visible)]="setVppsDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <button *ngIf="localStorageAuthority" pButton type="button" class="add-button" (click)="addVppsClick()" label="Add"></button>
+        <button pButton *ngIf="flagAuthority" type="button" class="add-button" (click)="exportVppsClick()" label="Export"></button>
+        <p-dataTable class="ui-grid data-table" [value]="vppsData">
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-8" field="vppsLevelFull" header="VppsLevelFull"></p-column>
+            <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-4" styleClass="align-center">
+                <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                    <span class="edit-span" (click)="editVppsClick(idx,data)">Edit</span>
+                    <span class="edit-span" (click)="deleteVppsClick(idx,data)">Delete</span>
+                </template>
+            </p-column>
+        </p-dataTable>
+    </p-dialog>
+    <p-dialog class="dialog vpps-dialog" header="Wbs Vpps" [(visible)]="addVppsDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="parentCode">VppsLevelFull :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" type="number" pInputText id="parentCode" [(ngModel)]="dialogVppsLevelFull" />
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="addVppsCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogVppsLevelFull" pButton (click)="addVppsSave()" label="Confrim"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除界面 -->
+    <p-dialog class="dialog" header="Investment WBS" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Disable This Data?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除Vpps -->
+    <p-dialog class="dialog" header="WBS Vpps" [(visible)]="deleteVppsDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteVppsNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton (click)="deleteVppsYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除界面 -->
+    <p-dialog class="dialog" header="Investment WBS" [(visible)]="confirmDialog">
+        <div>
+            Are You Sure To Delete Whether It Has A Child?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="confirmCancel(idx,data)" label="Cancel"></button>
+                <button type="button" pButton (click)="confirmSave(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

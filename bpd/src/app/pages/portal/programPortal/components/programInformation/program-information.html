@@ -1,0 +1,308 @@
+<div class="main-content">
+    <p-tabView class="tab-view" (onChange)="handleChange($event)">
+        <p-tabPanel header="Master Timesheet" [selected]="true">
+            <div style="max-height:30rem;overflow-y:auto;">
+                <table class="table table-hover table-bordered">
+                    <thead class="thead-inverse">
+                        <tr style="background-color: #4B98DC;color: white;">
+                            <th>Version</th>
+                            <th>Approval Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of programInformationData;let i=index;">
+                            <td (click)="openKSH(option.adProjectCode,option.timingId)" style="cursor:pointer;color:blue;">{{option.version}}</td>
+                            <!-- <td *ngIf="!option.versionFlag" style="cursor:pointer;color:gray;">{{option.version}}</td> -->
+                            <td>{{option.approvalDate}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </p-tabPanel>
+        <p-tabPanel header="NOD">
+            <p-dataTable [value]="nodTable" class="data-table" [rows]="10" scrollable="true" scrollHeight="28rem">
+                <p-column field="id" header="No"></p-column>
+                <p-column field="projectCode" header="Costbook Code"></p-column>
+                <p-column field="nameArray" header="NOD Type"></p-column>
+                <p-column field="sequence" header="Sequence"></p-column>
+                <p-column field="docControlNumber" header="Doc.Control Number"></p-column>
+                <!-- <p-column field="approvalDate" header="Approval Date"></p-column> -->
+                <p-column field="approveInvestment" header="Approved Investment(MRMB)"></p-column>
+            </p-dataTable>
+            <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+        </p-tabPanel>
+        <p-tabPanel header="CR/DN">
+            <div class="crdn-tracking">
+                <div class="topBar">
+                    <!-- Program:
+                    <p-dropdown autoWidth="false" [options]="programSerchStore" [(ngModel)]="programSerch"></p-dropdown> -->
+                    Model Year:
+                    <input type="text" (keyup)="lookUpBtnEnterSearch($event)" pInputText [(ngModel)]="modelYearSerch"> Red Zone:
+                    <p-dropdown autoWidth="false" [options]="redZoneSerchStore" [(ngModel)]="redZoneSerch"></p-dropdown>
+                    Competitive:
+                    <p-dropdown autoWidth="false" [options]="competitiveSerchStore" [(ngModel)]="competitiveSerch"></p-dropdown>
+                    <button pButton type="button" (click)="lookUpBtn()" label="Search"></button>
+                    <!-- <button pButton type="button" (click)="lifecyclePlanBtn()" label="lifecycle Plan"></button>
+                    <button pButton type="button" (click)="exportBtn()" label="Export"></button> -->
+                </div>
+                <p-dataTable [rows]="10" [value]="gridStore" class="data-table" scrollable="true" scrollHeight="27rem">
+                    <p-column field="crdn" header="CR/DN" styleClass="ui-grid-col-1 align-center"></p-column>
+                    <p-column field="crdnNo" header="CR No" styleClass="ui-grid-col-1"></p-column>
+                    <p-column field="icrOriginalDate" header="Date in Step" styleClass="ui-grid-col-1"></p-column>
+                    <p-column field="subject" header="Subject" styleClass="ui-grid-col-2"></p-column>
+                    <p-column field="programs" header="Impact Program" styleClass="ui-grid-col-2"></p-column>
+                    <!-- <p-column header="Program" styleClass="ui-grid-col-1 align-center">
+                        <template pTemplate="body" let-item="rowData">
+                            <span *ngIf="item.programId && item.id" class="editBtn" (click)="toProgramBtn(item)">{{item.programId}}</span>
+                            <span *ngIf="!item.programId && item.id" class="editBtn" (click)="toProgramBtn(item)">Set</span>
+                        </template>
+                    </p-column> -->
+                    <p-column field="modelYear" header="Model Year" styleClass="ui-grid-col-1"></p-column>
+                    <p-column field="competitive" header="Competitive Activity" styleClass="ui-grid-col-1"></p-column>
+                    <p-column field="initiator" header="Initial by" styleClass="ui-grid-col-1"></p-column>
+                    <p-column field="status" header="Status" styleClass="ui-grid-col-1"></p-column>
+                    <p-column field="crdnTracking" header="Tracking" styleClass="ui-grid-col-1"></p-column>
+                    <p-column field="crdnStatus" header="Open/Close" styleClass="ui-grid-col-1"></p-column>
+                    <!-- <p-column header="" styleClass="ui-grid-col-1 align-center">
+                        <template pTemplate="body" let-item="rowData">
+                            <span *ngIf="item.id" class="editBtn" (click)="editBtn(item)">Edit</span>
+                        </template>
+                    </p-column> -->
+                </p-dataTable>
+                <p-paginator totalRecords="{{gridStoreLen}}" [rowsPerPageOptions]="[10,20,30]" rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" pageLinkSize="3" (onPageChange)="gridPaginate($event)"></p-paginator>
+                
+                <!-- <p-dialog header="CR/DN Tracking List" [(visible)]="display" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon">CR/DN:</span>
+                                <input type="text" pInputText value="{{itemStore.crdn}}" disabled="true">
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon">Status:</span>
+                                <p-dropdown autoWidth="false" [options]="statusStore" [(ngModel)]="itemStore.crdnStatus"></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon">CR/NO:</span>
+                                <input type="text" pInputText value="{{itemStore.crdnNo}}" disabled="true">
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon">Impack Program:</span>
+                                <input type="text" pInputText value="{{itemStore.programs}}" disabled="true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon">Impack MY:</span>
+                                <input type="text" pInputText value="{{itemStore.modelYear}}" disabled="true">
+                            </div>
+                        </div>
+                        <div class="ui-g-12 ui-md-6">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon">Initial by:</span>
+                                <input type="text" pInputText value="{{itemStore.initiator}}" disabled="true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon">Date in step:</span>
+                                <input type="text" pInputText value="{{itemStore.icrOriginalDate}}" disabled="true">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-12">
+                            <div class="ui-inputgroup" style="height:60px;">
+                                <span class="ui-inputgroup-addon">Subject:</span>
+                                <textarea type="text" pInputTextarea style="position:absolute;right:4.5em;height:60px;width:72.8%" value="{{itemStore.subject}}" disabled="true"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-12">
+                            <div class="ui-inputgroup" style="height:60px;">
+                                <span class="ui-inputgroup-addon">Tracking:</span>
+                                <textarea type="text" pInputTextarea style="position:absolute;right:4.5em;height:60px;width:72.8%" [(ngModel)]="itemStore.crdnTracking"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-12">
+                            <div class="ui-inputgroup" style="height:60px;">
+                                <span class="ui-inputgroup-addon">Change From:</span>
+                                <textarea type="text" pInputTextarea style="position:absolute;right:4.5em;height:60px;width:72.8%" [(ngModel)]="itemStore.changFrom"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-12">
+                            <div class="ui-inputgroup" style="height:60px;">
+                                <span class="ui-inputgroup-addon">Change To:</span>
+                                <textarea type="text" pInputTextarea style="position:absolute;right:4.5em;height:60px;width:72.8%" [(ngModel)]="itemStore.changTo"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-g ui-fluid">
+                        <div class="ui-g-12 ui-md-12">
+                            <div class="ui-inputgroup">
+                                <span class="ui-inputgroup-addon">Competitive Activity:</span>
+                                <p-dropdown autoWidth="false" [options]="competitiveSerchStore" [(ngModel)]="itemStore.competitive"></p-dropdown>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <button pButton type="button" (click)="saveBtn()" label="Confirm" style="margin-right:10px"></button>
+                        <button pButton type="button" (click)="cancelBtn()" label="Cancel"></button>
+                    </div>
+                </p-dialog>
+                <p-dialog header="Select Programs" [(visible)]="programDisplay" width="800" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+                    <div class="topBar">
+                        Brand:
+                        <p-dropdown autoWidth="false" [options]="brandSerchStore" [(ngModel)]="brandSerch"></p-dropdown>
+                        Platform:
+                        <p-dropdown autoWidth="false" [options]="platformSerchStore" [(ngModel)]="platformSerch"></p-dropdown>
+                        <button pButton type="button" (click)="programLookUpBtn()" label="Search"></button>
+                    </div>
+                    <p-dataTable [rows]="10" [value]="programStore" class="data-table" scrollable="true" scrollHeight="30rem" (onRowDblclick)="dbclick($event)" [rowHover]=true>
+                        <p-column field="id" header="NO" styleClass="ui-grid-col-1 align-center"></p-column>
+                        <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-1"></p-column>
+                        <p-column field="modelPlatform" header="Platform" styleClass="ui-grid-col-1"></p-column>
+                        <p-column field="brandName" header="Brand" styleClass="ui-grid-col-1"></p-column>
+                        <p-column field="bodyStyle" header="Body Style" styleClass="ui-grid-col-1"></p-column>
+                        <p-column field="sorp" header="SORP" styleClass="ui-grid-col-1"></p-column>
+                        <p-column field="eop" header="EOP" styleClass="ui-grid-col-1"></p-column>
+                        <p-column field="lcaVolume" header="LCA Volume" styleClass="ui-grid-col-1"></p-column>
+                        <p-column field="lifecycleVolume" header="Lifecycle Volume" styleClass="ui-grid-col-1"></p-column>
+                    </p-dataTable>
+                <p-paginator totalRecords="{{programStoreLen}}" [rowsPerPageOptions]="[10,20,30]" rows="{{programStoreRows}}" first="{{programStoreFirst}}" pageLinkSize="3" (onPageChange)="programPaginate($event)"></p-paginator>
+                </p-dialog> -->
+            </div>    
+        </p-tabPanel>
+        <p-tabPanel header="Issue List">
+            <div class="issue">
+                    <span>Issue Type:</span><p-dropdown [options]="issueTypeValueStore" [(ngModel)]="issueTypeSerch" [style]="{'width':'150px !important'}"></p-dropdown>
+                    <span style="margin-left:1rem;">Status:</span><p-dropdown [options]="statusStore1" [(ngModel)]="status1" [style]="{'width':'150px !important'}"></p-dropdown>
+                <button pButton type="button" (click)="checkIssueList()" label="Search" style="margin-left:0.5rem;"></button>
+            </div>
+            <p-dataTable [rows]="10" [value]="gridStore1" class="data-table" [rowHover]=true scrollable="true" scrollHeight="28rem">
+                <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2"></p-column>
+                <p-column field="issueDate" header="Issue date" styleClass="ui-grid-col-2"></p-column>
+                <p-column field="issueItem" header="Issue Item" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="issueType" header="Issue Type" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="issueAction" header="Decision/Action" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="userName" header="Initiator" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="ownerName" header="Owner" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="issueClosedDate" header="Target date" styleClass="ui-grid-col-2 align-center"></p-column>
+                <p-column field="finishiDate" header="Finish date" styleClass="ui-grid-col-2"></p-column>
+                <p-column styleClass="ui-grid-col-1 align-center" header="Status">
+                    <template pTemplate="body" let-item="rowData">
+                        <i *ngIf="item.issueStatus == 3" class="fa fa-circle green"></i>
+                        <i *ngIf="item.issueStatus == 2" class="fa fa-warning yellow"></i>
+                        <i *ngIf="item.issueStatus == 1" class="fa fa-close red"></i>
+                    </template>
+                </p-column>
+            </p-dataTable>
+            <p-paginator totalRecords="{{totalRecord1}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate1($event)"></p-paginator>
+        </p-tabPanel>
+        <p-tabPanel header="Documents">
+             <div style="width:30%;float:left;">
+                 <div class="topBar1" *ngIf="haveFolder">
+                     <button *ngIf="isManager == '1'" [(disabled)]="!addChild" style="margin-right:5px;" pButton type="button" (click)="addFolderBtn()" label="Add Child"></button>
+                     <button *ngIf="isManager == '1'" [(disabled)]="!haveSelected" style="margin-right:5px;" pButton type="button" (click)="modifyNameBtn()" label="Modify Name"></button>
+                     <button *ngIf="isManager == '1'" [(disabled)]="!haveSelected" style="margin-right:5px;" pButton type="button" (click)="delFolderBtn()" label="Delete"></button>
+                 </div>
+                 <div class="topBar1" *ngIf="!haveFolder">
+                     <button *ngIf="isManager == '1'" style="margin-right:5px;" pButton type="button" (click)="addMainFolderBtn()" label="Add Folder"></button>
+                 </div>
+                 <div class="tree_menu">
+                     <p-tree id="pTree" [value]="items" expanded="true" selectionMode="single" [(selection)]="selectedFile" (onNodeSelect)="nodeSelect($event)"></p-tree>
+                 </div> 
+             </div>
+             <div style="width:69%;float:right;">
+                 <div *ngIf="normalFolder">
+                     <div class="topBar1">
+                         <button *ngIf="isManager == '1' || (isManager == '2' && writeRead == '1')" [(disabled)]="!addChild" pButton type="button" (click)="uploadBtn()" label="Upload"></button>
+                         Upload User:<input (keyup)="fileLookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="uploadUserSearch" class="searchInput">
+                         File Name:<input (keyup)="fileLookUpEnterSearch($event)" type="text" pInputText [(ngModel)]="fileNameSearch" class="searchInput">
+                         <button [(disabled)]="!addChild" pButton type="button" (click)="fileLookUpBtn()" label="Search"></button>
+                     </div>
+                     <p-dataTable [rows]="10" [value]="fileStore" class="data-table" scrollable="true" scrollHeight="30rem" [rowHover]=true>
+                         <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                         <p-column field="uploadUserName" header="Upload User" styleClass="ui-grid-col-2 align-center"></p-column>
+                         <p-column field="uploadTime" header="Upload Date" styleClass="ui-grid-col-2 align-center"></p-column>
+                         <p-column field="modelYear" header="Model Year" styleClass="ui-grid-col-2 align-center"></p-column>
+                         <p-column header="File Name" styleClass="ui-grid-col-4 align-center">
+                             <template pTemplate="body" let-item="rowData">
+                                 <span *ngIf="item.id" class="editBtn" (click)="fileClickBtn(item)">{{item.fileFullName}}</span>
+                             </template>
+                         </p-column>
+                         <p-column header="" styleClass="ui-grid-col-3 align-center">
+                             <template pTemplate="body" let-item="rowData">
+                                 <span *ngIf="item.id && item.allowDownLoad == '1' && isManager == '1'" class="editBtn" (click)="shareBtn(item)">Share</span>
+                                 <span *ngIf="item.id && item.allowDownLoad == '1' && isManager == '1'" class="editBtn" (click)="cancelShareBtn(item)">Cancel Share</span>
+                                 <span *ngIf="item.id && item.allowDownLoad == '1' && (isManager == '1' || isManager == '2' && writeRead == '1')" class="editBtn" (click)="editBtn(item)">Update</span>
+                                 <span *ngIf="item.id && item.allowDownLoad == '1' && isManager == '1'" class="editBtn" (click)="delBtn(item)">Delete</span>
+                                 <span *ngIf="item.id && item.allowDownLoad == '0'" class="editBtn" (click)="delBtn(item)">Delete</span>
+                             </template>
+                         </p-column>
+                     </p-dataTable>
+                 </div>
+                 <div *ngIf="!normalFolder">
+                     <div class="topBar1">
+                         File Name:<input (keyup)="shareFileEnterSearch($event)" type="text" pInputText [(ngModel)]="shareFileNameSearch" class="searchInput">
+                         <button pButton type="button" (click)="shareFileLookUpBtn()" label="Search"></button>
+                     </div>
+                     <p-dataTable [rows]="10" [value]="shareFileStore" class="data-table" scrollable="true" scrollHeight="30rem" [rowHover]=true>
+                         <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+                         <p-column field="uploadUserName" header="Upload User" styleClass="ui-grid-col-2 align-center"></p-column>
+                         <p-column field="uploadTime" header="Upload Date" styleClass="ui-grid-col-2 align-center"></p-column>
+                         <p-column header="File Name" styleClass="ui-grid-col-4 align-center">
+                             <template pTemplate="body" let-item="rowData">
+                                 <span *ngIf="item.id" class="editBtn" (click)="shareFileClickBtn(item)">{{item.fileFullName}}</span>
+                             </template>
+                         </p-column>
+                     </p-dataTable>
+                 </div>
+             </div>   
+        </p-tabPanel>
+    </p-tabView>
+    <p-dialog class="dialog" header="Folder" [(visible)]="fileUpLoadDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <p-fileUpload mode="basic" name="file[]" url="{{budgetFileUpLoadUrlFirstStep}}?bussinessId={{businessId}}&attId={{UuId}}&name=file[]&allowDownLoad=1&sourceType=doc&projId={{businessId}}" multiple="{{uploadNum}}" accept="xlsm" maxFileSize="50000000"
+            (onUpload)="onFolderFileUpload($event)"></p-fileUpload>
+    </p-dialog>
+    <p-dialog class="dialog dialog-view" id="visualization" header="Preview Timesheet" [(visible)]="showModelYear" model="model" [responsive]="true">
+        <iframe [src]="specialURL" width="100%" height="100%"></iframe>
+    </p-dialog>
+    <p-dialog header="Add Folder" [(visible)]="addFolderDisplay" width="450" modal="modal" class="dialog">
+        <div style="margin: 10px 0 20px 20px;">
+            Folder Name:<input style="width:55%;margin-left:30px" type="text" pInputText [(ngModel)]="folderName" (ngModelChange)="checkFolderName()">
+        </div>
+        <div class="footer">
+            <button pButton type="button" (click)="addFolderSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+            <button pButton type="button" (click)="addFolderDisplay=false" label="Cancel"></button>
+        </div>
+    </p-dialog>
+    <p-dialog header="Modify Folder" [(visible)]="modifyFolderDisplay" width="450" modal="modal" class="dialog">
+        <div style="margin: 10px 0 20px 20px;">
+            Folder Name:<input style="width:55%;margin-left:30px" type="text" pInputText [(ngModel)]="folderName" (ngModelChange)="checkFolderName()">
+        </div>
+        <div class="footer">
+            <button pButton type="button" (click)="modifyFolderSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+            <button pButton type="button" (click)="modifyFolderDisplay=false" label="Cancel"></button>
+        </div>
+    </p-dialog>
+</div>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>

@@ -1,0 +1,63 @@
+    @import '../../../../../sass/privateStyle';
+    .authority-list-content {
+        .content-changes {
+            margin: 0 0 1rem 0;
+            border-bottom: 1px solid shade($ebontab, 15%);
+            button {
+                margin: 0 1rem 0 0; // padding: .3rem;
+                border: 2px solid shade($buttons, 15%);
+                border-radius: .5rem .5rem 0 0;
+                background-color: shade($buttons, 5%);
+                border-color: shade($buttons, 5%);
+                color: #fff; // border-radius: 20%;
+                &:hover {
+                    border: 2px solid shade($buttons, 15%);
+                }
+                &:focus {
+                    border: 2px solid shade($buttons, 15%);
+                    background-color: shade($buttons, 15%);
+                    border-color: shade($buttons, 15%);
+                    color: #fff;
+                }
+            }
+        }
+        .dialog {
+            &>div {
+                width: 40%;
+                &>div {
+                    &>div {
+                        &>div {
+                            margin: 1rem 0;
+                        }
+                    }
+                }
+            }
+        }
+        .user-detail-dialog {
+            &>div {
+                width: 30%;
+            }
+        }
+        .search-role-dialog {
+            &>div {
+                width: 70%;
+                .ui-dialog-content {
+                    height: 45rem;
+                    overflow: auto;
+                }
+            }
+        }
+        .user-data-table {
+            width: 100%;
+        }
+        .tree-table {
+            .ui-treetable-tablewrapper {
+                height: 32rem;
+                overflow: auto;
+                border: 1px solid #ddd;
+                & > table {
+                    border-right: 0 none;
+                }
+            }
+        }
+    }

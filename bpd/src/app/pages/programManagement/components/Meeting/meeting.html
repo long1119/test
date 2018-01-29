@@ -1,0 +1,627 @@
+<div class="header-main-body">
+<!-- 会议增加&查询按钮-->
+<div>
+    <button pButton type="button" (click)="openAddMeeting()" label="Add"></button>
+    <span style="margin:0 1rem">Program:</span><p-dropdown [options]="programs" [(ngModel)]="selectedProgram"></p-dropdown>
+    <span style="margin:0 1rem">Meeting Topic:</span><input (keyup)="checkMeetingEnterSearch($event)" type="text" pInputText [(ngModel)]="meetingTopic"/>
+    <span style="margin:0 1rem">Meeting Time:</span><p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" [(ngModel)]="meetingTime" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
+    <button style="margin-left:2rem;" pButton type="button" (click)="meeting()" label="Search"></button>
+</div>
+<!-- 会议表 -->
+<table class="table table-bordered">
+    <thead class="thead-inverse">
+        <tr>
+            <th>No</th>
+            <th>Meeting Topic</th>
+            <th>Program</th>
+            <th style="width:130px;">Meeting Time</th>
+            <th>Teleconferencing</th>
+            <th>Venue</th>
+            <th>Creator</th>
+            <!-- <th>Notification Status</th> -->
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let option of meetingTable;let i=index" (click)="giveId(option.meetingId,i,option.meetingTime,option.minutes,option.createUser)" [ngClass]="{'click-style':i==column,'over-style':i==column1}" (mouseover)="gotoCover(i)" style="cursor:pointer;">
+            <td>{{i+1}}</td>
+            <td>{{option.meetingName}}</td>
+            <td>{{option.programCode}}</td>
+            <td>{{option.meetingTime}}</td>
+            <td *ngIf="option.teleconferencing?.length>35" pTooltip={{option.teleconferencing}} tooltipPosition="top">{{option.teleconferencing.slice(0,35)+'......'}}</td>
+            <td *ngIf="option.teleconferencing?.length<36">{{option.teleconferencing}}</td>
+            <td>{{option.venue}}</td>
+            <td>{{option.createUserName}}</td>
+            <!-- <td>{{option.notificationStatus}}</td> -->
+            <td *ngIf="(option.createUser==createUser)&&((option.meetingTimeForCheck>newTime)||(option.mailFlag=='0'))">
+                <span class="txt" (click)="editMeeting(option)">Edit</span>
+                <span *ngIf="option.meetingTimeForCheck>newTime" class="txt" (click)="notification()">Notification</span>
+                <span class="txt" (click)="deleteMeeting(option.meetingId)">Delete</span>
+            </td>
+            <td *ngIf="(option.createUser!=createUser)||((option.meetingTimeForCheck<newTime)&&(option.mailFlag=='1'))"><span class="txt1">Edit</span><span class="txt1">Notification</span><span class="txt1">Delete</span></td>
+        </tr>
+    </tbody>
+</table>
+<p-paginator totalRecords="{{totalRecord1}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate1($event)"></p-paginator>
+<!-- tab切换 -->
+<p-tabView class="tab-view" (onChange)="handleChange($event)">
+    <p-tabPanel header="Meeting Topics">
+        <button pButton type="button" [disabled]="!tabFlag" (click)="addAmeetingTopic()" label="Add" style="margin-top:0.5rem;"></button>
+        <table class="table table-bordered table-hover">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>Topic Category</th>
+                    <th>Topic</th>
+                    <th>Time</th>
+                    <th>Presenter</th>
+                    <th>D/I</th>
+                    <th *ngIf="tabFlag"></th>
+                </tr> 
+            </thead>
+            <tbody>
+                <tr *ngFor="let option of meetingTopics">
+                    <td>{{option.topicCategory}}</td>
+                    <td>{{option.theme}}</td>
+                    <td>{{option.time}}</td>
+                    <td>{{option.userName}}</td>
+                    <td>{{option.di}}</td>
+                    <td *ngIf="tabFlag"><span class="txt" (click)="openEditBox(option)">Edit</span><span class="txt" (click)="deleteMeetingTopic(option.topicId)">Delete</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p-paginator totalRecords="{{totalRecord2}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate2($event)"></p-paginator>
+    </p-tabPanel>
+    <p-tabPanel header="Meeting Minutes">
+        <button pButton type="button" [disabled]="!tabFlag" (click)="addAmeetingMinutes()" label="Add" style="margin-top:0.5rem;"></button>
+        <button pButton type="button" [disabled]="meetingMinutes?.length<1" *ngIf="tabFlag" (click)="notification1()" label="Notification" style="margin-top:0.5rem;"></button>
+        <table class="table table-bordered table-hover">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>Topic Category</th>
+                    <th>Topic</th>
+                    <th>Time</th>
+                    <th>Presenter</th>
+                    <th>D/I</th>
+                    <th>Decision/Action</th>
+                    <th>Owner</th>
+                    <th>Target Close Date</th>
+                    <th>Report</th>
+                    <th *ngIf="tabFlag"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let option of meetingMinutes">
+                    <td>{{option.topicCategory}}</td>
+                    <td>{{option.topic}}</td>
+                    <td>{{option.time}}</td>
+                    <td>{{option.presenterName}}</td>
+                    <td>{{option.di}}</td>
+                    <td>{{option.decisionAction}}</td>
+                    <td>{{option.ownerName}}</td>
+                    <td>{{option.targetCloseDate}}</td>
+                    <td style="text-align:center;" *ngIf="!option.fileName"><i (click)="exportFile(option.minutesId)" class="fa fa-file" aria-hidden="true"></i></td>
+                    <td style="text-align:center;" *ngIf="option.fileName">
+                        <span (click)="xiazai(option.attId)" class="blue">{{option.fileName}}</span>
+                        <li *ngIf="option.fileName" class="fa fa-times" (click)="removeFile(option.attId)" style="color:red;"></li>
+                    </td>
+                    <td *ngIf="tabFlag"><span class="txt" (click)="openEditBox1(option)">Edit</span><span class="txt" (click)="deleteMeetingMinutes(option.minutesId)">Delete</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p-paginator totalRecords="{{totalRecord3}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate3($event)"></p-paginator>
+    </p-tabPanel>
+    <p-tabPanel header="Issue Tracking List">
+        <button pButton type="button" [disabled]="!tabFlag" (click)="addIssue()" label="Add" style="margin-top:0.5rem;"></button>
+        <button pButton type="button" [disabled]="issueTrackingList?.length<1" *ngIf="tabFlag" (click)="notification2()" label="Notification" style="margin-top:0.5rem;"></button>
+        <table class="table table-bordered table-hover">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>No</th>
+                    <th>Issue Date</th>
+                    <th>Issue</th>
+                    <th>Decision/Action</th>
+                    <th>Owner</th>
+                    <th>Target Date</th>
+                    <th>Tracking Forum</th>
+                    <th>Status</th>
+                    <th *ngIf="tabFlag"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let option of issueTrackingList;let i=index">
+                    <td>{{i+1}}</td>
+                    <td>{{option.issueDate}}</td>
+                    <td>{{option.item}}</td>
+                    <td>{{option.decisionAction}}</td>
+                    <td>{{option.ownerName}}</td>
+                    <td>{{option.targetDate}}</td>
+                    <td>{{option.trackingForum}}</td>
+                    <td *ngIf="(option.status == 1)">Close</td>
+                    <td *ngIf="(option.status != 1)">Open</td>
+                    <td *ngIf="tabFlag"><span class="txt" (click)="openEditBox2(option)">Edit</span><span class="txt" (click)="deleteMeetingIssue(option.meetingTrackingId)">Delete</span></td>
+                </tr>
+            </tbody>
+        </table>
+        <p-paginator totalRecords="{{totalRecord4}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate4($event)"></p-paginator>
+    </p-tabPanel>
+</p-tabView>
+<!-- tab切换里的增加弹框 -->
+<p-dialog class="dialog" [header]="header" [(visible)]="display" modal="modal" width="500" [responsive]="true">
+    <div class="wrap1" *ngIf="flag1">
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label class="required">Topic Category:</label>
+            </div>
+            <div class="ui-g-6">
+                <input id="input" type="text" maxlength="50" pInputText [(ngModel)]="topicCategory"/>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label class="required">Topic:</label>
+            </div>
+            <div class="ui-g-6">
+                <input id="input" maxlength="50" type="text" pInputText [(ngModel)]="topic"/>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label>Time:</label>
+            </div>
+            <div class="ui-g-4">
+                <p-spinner [(ngModel)]="time" maxlength="3" [max]="999" [min]="1" (keydown)="msgService.checkNumValue($event,999)"></p-spinner>
+                <!-- <input type="number" min="1" max="60" [(ngModel)]="time"/> -->
+            </div>
+            <div class="ui-g-4">Minutes</div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label>D/I:</label>
+            </div>
+            <div class="ui-g-6">
+                <p-dropdown [options]="di" [(ngModel)]="selectedDi" class="drop-down"></p-dropdown>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label>Presenter:</label>
+            </div>
+            <div class="ui-g-6">
+                <input id="input" type="text" readonly="true" pInputText [(ngModel)]="presenter" (click)="choosePet()"/>
+            </div>
+        </div>
+    </div>
+    <div class="wrap2" *ngIf="flag2">
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label class="required">Topic Category:</label>
+            </div>
+            <div class="ui-g-6">
+                <input type="text" maxlength="50" pInputText [(ngModel)]="topicCategory1"/>
+            </div>
+            <div class="ui-g-4">
+                <label class="required">Topic:</label>
+            </div>
+            <div class="ui-g-6">
+                <input type="text" maxlength="50" pInputText [(ngModel)]="topic1"/>
+            </div>
+            <div class="ui-g-4">
+                <label class="required">Target Close Date:</label>
+            </div>
+            <div class="ui-g-6">
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" class="calendar-icon-input" [showTime]="true" [(ngModel)]="date1" dateFormat="yy-mm-dd" [showIcon]="true" [minDate]="minDate1"></p-calendar>
+            </div>
+            <div class="ui-g-4">
+                <label>Time:</label>
+            </div>
+            <div class="ui-g-4">
+                <!-- <input type="number" min="0" max="60" [(ngModel)]="time1"/> -->
+                <p-spinner [(ngModel)]="time1" maxlength="3" [max]="999" [min]="1" (keydown)="msgService.checkNumValue($event,999)"></p-spinner>
+            </div>
+            <div class="ui-g-4">Minutes</div>
+            <div class="ui-g-4">
+                <label>D/I:</label>
+            </div>
+            <div class="ui-g-6">
+                <p-dropdown [options]="di" [(ngModel)]="selectedDi1" class="drop-down"></p-dropdown>
+            </div>
+            <div class="ui-g-4">
+                <label>Presenter:</label>
+            </div>
+            <div class="ui-g-6">
+                <input type="text" pInputText readonly="true" [(ngModel)]="presenterName" (click)="choosePet3()"/>
+            </div>
+            <div class="ui-g-4">
+                <label>Decision/Action:</label>
+            </div>
+            <div class="ui-g-6">
+                <textarea pInputTextarea maxlength="500" [(ngModel)]="decision" [rows]="4" style="width:90%;"></textarea>
+            </div>
+            <div class="ui-g-4">
+                <label>Owner:</label>
+            </div>
+            <div class="ui-g-6">
+                <input type="text" pInputText readonly="true" [(ngModel)]="ownerName" (click)="choosePet4()"/>
+            </div>
+        </div>
+    </div>
+    <div class="wrap3" *ngIf="flag3">
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label class="required">Issue:</label>
+            </div>
+            <div class="ui-g-8">
+                <input id="input" type="text" maxlength="50" pInputText [(ngModel)]="Issue"/>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label class="required">Issue Date:</label>
+            </div>
+            <div class="ui-g-8">
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" class="calendar-icon-input" [(ngModel)]="date2" [showTime]="true" [showIcon]="true" [minDate]="minDate2" dateFormat="yy-mm-dd"></p-calendar>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label class="required">Target Close Date:</label>
+            </div>
+            <div class="ui-g-8">
+                <p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" class="calendar-icon-input" [(ngModel)]="date3" [showTime]="true" [showIcon]="true" [minDate]="date2" dateFormat="yy-mm-dd"></p-calendar>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label>Decision/Action:</label>
+            </div>
+            <div class="ui-g-8">
+                <textarea pInputTextarea style="width:90%;" autoResize="autoResize" maxlength="500" [(ngModel)]="decision1"></textarea>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label>Owner:</label>
+            </div>
+            <div class="ui-g-8">
+                <input id="input" type="text" readonly="true" pInputText [(ngModel)]="owner1" (click)="choosePet5()"/>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label>Tracking Forum:</label>
+            </div>
+            <div class="ui-g-8">
+                <textarea pInputTextarea style="width:90%;" autoResize="autoResize" maxlength="500" [(ngModel)]="trackingForum"></textarea>
+            </div>
+        </div>
+        <div class="ui-g">
+            <div class="ui-g-4">
+                <label>Status:</label>
+            </div>
+            <div class="ui-g-1">
+                <!-- <input type="checkbox" value="finish" [(ngModel)]="selectedBox"> -->
+                <p-checkbox [(ngModel)]="checked" binary="true"></p-checkbox>
+            </div>
+            <div class="ui-g-2">Close</div>
+        </div>
+    </div>
+    <p-footer class="ui-g" style="margin-bottom:1rem;">
+        <div class="ui-g-4"></div>
+        <button *ngIf="flag1" [disabled]="!topicCategory||!topic" type="button" pButton  (click)="confirm()" label="Confirm"></button>
+        <button *ngIf="flag2" [disabled]="!topicCategory1||!topic1||!date1" type="button" pButton  (click)="confirm()" label="Confirm"></button>
+        <button *ngIf="flag3" [disabled]="!Issue||!date2||!date3" type="button" pButton  (click)="confirm()" label="Confirm"></button>
+        <div class="ui-g-1"></div>
+        <button type="button" pButton  (click)="display=false" label="Cancel"></button>
+    </p-footer>
+</p-dialog>
+<!-- 选择users弹框 -->
+<p-dialog class="dialog" header="Select Users" [(visible)]="selectUsers" modal="modal" width="800" [responsive]="true">
+    <span style="margin-right:1rem;">Department:</span>
+    <input (keyup)="checkUserEnterSearch($event)" maxlength="100" style="width:100px;" id="input" type="text" pInputText [(ngModel)]="department">
+    <span style="margin:0 1rem 0 2rem;">User Name:</span>
+    <input (keyup)="checkUserEnterSearch($event)" maxlength="100" style="width:100px;" id="input" type="text" pInputText [(ngModel)]="userName">
+    <span style="margin:0 1rem 0 2rem;">Employee ID:</span>
+    <input (keyup)="checkUserEnterSearch($event)" maxlength="100" style="width:100px;" id="input" type="text" pInputText [(ngModel)]="employeeId">
+    <button pButton type="button" (click)="checkUsers()" label="Search"></button>
+    <!-- <table class="table table-bordered table-hover">
+        <thead class="thead-inverse">
+            <tr>
+                <th>User Name</th>
+                <th>User Code</th>
+                <th>Job</th>
+                <th>Telephone</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Manager</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let option of userTable" (dblclick)="giveUser(option.userName,option.userCode,option.jobPosition)">
+                <td>{{option.userName}}</td>
+                <td>{{option.userCode}}</td>
+                <td>{{option.jobPosition}}</td>
+                <td>{{option.telephone}}</td>
+                <td>{{option.emailAddress}}</td>
+                <td>{{option.departmentName}}</td>
+                <td>{{option.masterName}}</td>
+            </tr>
+        </tbody>
+    </table> -->
+    <p-dataTable [rows]="10" (onRowDblclick)="giveUser($event)" [value]="userTable" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem">
+            <p-column field="userName" header="User Name"></p-column>
+            <p-column field="employeeCode" header="Employee ID"></p-column>
+            <p-column field="jobPosition" header="Job"></p-column>
+            <p-column field="telephone" header="Telephone"></p-column>
+            <p-column field="emailAddress" header="Email"></p-column>
+            <p-column field="departmentName" header="Department"></p-column>
+            <p-column field="masterName" header="Manager"></p-column>
+    </p-dataTable>
+    <p-paginator totalRecords="{{totalRecord}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate($event)"></p-paginator>
+</p-dialog>
+<!-- add meeting 弹框 -->
+<p-dialog class="dialog" header="Add Meeting" [(visible)]="addAmeeting" modal="modal" width="800" [responsive]="true">
+    <div *ngIf="stepOne">
+        <div class="title" style="font-weight:bolder;margin:0;">Base Information</div>
+        <div class="body ui-g">
+            <div class="ui-g-1"></div>
+            <div class="ui-g-3"><label class="required">Meeting Topic:</label></div>
+            <div class="ui-g-7"><input type="text" maxlength="100" pInputText [(ngModel)]="meetingTopic1"/></div>
+            <div class="ui-g-1"></div>
+            <div class="ui-g-1"></div>
+            <div class="ui-g-3"><label class="required">Venue:</label></div>
+            <div class="ui-g-7"><input type="text" maxlength="100" pInputText [(ngModel)]="venue"/></div>
+            <div class="ui-g-1"></div>
+            <div class="ui-g-1"></div>
+            <div class="ui-g-3"><label class="required">Meeting Time:</label></div>
+            <div class="ui-g-3"><p-calendar [monthNavigator]="true" [yearNavigator]="true" yearRange="{{yearRange}}" [(ngModel)]="meetingTime1" [showTime]="true" [showIcon]="true" dateFormat="yy-mm-dd" [minDate]="minDate"></p-calendar></div>
+            <div class="ui-g-1"><label class="required">Minutes:</label></div>
+            <div class="ui-g-3">
+                <p-spinner [(ngModel)]="minute" maxlength="3" [min]="1" [max]="999" [step]="1" (keydown)="msgService.checkNumValue($event,999)"></p-spinner>
+                <!-- <input type="number" min="1" max="100" [(ngModel)]="minute" style="width:75%;"/> -->
+            </div><div style="display:inline-block;width:20px;"></div>
+            <!-- <div class="ui-g-1"></div> -->
+            <div class="ui-g-1"></div>
+            <div class="ui-g-3"><label class="required">Program Code:</label></div>
+            <div class="ui-g-7">
+                <input type="text" pInputText readonly="true" [(ngModel)]="mutiProgram" (click)="showProgramCodes()"/>
+                <!-- <div class="wrap" style="position:relative;">
+                    <div id="box1" class="faelse"><input type="text" (focus)="showDropdown2()" [(ngModel)]="mutiProgram" style="border:none;height:100%;width:calc(100% - 24px);"/><span class="fa fa-caret-down fa-lg" style="float:right;border-left:1px solid #1491E0;padding:0.45rem 0.5rem;" (click)="showDropdown()"></span></div>
+                    <div id="box2" style="position:relative;width:200px;Z-index:200;top:-10px;" *ngIf="singleChange">
+                        <p-dataTable [value]="programCodes" class="data-table" [rowHover]=true scrollable="true" scrollHeight="10rem">
+                            <p-column field="id" header="No" [style]="{'width':'30px'}">
+                                <template pTemplate="body" let-item="rowData">
+                                    <p-checkbox name="group" [value]=item.value [(ngModel)]="selectedBoxelse" inputId="ny" (onChange)="gotoView()"></p-checkbox>                                
+                                </template>
+                            </p-column>
+                            <p-column field="label" header="Program Code"></p-column>
+                        </p-dataTable>
+                    </div>
+                </div> -->
+            </div>
+            <!-- <div class="ui-g-7"><p-dropdown [options]="programCodes" [(ngModel)]="programCode" class="drop-down"></p-dropdown></div> -->
+            <div class="ui-g-1"></div>
+            <div class="ui-g-1"></div>
+            <div class="ui-g-3"><label>Teleconferencing:</label></div>
+            <div class="ui-g-7"><textarea [rows]="3" style="width:90%;" maxlength="500" [(ngModel)]="teleconferencing" pInputTextarea autoResize="autoResize"></textarea></div>
+            <div class="ui-g-1"></div>
+            <div class="ui-g-1" *ngIf="emailFlag"></div>
+            <div class="ui-g-3" *ngIf="emailFlag"><label class="required">Remark:</label></div>
+            <div class="ui-g-7" *ngIf="emailFlag"><textarea [rows]="2" style="width:90%;" [(ngModel)]="remark" pInputTextarea autoResize="autoResize"></textarea></div>
+        </div>
+    </div>
+    <div *ngIf="footOne">
+        <p-footer class="ui-g" style="margin-bottom:1rem;">
+            <!-- <div class="ui-g-3"></div>
+            <button type="button" pButton (click)="confirmAndNotify()" label="Confirm and Notify"></button> -->
+            <div class="ui-g-5"></div>
+            <button type="button" pButton [disabled]="!meetingTopic1||!venue||!meetingTime1||!minute||!mutiProgram" (click)="confirmMeeting()" label="Confirm"></button>
+            <div class="ui-g-1"></div>
+            <button type="button" pButton (click)="addAmeeting=false" label="Cancel"></button>
+        </p-footer>
+    </div>
+    <div *ngIf="stepTwo">
+        <p-tabView class="tab-view view-body" [ngClass]="{'flexHeight':footTwo != true}" (onChange)="handleChange1($event)">
+            <p-tabPanel header="Attendance">
+                <button pButton type="button" label="Initial from PET" (click)="initialFromPet()"></button>
+                <button pButton type="button" (click)="openProjectMember()" label="Add"></button>
+                <table class="table table-bordered">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Role Name/Job Position</th>
+                            <th>First Name</th>
+                            <th>Option</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of projectMemberTable">
+                            <td>{{option.rolePosition}}</td>
+                            <td>{{option.attendenceName}}</td>
+                            <td>{{option.attend==1?'CC':'Participation'}}</td>
+                            <td><span class="txt" (click)="modifyProjectMember(option)">Edit</span><span class="txt" (click)="deleteProjectMember(option.attendenceId)">Delete</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </p-tabPanel>
+            <p-tabPanel header="Meeting Topics">
+                <button pButton type="button" label="Add" (click)="openChangeMeetingTopic()"></button>
+                <table class="table table-bordered">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>Topic Category</th>
+                            <th>Topic</th>
+                            <th>Time</th>
+                            <th>Presenter</th>
+                            <th>D/I</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let option of meetingTopicTable">
+                            <td>{{option.topicCategory}}</td>
+                            <td>{{option.theme}}</td>
+                            <td>{{option.time}}</td>
+                            <td>{{option.userName}}</td>
+                            <td>{{option.di}}</td>
+                            <td><span class="txt" (click)=modifyMeetingTop(option)>Edit</span><span class="txt" (click)="deleteMeetingTop(option.topicId)">Delete</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p-paginator totalRecords="{{totalRecord5}}" rows="10" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="paginate5($event)"></p-paginator>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+    <div *ngIf="footTwo">
+        <p-footer class="ui-g" style="margin:0.5rem 0">
+            <!-- <div class="ui-g-3"></div>
+            <button type="button" pButton (click)="confirmAndNotify()" label="Confirm and Notify"></button> -->
+            <div class="ui-g-5"></div>
+            <button type="button" *ngIf="!emailFlag" pButton [disabled]="!meetingTopic1||!venue||!meetingTime1||!minute||!mutiProgram" (click)="confirmMeeting1()" label="Confirm"></button>
+            <button type="button" *ngIf="emailFlag" pButton [disabled]="!meetingTopic1||!venue||!meetingTime1||!minute||!mutiProgram||!remark" (click)="confirmMeeting1()" label="Confirm"></button>
+            <div class="ui-g-1"></div>
+            <button type="button" pButton (click)="addAmeeting=false" label="Cancel"></button>
+        </p-footer>
+    </div>
+    <!-- <p-footer class="ui-g" style="margin-bottom:1rem;">
+        <div class="ui-g-3"></div>
+        <button type="button" pButton (click)="confirmAndNotify()" label="Confirm and Notify"></button>
+        <div class="ui-g-5"></div>
+        <button type="button" pButton (click)="confirmMeeting()" label="Next"></button>
+        <div class="ui-g-1"></div>
+        <button type="button" pButton (click)="addAMeeting=false" label="Cancel"></button>
+    </p-footer> -->
+</p-dialog>
+<!-- <p-dialog class="dialog" header="Add Meeting" [(visible)]="addAmeeting1" modal="modal" width="800" [responsive]="true">
+    <p-tabView class="tab-view">
+        <p-tabPanel header="Attendance">
+            <button pButton type="button" label="Initial from Pet" (click)="initialFromPet()"></button>
+            <button pButton type="button" (click)="openProjectMember()" label="Add"></button>
+            <table class="table table-bordered">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Role Name/Job Position</th>
+                        <th>First Name</th>
+                        <th>Option</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let option of projectMemberTable">
+                        <td>{{option.rolePosition}}</td>
+                        <td>{{option.userName}}</td>
+                        <td>{{option.attend}}</td>
+                        <td><span class="txt">Edit</span><span class="txt">Delete</span></td>
+                    </tr>
+                    <tr *ngFor="let option of petTable">
+                        <td>{{option.rolePosition}}</td>
+                        <td>{{option.userName}}</td>
+                        <td>{{option.attend}}</td>
+                        <td><span class="txt">Edit</span><span class="txt">Delete</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </p-tabPanel>
+        <p-tabPanel header="Meetinng Topics">
+            <button pButton type="button" label="Add" (click)="openChangeMeetingTopic()"></button>
+            <table class="table table-bordered">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>Topic Category</th>
+                        <th>Topic</th>
+                        <th>Time</th>
+                        <th>PRESENTER</th>
+                        <th>D/I</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let option of meetingTopicTable">
+                        <td>{{option}}</td>
+                        <td>{{option}}</td>
+                        <td>{{option}}</td>
+                        <td>{{option}}</td>
+                        <td>{{option}}</td>
+                        <td><span class="txt">Edit</span><span class="txt">Delete</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </p-tabPanel>
+    </p-tabView>
+    <p-footer class="ui-g" style="margin-bottom:1rem;">
+        <div class="ui-g-4"></div>
+        <button type="button" pButton (click)="confirmMeeting1()" label="Confirm"></button>
+        <div class="ui-g-1"></div>
+        <button type="button" pButton (click)="addAMeeting=false" label="Cancel"></button>
+    </p-footer>
+</p-dialog> -->
+<!-- add meeting 弹框里的弹框 -->
+<p-dialog class="dialog" [header]="header" [(visible)]="projectMember" width="400" [responsive]="true">
+    <div class="ui-g">
+        <div class="ui-g-5"><label class="required">First Name</label></div>
+        <div class="ui-g-7"><input type="text" pInputText [(ngModel)]="firstName" (click)="choosePet1()"/></div>
+        <div class="ui-g-5"><label class="required">Role/Job Position:</label></div>
+        <div class="ui-g-7"><input type="text" disabled="true" pInputText [(ngModel)]="rolePosition"/></div>
+        <div class="ui-g-5"><label>Option</label></div>
+        <div class="ui-g-7">
+            <p-radioButton class="radio-button" name="groupname" value=0 label="Participation" [(ngModel)]="selectedValue"></p-radioButton>
+            <p-radioButton class="radio-button" name="groupname" value=1 label="CC" [(ngModel)]="selectedValue"></p-radioButton>
+            <!-- <input type="radio" style="width:20px;" value=0 [(ngModel)]="selectedValue"/><span style="margin-right:1rem;">Participation</span> -->
+            <!-- <input type="radio" style="width:20px;" value=1 [(ngModel)]="selectedValue"/><span>CC</span> -->
+        </div>
+    </div>
+    <p-footer class="ui-g" style="margin-bottom:1rem;">
+        <div class="ui-g-5"></div>
+        <button type="button" [disabled]="!firstName||!rolePosition" pButton  (click)="addProjectMember()" label="Confirm"></button>
+        <div class="ui-g-1"></div>
+        <button type="button" pButton  (click)="projectMember=false" label="Cancel"></button>
+    </p-footer>
+</p-dialog>
+<!-- 选择项目弹框 -->
+<p-dialog class="dialog" header="Select Programs" [(visible)]="showPrograms" modal="modal" width="400" [responsive]="true">
+    <div class="ui-g" style="margin:0;">
+        <div class="ui-g-4" style="margin:0;">
+            Program Code:
+        </div>
+        <div class="ui-g-6" style="margin:0;">
+            <input (keyup)="searchBoxData($event)" type="text" pInputText [(ngModel)]="itemForProgramCode"/>
+        </div>
+    </div>
+    <p-dataTable [value]="programCodes" class="data-table" [rowHover]=true scrollable="true" scrollHeight="20rem">
+        <p-column field="id" header="No" [style]="{'width':'40px'}">
+            <template pTemplate="body" let-item="rowData">
+                <p-checkbox name="group" [value]=item.value [(ngModel)]="selectedBoxelse" inputId="ny" (onChange)="gotoView()"></p-checkbox>                                
+            </template>
+        </p-column>
+        <p-column field="label" header="Program Code"></p-column>
+    </p-dataTable>  
+</p-dialog>
+
+<p-dialog class="dialog" [header]="header" [(visible)]="changeMeetingTopic" modal="modal" width="500" [responsive]="true">
+    <div class="ui-g">
+        <div class="ui-g-5"><label class="required">Topic Category:</label></div>
+        <div class="ui-g-5"><input type="text" maxlength="50" pInputText [(ngModel)]="topicCategory2"/></div>
+        <div class="ui-g-5"><label class="required">Topic:</label></div>
+        <div class="ui-g-5"><input type="text"maxlength="50"  pInputText [(ngModel)]="topic2"/></div>
+        <div class="ui-g-5"><label>Time:</label></div>
+        <div class="ui-g-5"><p-spinner [(ngModel)]="time2" maxlength="3" [min]="0" [max]="999" (keydown)="msgService.checkNumValue($event,999)"></p-spinner></div><span style="display:inline-block;margin-top:2rem;">Minutes</span>
+        <div class="ui-g-5"><label>D/I:</label></div>
+        <div class="ui-g-5"><p-dropdown [options]="di" [(ngModel)]="selectedDi2"></p-dropdown></div>
+        <div class="ui-g-5"><label>Presenter:</label></div>
+        <div class="ui-g-5"><input type="text" pInputText [(ngModel)]="presenter2" (click)="choosePet2()"/></div>
+    </div>
+    <p-footer class="ui-g" style="margin-bottom:1rem;">
+        <div class="ui-g-4"></div>
+        <button type="button" [disabled]="!topicCategory2||!topic2" pButton  (click)="confirmMeetingTopic()" label="Confirm"></button>
+        <div class="ui-g-1"></div>
+        <button type="button" pButton  (click)="changeMeetingTopic=false" label="Cancel"></button>
+    </p-footer>
+</p-dialog>
+<p-confirmDialog></p-confirmDialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+<!-- meeting minutes 上传附件 -->
+<p-dialog class="dialog" header="Import File" [(visible)]="file" [responsive]="true" showEffect="fade" [modal]="true">
+    <p-fileUpload mode="basic" url="/bpd-proj/bpd/att/upload?bussinessId={{bussinessId}}&attId={{attId}}" name="file1"
+        (onUpload)="onBasicUpload($event)">
+    </p-fileUpload>
+</p-dialog>
+</div>

@@ -1,0 +1,35 @@
+@import "../../../../../sass/privateStyle";
+.other-rate-content {
+    .panel {
+        &>div {
+            .ui-panel-content-wrapper {
+                .ui-panel-content {
+                    overflow: hidden;
+                    &::before {
+                        content: "";
+                        height: 0;
+                        display: table;
+                        clear: both;
+                    }
+                }
+            }
+            .panel-in-panel {
+                margin: 0;
+            }
+        }
+        .inner-table-input {
+            margin-top: 1rem; 
+        }
+        .inner-input {
+            margin: 1rem 0;
+        }
+        .inner-button-content {
+            margin: 1rem 0;
+        }
+    }
+    .real-estate-modify {
+        &>div {
+            width: 35%;
+        }
+    }
+}

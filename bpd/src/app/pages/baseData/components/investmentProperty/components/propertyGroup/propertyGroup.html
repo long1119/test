@@ -1,0 +1,87 @@
+
+<div class="ui-grid main-content">
+    <button style="margin-top: 1rem;" *ngIf="localStorageAuthority" pButton type="button" class="add-button" (click)="addClick()" label="Add"></button>
+    <!--列表-->
+    <p-dataTable class="ui-grid-row data-table" [value]="pGroupData" selectionMode="single" (onRowClick)="handleRowClick($event)">
+        <p-column styleClass="ui-gird-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                {{idx + 1}}
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-5" field="groupPropertyName" header="Property Group" ></p-column>
+        <p-column styleClass="ui-grid-col-4" field="investmentCharacter" header="Capital/Expense"></p-column>
+        <!-- <p-column styleClass="ui-grid-col-5" field="serialNo" header="Serial No" ></p-column> -->
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-2" header="">
+            <template let-data="rowData" let-idx="rowIndex" pTemplate="body">
+                <span class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                <span class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!--添加页面-->
+    <p-dialog class="dialog" header="Investment Property" [(visible)]="dialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="propertyGroup">Property Group :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="36" pInputText id="propertyGroup" [(ngModel)]="dialogPropertyGroup" /></div>
+            </div>
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="propertyGroup">Serial No :</label></div>
+                <div class="ui-grid-col-8"><input disabled pInputText id="propertyGroup" [(ngModel)]="dialogSerialNo" /></div>
+            </div> -->
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="capitalExpense">Capital Expense</label></div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" styleClass="drop-down" [options]="capitalExpense" [(ngModel)]="selectedCapitalExpense" placeholder="please choose"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <!--添加页面按钮-->
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="cancleClick()" label="Cancel"></button>
+                <button type="button" pButton [(disabled)]="!dialogPropertyGroup || !dialogSerialNo"  (click)="saveClick()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+
+    <!--修改页面-->
+    <p-dialog class="dialog" header="Investment Property" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="propertyGroup">Property Group :</label></div>
+                <div class="ui-grid-col-8"><input maxlength="36" pInputText id="propertyGroup" [(ngModel)]="dialogPropertyGroup" /></div>
+            </div>
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="propertyGroup">Serial No :</label></div>
+                <div class="ui-grid-col-8"><input disabled pInputText id="propertyGroup" [(ngModel)]="dialogSerialNo" /></div>
+            </div> -->
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label for="capitalExpense">Capital Expense</label></div>
+                <div class="ui-grid-col-8">
+                    <p-dropdown class="drop-down" autoWidth="false" styleClass="drop-down" [options]="capitalExpense" [(ngModel)]="selectedCapitalExpense" placeholder="please choose"></p-dropdown>
+                </div>
+            </div>
+        </div>
+        <!--修改页面按钮-->
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="cancleClick()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogPropertyGroup || !dialogSerialNo" pButton  (click)="saveClick()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="Investment Property" [(visible)]="deleteDialog">
+         <div>
+            Are You Sure To Delete?
+        </div>  
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo()" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes()" label="Cofirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

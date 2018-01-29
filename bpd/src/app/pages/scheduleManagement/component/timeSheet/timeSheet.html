@@ -1,0 +1,293 @@
+<div class="time-sheet-content ui-grid">
+    <div class="content-left ui-grid-col-3">
+        <!-- scrollable="true" scrollHeight="30rem"  -->
+        <p-dataTable (onRowClick)="onRowClick($event)" scrollable="true" scrollHeight="40rem" selectionMode="single" class="ui-grid data-table project-info-table"
+            [value]="programInfoData" [(selection)]="selectedProgramInfoData" [paginator]="true" [rows]="10">
+            <p-header>
+                <div class="previous-head">Project Info</div>
+                <button pButton type="button" class="previous-button" icon="fa-search" (click)="searchClick()"></button>
+            </p-header>
+            <p-column styleClass="ui-grid-col-2" header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                    <span *ngIf="programInfoData[idx].adProjectCode">{{idx + 1}}</span>
+                </template>
+            </p-column>
+            <!-- <p-column styleClass="ui-grid-col-2" field="programCode" header="Program Code"></p-column> -->
+            <p-column styleClass="ui-gird-col-10" field="projectName" header="Project Name"></p-column>
+            <!-- <p-column styleClass="ui-grid-col-2" field="modelYear" header="Model Year"></p-column> -->
+        </p-dataTable>
+    </div>
+    <!-- 版本控制按钮 -->
+    <div class="content-right ui-grid-col-9">
+        <div class="ui-grid version-button">
+            <div class="ui-grid-col-1">
+                <label>Version :</label>
+            </div>
+            <div class="ui-grid-col-1">
+                <p-dropdown class="drop-down" (onChange)="versionChange($event)" autoWidth="false" [options]="versionOption" [(ngModel)]="selectedVersion"></p-dropdown>
+            </div>
+            <!-- <div class="ui-grid-10" style="height: 3rem;" *ngIf="!localStorageAuthority">
+            </div> -->
+            <div class="ui-grid-10 operate-buttons" *ngIf="freezeStatus != '2' && changeProjectStatus && localStorageAuthority">
+                <!-- <div class="ui-grid-10 operate-buttons" *ngIf="freezeStatus != '2'"> -->
+                <button type="button" [(disabled)]="!changeAdProjectCode || !managerFlag || timeSheetStatus" pButton (click)="addTemplateClick()"
+                    label="Add From Template"></button>
+                <button type="button" [(disabled)]="!changeAdProjectCode || !managerFlag || timeSheetStatus" pButton (click)="copyTemplateClick()"
+                    label="Copy From Project"></button>
+                <button type="button" [(disabled)]="!changeAdProjectCode || !managerFlag || timeSheetStatus" pButton (click)="importClick()"
+                    label="Import"></button>
+                <button type="button" [(disabled)]="!selectedVersion || !saveAsForbiden || !managerFlag" pButton (click)="saveAsClick()"
+                    label="Save As New Version"></button>
+                <!--  || !managerFlag -->
+                <button type="button" [(disabled)]="timeSheetStatus || !saveAsForbiden || !managerFlag || timeSheetStatus" pButton (click)="submitClick()"
+                    label="Submit"></button>
+                <button type="button" pButton (click)="exportClick()" label="Export"></button>
+            </div>
+            <div class="ui-grid-10 operate-buttons" *ngIf="freezeStatus == '2' || !changeProjectStatus && localStorageAuthority">
+                <button type="button" [disabled]="true" pButton label="Add From Template"></button>
+                <button type="button" [disabled]="true" pButton label="Copy From Project"></button>
+                <button type="button" [disabled]="true" pButton label="Import"></button>
+                <button type="button" [disabled]="true" pButton label="Save As New Version"></button>
+                <button type="button" [disabled]="true" pButton label="Submit"></button>
+                <button type="button" pButton (click)="exportClick()" label="Export"></button>
+            </div>
+            <div class="ui-grid-10 operate-buttons" *ngIf="!localStorageAuthority">
+                <button type="button" [(disabled)]="!changeAdProjectCode" pButton (click)="exportClick()" label="Export"></button>
+            </div>
+            <!-- tabView -->
+            <div class="tab-view-content">
+                <p-tabView class="tab-view" (onChange)="tabViewChange($event)">
+                    <p-tabPanel header="Timesheet Info">
+                        <time-sheet-data *ngIf="showTimeSheetData" [changeAdProjectCode]="changeAdProjectCode" [changeTimingId]="selectedVersion"
+                            [changeProjManager]="changeProjManager" [changeProjectStatus]="changeProjectStatus" [refreshFlag]="refreshFlag"
+                            (submitStatusFlagOut)="submitStatusFlagIn($event)"></time-sheet-data>
+                    </p-tabPanel>
+                    <!-- 审批中查看 -->
+                    <p-tabPanel *ngIf="managerFlag" header="Approving Log">
+                        <devibables *ngIf="showApproveLog" [changeAdProjectCode]="changeAdProjectCode" [changeProjManager]="changeProjManager" [changeTimingId]="selectedVersion"></devibables>
+                    </p-tabPanel>
+                    <!-- 审批完成查看 -->
+                    <!-- <p-tabPanel *ngIf="managerFlag" header="Approval Logs">
+                        <approve-log [changeProjManager]="changeProjManager" [changeTimingId]="selectedVersion"></approve-log>
+                    </p-tabPanel> -->
+                    <!-- <p-tabPanel header="Files">
+                        <time-sheet-files></time-sheet-files>
+                    </p-tabPanel> -->
+                </p-tabView>
+            </div>
+        </div>
+    </div>
+    <!-- addTemplateDialog -->
+    <p-dialog class="dialog add-gvdp-dialog" header="Select GVDP Template" [(visible)]="addTemplateDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div class="gvdp-version">
+            <p-dataTable (onRowClick)="onGvdpVersionRowClick($event)" selectionMode="single" [(selection)]="selectedGvdpVersion" class="ui-grid data-table"
+                [value]="gvdpVersionData" scrollable="true" scrollHeight="30rem">
+                <p-header>
+                    <div class="previous-head">GVDP Version</div>
+                </p-header>
+                <p-column styleClass="ui-grid-col-1" header="NO">
+                    <template let-idx="rowIndex" pTemplate="body">
+                        <span>{{idx + 1}}</span>
+                    </template>
+                </p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-4" field="templateTitle" header="Template Name"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-3" field="descriiption" header="Description"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="userName" header="Update User"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="lastUpdateDate" header="Update Date"></p-column>
+            </p-dataTable>
+        </div>
+        <div class="gvdp-detail">
+            <p-dataTable class="ui-grid data-table" [value]="gvdpDetailData">
+                <p-header>
+                    <div class="previous-head">GVDP {{GVDPVersion}} Detail</div>
+                </p-header>
+                <p-column styleClass="ui-grid-col-2" header="NO">
+                    <template let-idx="rowIndex" pTemplate="body">
+                        <span>{{idx + 1}}</span>
+                    </template>
+                </p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="elementName" header="Element Name"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="elementId" header="Element ID"></p-column>
+                <p-column rowStyleClass="table-align" styleClass="ui-grid-col-5" field="period" header="Period(Days To SORP)"></p-column>
+            </p-dataTable>
+            <p-paginator rows="5" totalRecords="{{gvdpDetailTotal}}" pageLinkSize="3" (onPageChange)="gvdpDetailPaginate($event)"></p-paginator>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="addTemplateCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!changeGvdpVersion" pButton (click)="addTemplateSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- copyFromTemplate -->
+    <p-dialog class="dialog copy-template-dialog" header="Copy Master Timesheet From Project Library" [(visible)]="copyTemplateDialog"
+        [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="program-search ui-grid">
+            <div class="ui-grid-col-2">
+                <label>Program Code :</label>
+            </div>
+            <div class="ui-grid-col-3">
+                <input (keyup)="lookUpEnterSearch($event)" pInputText [(ngModel)]="dialogProgramCode" />
+            </div>
+            <div class="ui-grid-col-1">
+                <button type="button" pButton (click)="lookUpClick()" label="Search"></button>
+            </div>
+            <div class="ui-grid-col-2">
+                <label>Version :</label>
+            </div>
+            <div class="ui-grid-col-4">
+                <p-dropdown class="drop-down" (onChange)="versionChange($event)" autoWidth="false" [options]="importVersionOption" [(ngModel)]="selectedImportVersion"></p-dropdown>
+            </div>
+        </div>
+        <p-dataTable (onRowClick)="onCopyTemplateRowClick($event)" selectionMode="single" [rows]="10" [(selection)]="SelectedCopyTemplate"
+            class="ui-grid data-table" [value]="copyTemplateData" scrollable="true" scrollHeight="30rem">
+            <p-column styleClass="ui-grid-col-1" header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                    <span *ngIf="copyTemplateData[idx].adProjectCode">{{idx + 1}}</span>
+                </template>
+            </p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-4" field="programCode" header="Progrom Code"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-3" field="modelYear" header="Model Year"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="projectCode" header="Costbook Code"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="projectName" header="Project Name"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="levelName" header="Classification"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="categoryName" header="Category"></p-column>
+            <!-- <p-column rowStyleClass="table-align" styleClass="ui-grid-col-2" field="projectStauts" header="Status"></p-column> -->
+        </p-dataTable>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="copyTemplateCancel()" label="Cancel"></button>
+                <button type="button" pButton (click)="copyTemplateSave()" label="Save"></button>
+            </div>
+        </p-footer>
+        <!-- <p-paginator rows="10" first="0" totalRecords="{{copyTemplateTotal}}" pageLinkSize="3" (onPageChange)="copyTemplatePaginate($event)"></p-paginator> -->
+    </p-dialog>
+    <!-- 确认版本覆盖弹窗 -->
+    <p-dialog class="dialog search-dialog" header="Version" [(visible)]="coverVersionDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div>
+            Are You Sure To Cover This Version?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="coverVersionCancel()" label="Cancel"></button>
+                <button type="button" pButton (click)="coverVersionSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 导入弹窗 -->
+    <p-dialog class="dialog" header="Timesheet" [(visible)]="importDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <p-fileUpload mode="basic" name="file" url="/bpd-proj/bpd/masterTimeSheet/importExcel?adProjectCode={{changeAdProjectCode}}&selectedVersionTimingId={{selectedVersion}}"
+            accept="xlsm" maxFileSize="50000000" (onUpload)="onImportUpload($event)" (onError)="onImportUploadError($event)"></p-fileUpload>
+    </p-dialog>
+    <!-- 信息提示页 -->
+    <p-dialog class="dialog" header="Timesheet" [(visible)]="timeSheetMessageDialog">
+        <p-dataTable class="ui-grid-row data-table" [value]="timeSheetMessageData" scrollable="true" scrollHeight="30rem">
+            <p-column styleClass="ui-grid-col-3" field="colIndex" header="Col">
+            </p-column>
+            <p-column styleClass="ui-grid-col-3" field="rowIndex" header="Row"></p-column>
+            <p-column styleClass="ui-grid-col-6" field="errorInfo" header="Error Info"></p-column>
+        </p-dataTable>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="messageVeto()" label="Cancel"></button>
+                <button type="button" pButton (click)="messageDetermine()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 搜索弹框 -->
+    <p-dialog class="dialog search-dialog" header="Locate Project" [(visible)]="searchDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label>Program Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input (keyup)="searchEnterSearch($event)" pInputText [(ngModel)]="dialogProjectId" />
+                </div>
+            </div>
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label>Model Year :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input pInputText [(ngModel)]="dialogModelyear" />
+                </div>
+            </div> -->
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="searchCancel()" label="Cancel"></button>
+                <button type="button" pButton (click)="searchSave()" label="Save"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 提交弹框 -->
+    <p-dialog class="dialog search-dialog" header="Submit Timesheet" [(visible)]="submitDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label>Description :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <textarea type="text" maxlength="1000" pInputTextarea style="width:95%; height:7rem;" [(ngModel)]="dialogDescription"></textarea>
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="submitCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!this.dialogDescription" pButton (click)="submitSave()" label="Direct Approve"></button>
+                <button type="button" (click)="submitFlowSave()" pButton label="WorkFlow Approve"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-dialog class="dialog" header="Modify Element Info" [(visible)]="setSorpDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="program-search ui-grid">
+            <div class="ui-grid-col-4">
+                <label class="required">Element Name :</label>
+            </div>
+            <div class="ui-grid-col-8">
+                <input pInputText disabled value="SORP" />
+            </div>
+        </div>
+        <div class="program-search ui-grid">
+            <div class="ui-grid-col-4">
+                <label class="required">Plan Date :</label>
+            </div>
+            <div class="ui-grid-col-8">
+                <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" dateFormat="yy-mm-dd"
+                    styleClass="calendar-input" [readonlyInput]="true" [(ngModel)]="selectSorpDate"></p-calendar>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="setSorpDialog = false" label="Cancel"></button>
+                <button type="button" pButton (click)="setSorpSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-dialog class="dialog dialog-delete" header="Save As New Version" [(visible)]="saveAsDialog">
+        <div>
+            Are You Sure To Save As New Version?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="saveAsNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton (click)="saveAsYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-dialog class="dialog search-dialog" header="Set Approve User" [(visible)]="setPetMemberDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div>
+            Please Set Approve User Of {{setPetMemberMessage}} First!
+        </div>
+    </p-dialog>
+    <select-user-work-flow [changeMemberMessage]="changeMemberMessage" (userRoleOut)="mapRecive($event)"></select-user-work-flow>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

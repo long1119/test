@@ -1,0 +1,70 @@
+<div class="ui-grid nod-content">
+    <div class="ui-grid">
+        <div class="ui-grid-col-8 search-tab">
+            <label class="ui-grid-col-2">
+                Program Code :
+            </label>
+            <div class="ui-grid-col-2">
+                <input (keyup)="lookUpEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogProgramCode" />
+            </div>
+            <label class="ui-grid-col-2">
+                Costbook Code :
+            </label>
+            <div class="ui-grid-col-2">
+                <input (keyup)="lookUpEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogProjectCode" />
+            </div>
+            <label class="ui-grid-col-2">
+                Model Year :
+            </label>
+            <div class="ui-grid-col-2">
+                <input (keyup)="lookUpEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogModelYear" />
+            </div>
+        </div>
+        <div class="ui-grid-col-4" style="padding-left: 1rem;">
+            <button pButton type="button" [ngClass]="{'content-add': true}" (click)="lookUpClick()" label="Search"></button>
+        </div>
+    </div>
+    <p-dataTable (onRowClick)="onNodRowClick($event)" selectionMode="single" class="ui-grid-row data-table" [value]="nodData">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="nodData[idx].adProjectCode">
+                    {{idx + 1}}
+                </span>
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="projectCode" header="Costbook Code"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="programCode" header="Program Code"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="projectName" header="Program Name"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="levelName" header="Classification"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="categoryName" header="Category"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="modelYear" header="Model Year"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="plantCode" header="Plant"></p-column>
+        <!-- <p-column styleClass="ui-grid-col-3" field="projectStauts" header="Status"></p-column> -->
+    </p-dataTable>
+    <p-paginator rows="10" first="0" totalRecords="{{nodPaginatorTotal}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]"
+        (onPageChange)="nodPaginate($event)"></p-paginator>
+    <!-- tabView -->
+    <div class="tab-view-content" (onChange)="nodTabViewChange($event)">
+        <p-tabView class="tab-view">
+            <p-tabPanel header="NOD Infomation">
+                <nod-information (nodIdOut)="nodIdRec($event)" (managerOut)="managerRec($event)" [changeAdProjectCode]="changeAdProjectCode"
+                    [changeManagerCode]="changeManagerCode"></nod-information>
+            </p-tabPanel>
+            <p-tabPanel *ngIf="managerFlag" header="Approving Log">
+                <p-dataTable scrollable="true" scrollHeight="30rem" selectionMode="single" class="ui-grid data-table" [value]="approvingData">
+                    <!-- <p-column styleClass="ui-grid-col-3" field="version" header="Version"></p-column> -->
+                    <p-column styleClass="ui-grid-col-3" field="taskName" header="Approval Node"></p-column>
+                    <p-column styleClass="ui-grid-col-3" field="userName" header="Name"></p-column>
+                    <p-column styleClass="ui-grid-col-3" field="startTime" header="Start Date"></p-column>
+                    <p-column styleClass="ui-grid-col-3" field="endTime" header="End Date"></p-column>
+                    <p-column styleClass="ui-grid-col-3" field="deleteReason" header="Status"></p-column>
+                    <p-column styleClass="ui-grid-col-3" field="isAgree" header="Decision"></p-column>
+                    <p-column styleClass="ui-grid-col-3" field="comments" header="Comments"></p-column>
+                    <!-- <p-column styleClass="ui-grid-col-3" field="endtime_" header="End Time"></p-column> -->
+                </p-dataTable>
+            </p-tabPanel>
+        </p-tabView>
+    </div>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

@@ -1,0 +1,68 @@
+<div class="ui-grid main-content">
+    <button *ngIf="localStorageAuthority" pButton type="button" [ngClass]="{'project-button': true}" (click)="addClick()" label="Add"></button>
+    <p-dataTable class="ui-grid-row data-table" [value]="regionData" [ngClass]="{'region-table': true}">
+        <p-column styleClass="ui-grid-col-2" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                {{idx + 1}}
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-5" field="regionGroupName" header="Region Group" ></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-5">
+            <template pTemplate="header">
+                
+            </template>
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <div>
+                    <span class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                    <span class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+                </div>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!--添加页面-->
+    <p-dialog class="dialog" header="Region Group" [(visible)]="addDialog">
+        <div class="ui-grid ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="regionGroup">Region Group ：</label></div>
+                <div class="ui-grid-col-8"><input pInputText [ngClass]="{'dialogInput':true}" id="regionGroup" maxlength="30" required ng-required="true"
+                        [(ngModel)]="dialogRegionGroup" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <!--添加页面按钮-->
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogRegionGroup" pButton  (click)="addSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 编辑界面 -->
+    <p-dialog class="dialog" header="Region Group" [(visible)]="editDialog">
+        <div class="ui-grid ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4"><label class="required" for="regionGroup">Region Group</label></div>
+                <div class="ui-grid-col-8"><input maxlength="30" pInputText id="regionGroup" [(ngModel)]="dialogRegionGroup" /></div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="editCancle(idx,data)" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogRegionGroup" pButton  (click)="editSave(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除界面 -->
+    <p-dialog class="dialog delete-dialog" header="Region Group" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete This Data?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes(idx,data)" label="Confrim"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 操作提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

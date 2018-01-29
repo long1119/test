@@ -1,0 +1,102 @@
+<div class="topBar">
+	<button *ngIf="userRoot" pButton type="button" (click)="AddBtn()" label="Add"></button>
+    PQRR Milestone:<p-dropdown autoWidth="false" [options]="PQRRSerchStore" [(ngModel)]="PQRRSerch" (onChange)="selectionLeftChange($event)" filter="filter"></p-dropdown>
+    Department:<p-dropdown autoWidth="false" [options]="departmentSerchStore" [(ngModel)]="departmentSerch" (onChange)="selectionRightChange($event)" filter="filter"></p-dropdown>
+</div>
+<p-dataTable [rows]="15" [value]="gridStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="50rem">
+    <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+    <p-column field="elementName" header="PQRR Milestone" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="deptName" header="Department" styleClass="ui-grid-col-3 align-left"></p-column>
+    <p-column field="roleName" header="Owner" styleClass="ui-grid-col-2 align-left"></p-column>
+    <p-column field="fileName" header="Template File" styleClass="ui-grid-col-5 align-left">
+        <template *ngIf="userRoot" pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id" class="editBtn" (click)="tplDownload(item)">{{item.fileName}}</span>
+        </template>
+    </p-column>
+    <p-column field="createUserName" header="Create User" styleClass="ui-grid-col-3 align-left"></p-column>
+    <p-column *ngIf="userRoot" header="" styleClass="ui-grid-col-2 align-center">
+        <template pTemplate="body" let-item="rowData">
+            <span *ngIf="item.id && (item.createUser == loginUser)" class="editBtn" (click)="editBtn(item)">Edit</span>
+            <span *ngIf="item.id && (item.createUser != loginUser)" class="noEditBtn">Edit</span>
+            <span *ngIf="item.id && (item.createUser == loginUser)" class="delBtn" (click)="delBtn(item)">Delete</span>
+            <span *ngIf="item.id && (item.createUser != loginUser)" class="noEditBtn">Delete</span>
+        </template>
+    </p-column>
+</p-dataTable>
+<p-paginator rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" totalRecords="{{gridStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[15,30,45]" (onPageChange)="paginate($event)"></p-paginator>
+<p-dialog header="Deliverable Template" [(visible)]="display" width="650" modal="modal" class="dialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required w105">PQRR Milestone:</span>
+                <p-dropdown autoWidth="false" [options]="PQRRMilestoneStore" [(ngModel)]="PQRRMilestone"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required w105">Department:</span>
+                <p-dropdown autoWidth="false" [options]="departmentStore" [(ngModel)]="department"></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required w105">Owner:</span>
+                <input class="input" type="text" pInputText readonly="true" [(ngModel)]="owner" (click)="getRole()">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required w105">Template File:</span>
+                <input class="input" style="width:62%" type="text" pInputText readonly="true" [(ngModel)]="templateFile">
+                <button style="width:70px" pButton type="button" label="Upload" (click)="upload()"></button>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-11">
+            <div class="ui-inputgroup" style="height:55px">
+                <span class="ui-inputgroup-addon w105">Description:</span>
+                <textarea type="text" pInputTextarea style="width:63.3%;position:absolute;right:90px;height:80px;" [(ngModel)]="description" maxlength="1000"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button *ngIf="save" pButton type="button" (click)="saveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!PQRRMilestone || !department || !templateFile || !owner"></button>
+        <button *ngIf="saveChange" pButton type="button" (click)="saveChangeBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!PQRRMilestone || !department || !owner || !templateFile"></button>
+        <button pButton type="button" (click)="cancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog class="dialog" header="Deliverable Template" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+    <p-fileUpload mode="basic" name="file" url="{{uploadURL}}" accept="xlsm" maxFileSize="50000000"
+        (onUpload)="onBasicUpload($event)"></p-fileUpload>
+</p-dialog>
+<!-- 信息提示页 -->
+<p-dialog class="dialog" header="Deliverable Template" [(visible)]="messageDialog">
+    <p-dataTable class="ui-grid-row data-table" [value]="messageData">
+        <p-column styleClass="ui-grid-col-3" field="colIndex" header="Col" [sortable]="true">
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="rowIndex" header="Row" [sortable]="true"></p-column>
+        <p-column styleClass="ui-grid-col-6" field="errorInfo" header="errorInfo" [sortable]="true"></p-column>
+    </p-dataTable>
+</p-dialog>
+<!-- 搜索角色界面 -->
+<p-dialog header="Role List" [(visible)]="roleDisplay" width="650" modal="modal" class="dialog">    
+    <div class="topBar">
+        Role Name:<input style="width:120px" (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="dialogRoleName" class="searchInput">
+        <button pButton type="button" (click)="lookClick()" label="Search"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="roleStore" class="data-table" [rowHover]=true (onRowDblclick)="roleDbclick($event)">
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="roleName" header="Role Name" styleClass="ui-grid-col-5 align-center"></p-column>
+        <p-column field="roleDescription" header="Description" styleClass="ui-grid-col-5 align-left"></p-column>
+    </p-dataTable>
+    <p-paginator rows="10" totalRecords="{{roleStoreLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="rolePaginate($event)"></p-paginator>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="3000"></p-growl>
+<p-confirmDialog></p-confirmDialog>

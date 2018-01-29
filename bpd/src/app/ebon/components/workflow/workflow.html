@@ -1,0 +1,161 @@
+<div class="work-flow">
+    <!-- <p-tabView class="tab-view"> -->
+    <!--     <p-tabPanel header="我发起">
+            <p-dataTable [value]="dataRows" dataKey="rownum">
+                <p-column field="defName" header="流程定义名称" [style]="{'text-align':'center'}"></p-column>
+                <p-column field="name" header="名称" [style]="{'text-align':'center'}"></p-column>
+                <p-column field="startTime" header="开始时间" [style]="{'text-align':'center'}"></p-column>
+                <p-column field="op" header="操作" [style]="{'width':'100px','text-align':'center'}">
+                    <template let-col let-row="rowData" pTemplate="body">
+              <button class="btn btn-success" (click)="showDialog(row)">审批</button>
+            </template>
+                </p-column>
+            </p-dataTable>
+        </p-tabPanel> -->
+    <!-- <p-tabPanel header="{{wfType}}" [selected]="true"> -->
+    <div style="height: 1rem; width: 100%;"></div>
+    <p-dataTable class="data-table" [value]="dataRows" dataKey="rownum">
+        <!-- <p-column field="defName" header="flow name" [style]="{'text-align':'center'}"></p-column> -->
+        <p-column field="modelYearName" header="Project Name" [style]="{'text-align':'center'}"></p-column>
+        <!-- <p-column *ngIf="wfType === 'timeSheet'" field="projectName" header="Model Year Name" [style]="{'text-align':'center'}"></p-column> -->
+        <!-- <p-column *ngIf="wfType === 'timeSheet'" field="version" header="Timing Version" [style]="{'text-align':'center'}"></p-column> -->
+        <p-column field="name" header="Approval Node" [style]="{'text-align':'center'}"></p-column>
+        <p-column field="startTime" header="Date" [style]="{'text-align':'center'}"></p-column>
+        <p-column header="" [style]="{'width':'200px','text-align':'center'}">
+            <template let-row="rowData" pTemplate="body">
+                <span class="edit-span" (click)="showDialog(row)">Show Detial</span>
+                <span *ngIf="row.createUserCode === currentUser" class="edit-span" (click)="reject(row)">Reject</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- </p-tabPanel> -->
+    <!-- <p-tabPanel header="flow">
+            <div style="height: 1rem; width: 100%;"></div>
+            <p-datatable class="data-table" [value]="finishdatarows" datakey="rownum">
+                <p-column field="defname" header="flow name" [style]="{'text-align':'center'}"></p-column>
+                <p-column field="name" header="name" [style]="{'text-align':'center'}"></p-column>
+                <p-column field="starttime_" header="start time" [style]="{'text-align':'center'}"></p-column>
+                <p-column field="endtime_" header="end time" [style]="{'text-align':'center'}"></p-column>
+                <p-column field="op" header="操作" [style]="{'width':'100px','text-align':'center'}">
+                    <template let-col let-row="rowdata" ptemplate="body">
+                      <button class="btn btn-success" (click)="showdialog(row)">查看</button>
+                    </template>
+                </p-column>
+            </p-datatable>
+        </p-tabPanel> -->
+    <!-- </p-tabView> -->
+    <!--审批弹出框============================================================================================================-->
+    <p-dialog header="{{dialogMessage}}" class="dialog approve-dialog" *ngIf="display" [(visible)]="display" modal="modal" header=""
+        [responsive]="true">
+        <p-tabView class="tab-view">
+            <p-tabPanel header="{{wfTypeInfo}} Info" [selected]="true">
+                <!-- mastertimeSheet -->
+                <time-sheet-work-flow *ngIf="auditForm?.processDefKey?.split(':')[0] === 'timeSheet'" [(auditForm)]="auditForm"></time-sheet-work-flow>
+                <!-- nod -->
+                <nod-work-flow *ngIf="auditForm?.processDefKey?.split(':')[0] === 'nod'" [(auditForm)]="auditForm"></nod-work-flow>
+                <!-- score card -->
+                <score-card-work-flow *ngIf="auditForm?.processDefKey?.split(':')[0] === 'scorecard'" [(auditForm)]="auditForm"></score-card-work-flow>
+                <!--应用系统的注册审批-->
+                <!-- <wf-appli-register-declare *ngIf="auditForm?.processDefKey?.split(':')[0] === 'XTZC'" [(auditForm)]="auditForm"></wf-appli-register-declare> -->
+                <!--项目立项-->
+                <!-- <wf-create-apply *ngIf="auditForm?.processDefKey?.split(':')[0] === 'XMLXSP'" [(auditForm)]="auditForm"></wf-create-apply> -->
+                <!--项目关闭申请-->
+                <!-- <Wf-proj-close-apply *ngIf="auditForm?.processDefKey?.split(':')[0] === 'XMGB'" [(auditForm)]="auditForm">
+                    </Wf-proj-close-apply> -->
+                <!-- <wf-workplan-declare *ngIf="auditForm?.processDefKey?.split(':')[0] === 'GZJHSB'" [(auditForm)]="auditForm"></wf-workplan-declare> -->
+                <!-- <wf-workplan-close *ngIf="auditForm?.processDefKey?.split(':')[0] === 'GZJHGB'" [(auditForm)]="auditForm"></wf-workplan-close> -->
+                <!-- <wf-workplan-change *ngIf="auditForm?.processDefKey?.split(':')[0] === 'GZJHBG'" [(auditForm)]="auditForm"></wf-workplan-change> -->
+                <!-- <wf-workplan-change *ngIf="auditForm?.processDefKey?.split(':')[0] === 'GZJHBG'" [(auditForm)]="auditForm"></wf-workplan-change> -->
+                <!--<wf-commit-check *ngIf="auditForm?.processDefKey?.split(':')[0] === 'QAPF'" [(auditForm)]="auditForm"></wf-commit-check>-->
+                <!-- <wf-qa-cut *ngIf="auditForm?.processDefKey?.split(':')[0] === 'QACJ'" [(auditForm)]="auditForm"></wf-qa-cut> -->
+                <!-- <wf-worktime-approve *ngIf="auditForm?.processDefKey?.split(':')[0] === 'GSSP'" [(auditForm)]="auditForm"></wf-worktime-approve> -->
+            </p-tabPanel>
+            <p-tabPanel header="To Do Task">
+                <div class="ui-grid" style="width:100%;margin-bottom:10px">
+
+                    <!-- <div class="ui-grid-col-12" style="text-align: right;">
+                        <span>approver：{{auditForm.createUserName}} &nbsp;&nbsp;&nbsp; approve time：{{auditForm.createTime}}</span>
+                    </div> -->
+
+                    <div class="ui-grid-12" style="padding-top: 1rem;">
+                        <div class="ui-grid-col-6">
+                            <p-radioButton class="radio-button" name="group1" style="font-size: 1rem;" value="1" label="Approve" [(ngModel)]="auditSuggestion.isAgree"></p-radioButton>
+                            <p-radioButton *ngIf="auditForm.createUserCode !== currentUser" class="radio-button" name="group1" style="font-size: 1rem;"
+                                value="2" label="Return" [(ngModel)]="auditSuggestion.isAgree"></p-radioButton>
+                            <!-- <p-radioButton class="radio-button" name="group1" value="0" label="back up" [(ngModel)]="auditSuggestion.isAgree"></p-radioButton> -->
+                            <!-- <p-radioButton class="radio-button" name="group1" value="3" label="more approve" [(ngModel)]="auditSuggestion.isAgree"></p-radioButton> -->
+                        </div>
+                        <div class="ui-grid-col-6">
+                            <span (click)="showPicture()" style="float: right; color: #49A0F0;cursor: pointer;">View Approve Flow Chart</span>
+                        </div>
+                    </div>
+                </div>
+                <h3>Comments: </h3>
+                <textarea pInputTextarea [(ngModel)]="auditSuggestion.comments" rows="5" cols="110"></textarea>
+                <br>
+                <br>
+                <br>
+                <br>
+                <h3>Approve Logs</h3>
+                <!--  header="approve nod"  scrollable="true" scrollHeight="15rem"-->
+                <p-dataTable class="data-table" [value]="auditForm.opinions" dataKey="rownum">
+                    <p-column field="taskName" header="Approve Node" [style]="{'text-align':'center'}"></p-column>
+                    <p-column field="userName" header="Name" [style]="{'text-align':'center'}"></p-column>
+                    <p-column field="createTime" header="Date" [style]="{'text-align':'center'}"></p-column>
+                    <p-column field="isAgree" header="Decision" [style]="{'text-align':'center'}"></p-column>
+                    <p-column header="Comments" [style]="{'text-align':'center'}">
+                        <template let-data="rowData" pTemplate="body">
+                            <span pTooltip={{data.comments}} *ngIf="data.comments.length > 9" tooltipPosition="top">{{data.comments.slice(0,10) + "......"}}</span>
+                            <span *ngIf="data.comments.length < 10">{{data.comments}}</span>
+                        </template>
+                    </p-column>
+                </p-dataTable>
+                <button style="float: right;margin-top: 1rem;" type="button" pButton (click)="audit()" label="Submit"></button>
+                <!-- <button style="float: right;margin-top: 1rem;" type="button" pButton (click)="reject()" label="reject"></button> -->
+            </p-tabPanel>
+            <!-- <p-tabPanel header="work flow picture"> -->
+            <!-- <img [src]="auditForm.processPicUrl"> -->
+            <!-- </p-tabPanel> -->
+        </p-tabView>
+    </p-dialog>
+    <p-dialog header="Work Flow Picture" class="dialog approve-dialog" *ngIf="pictureDisplay" [(visible)]="pictureDisplay" modal="modal"
+        header="" [responsive]="true">
+        <img [src]="auditForm.processPicUrl">
+    </p-dialog>
+    <!--提交下一步审批=========================================================================================-->
+    <p-dialog header="{{wfTypeInfo}} Approve" class="dialog" [(visible)]="nextDisplay" modal="modal" [responsive]="true">
+        <table>
+            <tr style="height: 3rem;">
+                <td>Approve Node</td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
+                <td>Approver</td>
+            </tr>
+            <!-- style="height: 3rem;" -->
+            <tr *ngFor="let item of nextData">
+                <td>{{item.name}}</td>
+                <td></td>
+                <td *ngIf="item.name !== 'End'">[{{item.participants.join(", ")}}]</td>
+            </tr>
+        </table>
+        <!-- <button pButton (click)="commit()">submit</button> -->
+        <button type="button" style="margin-top: 1rem;" pButton (click)="commit()" label="Submit"></button>
+    </p-dialog>
+    <p-dialog class="dialog dialog-delete" header="Reject Work Flow" [(visible)]="rejectDialog">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-4">
+                <label for="regionType">Description :</label>
+            </div>
+        </div>
+        <div class="ui-grid-row">
+            <textarea type="text" pInputTextarea style="width:95%;height:80px;" [(ngModel)]="dialogDescription" maxlength="200"></textarea>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="rejectNo(idx,data)" label="Cancel"></button>
+                <button [(disabled)]="!dialogDescription" type="button" pButton (click)="rejectYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

@@ -1,0 +1,251 @@
+<div class="rental-record">
+    <div class="button-content">
+        <div style="width: 30%; float: left; margin-right: 1rem;">
+            <div class="yearCalendar">
+                <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" (onSelect)="dateSelectCalendar()"
+                    styleClass="calendar-input yearCalendar" [readonlyInput]="true" [(ngModel)]="selectSearchDate"></p-calendar>
+            </div>
+            <div class="yearDrop">
+                <p-dropdown (onChange)="dataSelectDropdown()" autoWidth="false" [options]="yearSearchOption" [(ngModel)]="selectedYearSearch"></p-dropdown>
+            </div>
+        </div>
+        <button pButton *ngIf="authorityData" type="button" class="program-add" (click)="dataSearchClick()" label="search"></button>
+        <button pButton *ngIf="authorityData" type="button" class="program-add" (click)="addRentalRecordClick()" label="Add"></button>
+        <button pButton *ngIf="authorityData" type="button" class="program-add" (click)="exportRentalRecordClick()" label="Export"></button>
+        <button pButton *ngIf="authorityData" type="button" class="program-add" (click)="copyRentalRecordClick()" label="Copy"></button>
+    </div>
+    <p-dataTable class="ui-grid data-table" scrollable="true" scrollHeight="29.5rem" [value]="rentalRecordData" [rows]="10">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                <span *ngIf="rentalRecordData[idx].leaseRecordId">{{idx + 1}}</span>
+            </template>
+        </p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="blockAddress" header="Project Name"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="contractCode" header="Contract Code"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="commencementDate" header="Commnecenment Date"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="rentalAddress" header="Rental Adress"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="contractPeriod" header="Contract Period"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="contractCycle" header="Contract Cycle"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="supplier" header="Supplier"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="propertyType" header="Property Type"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="totalRental" header="Total Rental"></p-column>
+        <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="createTime" header="Create Time"></p-column>
+        <p-column *ngIf="authorityData" styleClass="ui-grid-col-1" header="">
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span *ngIf="rentalRecordData[idx].leaseRecordId" class="edit-span" (click)="editRentalRecordClick(idx,data)">Edit</span>
+                <span *ngIf="rentalRecordData[idx].leaseRecordId" class="edit-span" (click)="deleteRentalRecordClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <!-- <p-paginator rows="10" totalRecords="{{rentalPaginatorTotal}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)=rentalPaginate($event)"></p-paginator> -->
+    <!-- 添加界面 -->
+    <p-dialog class="dialog rental-modify-dialog" header="Modify Rental Record" [(visible)]="modifyDialog" [responsive]="true"
+        showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionCode">Project Name :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input maxlength="100" pInputText [(ngModel)]="dialogProjectName" />
+                </div>
+                <div class="ui-grid-col-2">
+                    <label class="required" for="regionCode">Contract No :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input maxlength="100" pInputText [(ngModel)]="dialogContractNo" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Commencement :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" styleClass="calendar-input"
+                        [readonlyInput]="true" [(ngModel)]="selectCommencementDate"></p-calendar>
+                </div>
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Rental Adress :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input maxlength="100" pInputText [(ngModel)]="dialogRentalAdress" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Contract Period :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input type="text" (keydown)="messageService.checkNumValue($event, 99999999)"  min="0" pInputText [(ngModel)]="dialogContractPeriod" />
+                </div>
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Contract Cycle :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <div class="ui-grid-col-6">
+                        <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" styleClass="calendar-input"
+                            [readonlyInput]="true" [(ngModel)]="dialogContractCycleStart" [maxDate]="dialogContractCycleEnd"></p-calendar>
+                    </div>
+                    <div class="ui-grid-col-6">
+                        <p-calendar [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" styleClass="calendar-input"
+                            [readonlyInput]="true" [(ngModel)]="dialogContractCycleEnd" [minDate]="dialogContractCycleStart"></p-calendar>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-2">
+                    <label for="regionType">Supplier :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input maxlength="100" pInputText id="regionType" [(ngModel)]="dialogSupplier" />
+                </div>
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Property Type :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <p-dropdown class="drop-down property-drop-down" autoWidth="false" [options]="propertyTypeOption" [(ngModel)]="selectedPropertyType"></p-dropdown>
+                </div>
+            </div>
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label for="regionGroup">Intention :</label></div>
+                <div class="ui-grid-col-10">
+                    <textarea type="text" pInputTextarea style="width:100%; height:7rem;" [(ngModel)]="dialogIntention"></textarea>
+                </div>
+            </div> -->
+            <!-- <div class="ui-grid-row">
+                <div class="ui-grid-col-2"><label for="regionGroup">Lease Strategy :</label></div>
+                <div class="ui-grid-col-10">
+                    <textarea type="text" pInputTextarea style="width:100%; height:7rem;" [(ngModel)]="dialogLeaseStrategy"></textarea>
+                </div>
+            </div> -->
+            <div class="ui-grid-row">
+                <!-- <div class="ui-grid-col-2"><label for="regionCode">Contract Code :</label></div>
+                <div class="ui-grid-col-4">
+                    <input pInputText id="regionType" [(ngModel)]="dialogContractCode" />
+                </div> -->
+                <div class="ui-grid-col-2">
+                    <label for="regionCode">Total Rental :</label>
+                </div>
+                <div class="ui-grid-col-4">
+                    <input disabled required pInputText id="regionType" [(ngModel)]="dialogTotalRental" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-1">
+                    <button type="button" pButton (click)="addYearRentalClick()" label="Add"></button>
+                </div>
+                <div class="ui-grid-col-11"></div>
+            </div>
+            <div class="ui-grid-row">
+                <p-dataTable selectionMode="single" class="ui-grid data-table" [value]="yearRentalData" [rows]="10">
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="year" header="Year"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="acreage" header="Acreage"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="price" header="Price(day)"></p-column>
+                    <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="rental" header="Rental"></p-column>
+                    <p-column styleClass="ui-grid-col-1" header="">
+                        <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                            <span *ngIf="yearRentalData[idx]" class="edit-span" (click)="editYearRentalClick(idx,data)">Edit</span>
+                            <span *ngIf="yearRentalData[idx]" class="edit-span" (click)="deleteYearRentalClick(idx,data)">Delete</span>
+                        </template>
+                    </p-column>
+                </p-dataTable>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="modifyRentalRecordCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogProjectName || !dialogContractNo" pButton (click)="modifyRentalRecordSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- yearRental 表格添加 -->
+    <p-dialog class="dialog" header="Modify Year Rental" [(visible)]="modifyYearRentalDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">Year :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input type="text" (keydown)="messageService.checkNumValue($event, 9999)" min="0" pInputText [(ngModel)]="dialogRentalYear" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">Acreage :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input type="text"  (keydown)="messageService.checkNumValue($event, 999)"  min="0" pInputText [(ngModel)]="dialogRentalAcreage" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="regionCode">Price :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input type="text"  (keydown)="messageService.checkNumValue($event, 99999999)" min="0" pInputText [(ngModel)]="dialogRentalPrice" />
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="modifyYearRentalCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!dialogRentalAcreage || !dialogRentalPrice || !dialogRentalYear" pButton (click)="modifyYearRentalSave()"
+                    label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <p-dialog class="dialog dialog-copy" header="Modify Year Rental" [(visible)]="copyRentalDialog" [responsive]="true" showEffect="fade"
+        [modal]="true">
+        <!-- <div class="ui-grid-row">
+            <div style="float: left; width: 9rem; margin-top: .25rem;">
+                <label>Project Name :</label>
+            </div>
+            <div style="float: left; width: 14rem; margin-left: 1rem;">
+                <input (keyup)="regionNameEnterSearch($event)" style="width: 100%;" pInputText [(ngModel)]="dialogBlockAddress" />
+            </div>
+            <div style="float: left; margin-left: 1rem;">
+                <button pButton type="button" class="program-add" (click)="regionNameLookClick()" label="Search"></button>
+            </div>
+        </div> -->
+        <p-dataTable class="ui-grid data-table" [(selection)]="selectedRentalRecordData" scrollable="true" scrollHeight="29.5rem"
+            [value]="rentalRecordData" [rows]="10">
+            <p-column styleClass="ui-grid-col-1" header="NO">
+                <template let-idx="rowIndex" pTemplate="body">
+                    <span *ngIf="rentalRecordData[idx].leaseRecordId">{{idx + 1}}</span>
+                </template>
+            </p-column>
+            <p-column [style]="{'width':'2.5rem'}" selectionMode="multiple"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="blockAddress" header="Project Name"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="contractCode" header="Contract Code"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="commencementDate" header="Commnecenment Date"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="rentalAddress" header="Rental Adress"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="contractPeriod" header="Contract Period"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="contractCycle" header="Contract Cycle"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="supplier" header="Supplier"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="propertyType" header="Property Type"></p-column>
+            <p-column rowStyleClass="table-align" styleClass="ui-grid-col-1" field="totalRental" header="Total Rental"></p-column>
+        </p-dataTable>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="copyRentalCancel()" label="Cancel"></button>
+                <button type="button" [(disabled)]="!selectedRentalRecordData.length" pButton (click)="copyRentalSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog dialog-delete" header="Delete Rental Record" [(visible)]="deleteDialog">
+        <div>
+            Are You Sure To Delete?
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="deleteRentalRecordNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton (click)="deleteRentalRecordYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+
+</div>

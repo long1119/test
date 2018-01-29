@@ -1,0 +1,14 @@
+<div class="system-log-content ui-grid">
+    <div class="content-left ui-grid-col-2">
+        <h3>Role Name</h3>
+        <div style="width: 95%; border: 1px solid #ddd; border-bottom: 0 none;">
+            <input style="width: 100%;" pInputText [(ngModel)]="dialogRoleName" placeholder="Please Insert Role Name" (keyup)="autoMatch()"
+            />
+        </div>
+        <p-listbox (onChange)="systemListClick($event)" [options]="systemListData" class="data-list" [(ngModel)]="selectedRole">
+        </p-listbox>
+    </div>
+    <div class="content-right ui-grid-col-10">
+        <permission [selectedRole]="selectedRole"></permission>
+    </div>
+</div>

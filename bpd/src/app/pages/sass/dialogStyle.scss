@@ -1,0 +1,53 @@
+ .dialog {
+     .ui-dialog {
+         position: fixed;
+         top: 50% !important;
+         left: 50% !important;
+         transform: translate(-50%, -50%) !important;
+     }
+     &>div {
+         .ui-dialog-content {
+             min-height: 10rem;
+             max-height: 50rem;
+            //  overflow: auto;
+            overflow: inherit;
+         }
+         .ui-dialog-titlebar {
+             background: $table-head;
+             color: #fff; //  text-align: center;
+             a {
+                 color: #FFFFFF;
+             }
+         }
+         width: 30%;
+         position: fixed;
+         top: 3rem;
+         &>div {
+             &>div {
+                 &>div {
+                     margin: 1rem 0;
+                 }
+             }
+         }
+     }
+     .required {
+         //  width: 100%;
+         margin: -.9rem;
+         &:before {
+             padding-right: .3rem;
+             content: "*";
+             color: red;
+         }
+     }
+     input {
+         width: 90%;
+     }
+     .data-table {
+         .ui-paginator-bottom {
+             background: transparent;
+             .ui-datatable {
+                 color: #000;
+             }
+         }
+     }
+ }

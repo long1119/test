@@ -1,0 +1,107 @@
+@import "../../../sass/privateStyle";
+.theme{
+    .table{
+        .txt{
+            color:#6BB2F3;
+            cursor: pointer;
+            margin: 1rem;
+        }
+    }
+    .outer{
+        .stepOne{
+            .ui-g{
+                margin: 0;
+                .txt{
+                    margin: 0;
+                    .wrap{
+                        height: 100%;
+                        border: 1px solid #C8C8C8;
+                        border-radius: 3px;
+                    }
+                }
+            }
+            .card{
+                border:1px solid #4B98DC;
+                border-radius:5px 5px 0 0;
+                .card-title{
+                    height: 30px;
+                    line-height: 30px;
+                    background-color: #4B98DC;
+                    color:white;
+                    border-radius:5px 5px 0 0;
+                }
+            }
+            .foot{
+                margin-top:0.5rem;
+            }
+            .wrapOne{
+                height: 430px;
+                overflow-y: auto;
+            }
+        }
+        .stepTwo{
+            .wrapTwo{
+                height: 440px;
+                overflow-y: auto;
+                .childTwo{
+                    .text{
+                        text-align: right;
+                    }
+                    .tipBar{
+                        display: -webkit-flex; 
+                        display: flex;
+                    }
+                    .wrap-percent{
+                        display: -webkit-flex; 
+                        display: flex;
+                        .percent{
+                            width: 20%;
+                        }
+                    }
+                    .tubiao{
+                        width: 15px;
+                        height: 15px;
+                        display: inline-block;
+                        margin: 0 10px 0 20px;
+                    }
+                }
+            }
+        }
+    }
+    .foot{
+        margin: 0.5rem 0;
+    }
+    .red{
+        background-color: red;
+        color: white;
+    }
+    .yellow{
+        background-color: yellow;
+    }
+    .green{
+        background-color: #00FF00;
+    }
+    .table-bordered td{
+        border: 1px solid #D9D9D9 !important;
+      }
+      .table-bordered th{
+        border: 1px solid #D9D9D9 !important;
+      }
+      .thead-inverse{
+        background-color: #4B98DC;
+        color: white;
+    }
+    .table > tbody > tr > td:last-child{
+        padding-right: 8px !important;
+    }
+    .clickStyle{
+        background-color: #186BA0;
+        color: white;
+        .txt{
+            color: white;
+        }
+    }
+    .overStyle{
+        background-color: rgba(220,220,220,0.5);
+    }
+}

@@ -1,0 +1,40 @@
+@import '../../../../../sass/privateStyle';
+.nod-information-content {
+    .button-tab {
+        margin-top: 1rem;
+    }
+    .information-modify-dialog {
+        // .ui-dialog {
+            // margin-top: -10rem;
+        // }
+        &>div {
+            .ui-dialog-content {
+                height: 40rem;
+                overflow: auto;
+            }
+            width: 70%;
+        }
+        input {
+            width: 95%;
+        }
+        .dialog-search-input {
+            float: left;
+            width: 87%;
+        }
+        .dialog-search-button {
+            float: left;
+            width: 8%;
+            height: 2.3rem;
+            box-sizing: border-box;
+            margin: 0;
+        }
+        .ar-project-search {
+            &>::after {
+                content: "";
+                height: 0;
+                clear: both;
+                display: table;
+            }
+        }
+    }
+}

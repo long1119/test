@@ -1,0 +1,121 @@
+<div class="ui-grid project-level">
+    <button *ngIf="localStorageAuthority" pButton type="button" [disabled]="!projectType" (click)="addClick()" label="Add"></button>
+    <p-dataTable class="ui-grid-row data-table" [value]="baseData">
+        <p-column styleClass="ui-grid-col-1" header="NO">
+            <template let-idx="rowIndex" pTemplate="body">
+                {{idx + 1}}
+            </template>
+        </p-column>
+        <p-column styleClass="ui-grid-col-3" field="levelName" header="Level Name"></p-column>
+        <p-column styleClass="ui-grid-col-2" field="serialNo" header="Level"></p-column>
+        <p-column styleClass="ui-grid-col-3" field="fileName" header="File Name"></p-column>
+        <p-column *ngIf="localStorageAuthority" styleClass="ui-grid-col-3">
+            <template pTemplate="header">
+                
+            </template>
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span class="edit-span" *ngIf="uploadFlag" (click)="upLoadClick(idx,data)">UpLoad</span>
+                <span class="edit-span" *ngIf="uploadFlag && data.fileName" (click)="downloadClick(idx,data)">Download</span>
+                <span class="edit-span" (click)="editClick(idx,data)">Edit</span>
+                <span class="edit-span" (click)="deleteClick(idx,data)">Delete</span>
+            </template>
+        </p-column>
+        <p-column *ngIf="!localStorageAuthority && !uploadFlag" styleClass="ui-grid-col-3">
+            <template pTemplate="header">
+                
+            </template>
+            <template let-idx="rowIndex" let-data="rowData" pTemplate="body">
+                <span class="edit-span" (click)="upLoadClick(idx,data)">UpLoad</span>
+                <span class="edit-span" *ngIf="data.fileName" (click)="downloadClick(idx,data)">Download</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-dialog class="dialog" header="Investment Property" [(visible)]="addDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="plantComment">Project Type :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input disabled pInputText id="plantComment" [(ngModel)]="projectTypeName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="plantComment">Level Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" pInputText id="plantComment" [(ngModel)]="dialogLevelName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="plantComment">Level :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="3" pInputText type="number" id="plantComment" [(ngModel)]="dialogLevel" />
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="addCancle()" label="Cancel"></button>
+                <button type="button" pButton [(disabled)]="!dialogLevelName"  (click)="addSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+
+    <p-dialog class="dialog" header="Investment Property" [(visible)]="editDialog" [responsive]="true" showEffect="fade" [modal]="true">
+        <div class="ui-grid-responsive ui-fluid">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label for="plantComment">Project Type :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" disabled pInputText id="plantComment" [(ngModel)]="projectTypeName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="plantComment">Level Name :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" pInputText id="plantComment" [(ngModel)]="dialogLevelName" />
+                </div>
+            </div>
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-4">
+                    <label class="required" for="propertyCode">Level :</label>
+                </div>
+                <div class="ui-grid-col-8">
+                    <input maxlength="36" pInputText type="number" id="plantComment" [(ngModel)]="dialogLevel" />
+                </div>
+            </div>
+        </div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton (click)="editCancle()" label="Cancel"></button>
+                <button type="button" pButton [(disabled)]="!dialogLevelName" (click)="editSave()" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 上传 -->
+    <p-dialog class="dialog" header="Project Level" [(visible)]="upLoaded">
+        <div>
+            Please Upload Excel File!
+        </div>
+        <p-fileUpload mode="basic" name="file" url="/bpd-proj/bpd/att/upload?attId={{Uuid}}&bussinessId={{baseData[selectedIndex]?.projectLevelId}}" accept="" maxFileSize="500000000" (onBeforeUpload)="onBasicBeforeUpload($event)" (onUpload)="onBasicUpload($event)"></p-fileUpload>
+    </p-dialog>
+    <!-- 删除弹框 -->
+    <p-dialog class="dialog" header="Project Level" [(visible)]="deleteDialog">
+        <div>Are You Sure To Delete?</div>
+        <p-footer>
+            <div class="ui-dialog-buttonpane ui-helper-clearfix">
+                <button type="button" pButton  (click)="deleteNo(idx,data)" label="Cancel"></button>
+                <button type="button" pButton  (click)="deleteYes(idx,data)" label="Confirm"></button>
+            </div>
+        </p-footer>
+    </p-dialog>
+    <!-- 成功弹框提示 -->
+    <p-growl styleClass="message-class" [(value)]="msgs" life="{{growLife}}"></p-growl>
+</div>

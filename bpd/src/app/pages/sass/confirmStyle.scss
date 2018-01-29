@@ -1,0 +1,12 @@
+p-confirmDialog {
+    .ui-dialog.ui-widget .ui-dialog-titlebar {
+        background: #2399e5;
+        color: #fff;
+        a {
+            color: #fff;
+        }
+    }
+    .ui-dialog.ui-widget .ui-dialog-content {
+        padding: 1em 2em;
+    }
+}

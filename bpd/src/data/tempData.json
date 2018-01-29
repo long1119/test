@@ -1,0 +1,38 @@
+[
+  {
+    "id": 0,
+    "code": "XXXXXXX",
+    "projTypeId": "系统开发",
+    "delivModeId": "瀑布",
+    "tempStatus": "草稿",
+    "checkStatus": "发布",
+    "isActivity": true
+  },
+  {
+    "id": 1,
+    "code": "XXXXXXX",
+    "projTypeId": "系统开发",
+    "delivModeId": "瀑布",
+    "tempStatus": "草稿",
+    "checkStatus": "发布",
+    "isActivity": false
+  },
+  {
+    "id": 2,
+    "code": "XXXXXXX",
+    "projTypeId": "系统开发",
+    "delivModeId": "瀑布",
+    "tempStatus": "草稿",
+    "checkStatus": "发布",
+    "isActivity": false
+  },
+  {
+    "id": 3,
+    "code": "XXXXXXX",
+    "projTypeId": "系统开发",
+    "delivModeId": "瀑布",
+    "tempStatus": "草稿",
+    "checkStatus": "发布",
+    "isActivity": true
+  }
+]

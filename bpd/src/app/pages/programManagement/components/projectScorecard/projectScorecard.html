@@ -1,0 +1,195 @@
+<div style="width:20%;float:left;">
+    <p-dataTable [rows]="10" [value]="programStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="45rem" (onRowClick)="programGridRowClick($event)" selectionMode="single" [(selection)]="programSelectedStore">
+        <p-header>
+            <div class="previous-head">{{ProgramSearchTitle}}</div>
+            <button pButton type="button" class="previous-button" icon="fa-search" (click)="lookUpBtn()"></button>
+            <button pButton type="button" class="previous-button" icon="fa-reply-all" (click)="changeProgram()"></button>
+        </p-header>
+        <p-column field="programCode" header="Program Code" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="modelYear" header="Model Year" styleClass="ui-grid-col-2 align-center"></p-column>
+    </p-dataTable>
+</div>
+<div style="width:79%;float:right;">
+    <p-dataTable [rows]="15" [value]="gridStore" class="data-table" scrollable="true" scrollHeight="45rem" [rowHover]=true>
+        <p-column field="id" header="No" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="subject" header="Subject" styleClass="ui-grid-col-5 align-center"></p-column>
+        <p-column field="pqrrMilestoneName" header="Milestone" styleClass="ui-grid-col-3 align-center"></p-column>
+        <p-column field="userName" header="Release User" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column field="createDate" header="Release Date" styleClass="ui-grid-col-2 align-center"></p-column>
+        <p-column header="" styleClass="ui-grid-col-3 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <span *ngIf="item.id" class="editBtn" style="margin-right:0" (click)="toDetailBtn(item)">View Detail Report</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+    <p-paginator totalRecords="{{gridStoreLen}}" [rowsPerPageOptions]="[15,30,45]" rows="{{gridStoreRows}}" first="{{gridStoreFirst}}" pageLinkSize="3" (onPageChange)="gridPaginate($event)"></p-paginator>
+</div>
+<p-dialog header="Locate Program" [(visible)]="lookUpDisplay" width="350" modal="modal" class="dialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Program Code:</span>
+                <input style="width:69%" class="input" type="text" pInputText [(ngModel)]="programCodeSearch" maxlength="8">
+            </div>
+        </div>
+    </div>
+    <div class="lookUpFooter">
+        <button pButton type="button" (click)="lookUpSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="lookUpCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Scorecard Status" [(visible)]="statusDisplay" width="950" minHeight=800 [responsive]="true" modal="modal" class="generalDialog">
+    <div class="topBar">
+        Pre_Status Version:
+        <p-dropdown autoWidth="false" [options]="preStatusStore" [(ngModel)]="preStatus" (onChange)="preStatusChange($event)" appendTo="body"></p-dropdown>
+        Cur_Status Version:
+        <p-dropdown autoWidth="false" [options]="curStatusStore" [(ngModel)]="curStatus" (onChange)="curStatusChange($event)" appendTo="body"></p-dropdown>
+        <button pButton type="button" (click)="refreshBtn()" label="Refresh"></button>
+        <button pButton type="button" [(disabled)]="!statusStore[0].metricGroup" (click)="exportBtn()" label="Export"></button>
+    </div>
+    <p-dataTable [rows]="10" [value]="statusStore" class="data-table" [rowHover]=true scrollable="true" scrollHeight="30rem">
+        <p-headerColumnGroup>
+            <p-row>
+                <p-column header="NO" styleClass="ui-grid-col-1 align-center"></p-column>
+                <p-column header="Group" styleClass="ui-grid-col-2"></p-column>
+                <p-column header="Metrics" styleClass="ui-grid-col-5"></p-column>
+                <p-column header="{{title}}" styleClass="ui-grid-col-2"></p-column>
+                <!-- <p-column header="Proposed Target" styleClass="ui-grid-col-2"></p-column> -->
+                <p-column header="{{title1}} Status" colspan="2" styleClass="ui-grid-col-4"></p-column>
+                <p-column header="{{title2}} Status" colspan="2" styleClass="ui-grid-col-4"></p-column>
+                <p-column header="Memo" styleClass="ui-grid-col-3"></p-column>
+            </p-row>
+        </p-headerColumnGroup>
+        <p-column field="id" styleClass="ui-grid-col-1 align-center"></p-column>
+        <p-column field="metricGroup" styleClass="ui-grid-col-2"></p-column>
+        <p-column field="indexName" styleClass="ui-grid-col-5"></p-column>
+        <p-column field="targetVolume" styleClass="ui-grid-col-2"></p-column>
+        <!-- <p-column field="proposedTarget" styleClass="ui-grid-col-2"></p-column> -->
+        <p-column field="valueOfMilestone1" styleClass="ui-grid-col-3"></p-column>
+        <p-column styleClass="ui-grid-col-1 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <i *ngIf="item.statusOfMilestone1 == 'G'" class="fa fa-circle green"></i>
+                <i *ngIf="item.statusOfMilestone1 == 'Y'" class="fa fa-circle yellow"></i>
+                <i *ngIf="item.statusOfMilestone1 == 'R'" class="fa fa-circle red"></i>
+                <i *ngIf="item.statusOfMilestone1 == 'W'" class="fa fa-circle white"></i>
+            </template>
+        </p-column>
+        <p-column field="valueOfMilestone2" styleClass="ui-grid-col-3"></p-column>
+        <p-column styleClass="ui-grid-col-1 align-center">
+            <template pTemplate="body" let-item="rowData">
+                <i *ngIf="item.statusOfMilestone2 == 'G'" (click)="changeStatus(item,false)" class="fa fa-circle green"></i>
+                <i *ngIf="item.statusOfMilestone2 == 'Y'" (click)="changeStatus(item,false)" class="fa fa-circle yellow"></i>
+                <i *ngIf="item.statusOfMilestone2 == 'R'" (click)="changeStatus(item,false)" class="fa fa-circle red"></i>
+                <i *ngIf="item.statusOfMilestone2 == 'W'" (click)="changeStatus(item,false)" class="fa fa-circle white"></i>
+            </template>
+        </p-column>
+        <p-column field="statusDesc" styleClass="ui-grid-col-3">
+            <template pTemplate="body" let-item="rowData">
+                <span pTooltip={{item.statusDesc}} *ngIf="item.indexId && item.statusDesc && item.statusDesc.length > 7" style="margin-right:0" class="editBtn" (click)="setMemo(item)">{{item.statusDesc.slice(0, 5) + '...'}}</span>
+                <span *ngIf="item.indexId && item.statusDesc && item.statusDesc.length < 8" style="margin-right:0" class="editBtn" (click)="setMemo(item)">{{item.statusDesc}}</span>
+                <span *ngIf="item.indexId && !item.statusDesc" style="width:100%;height:100%;margin-right:0" class="editBtn" (click)="setMemo(item)">-</span>
+            </template>
+        </p-column>
+    </p-dataTable>
+</p-dialog>
+<p-dialog class="dialog" header="Set Status" [(visible)]="setStatusDialog" width="450">
+    <div style="font-size:14px;font-weight:bold;margin-bottom:5px;background-color:#e6e6e6;padding:7px">Status:</div>
+    <div class="ui-g">
+        <p-radioButton class="radio-button" style="margin-left:40px" name="White" value="W" label="White" [(ngModel)]="authorizeRadio"></p-radioButton>
+        <p-radioButton class="radio-button" style="margin-left:40px" name="Yellow" value="Y" label="Yellow" [(ngModel)]="authorizeRadio"></p-radioButton>
+        <p-radioButton class="radio-button" style="margin-left:40px" name="Red" value="R" label="Red" [(ngModel)]="authorizeRadio"></p-radioButton>
+        <p-radioButton class="radio-button" style="margin-left:40px" name="Green" value="G" label="Green" [(ngModel)]="authorizeRadio"></p-radioButton>
+    </div>
+    <div class="footer">
+        <button pButton type="button" [(disabled)]="!authorizeRadio" (click)="setStatusSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="setStatusDialog=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Set Memo" [(visible)]="setSuggestionDisplay" width="450" modal="modal" class="generalDialog">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon" style="width:90px;float:left;">Memo:</span>
+                <textarea style="width:300px;height:55px" type="text" pInputTextarea [(ngModel)]="suggestion" maxlength="100"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button pButton type="button" [(disabled)]="!suggestion" (click)="setSuggestionSaveBtn()" label="Confirm" style="margin-right:10px"></button>
+        <button pButton type="button" (click)="setSuggestionDisplay=false" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog header="Add Issue" [(visible)]="addIssueDisplay" width="600" [responsive]="true" modal="modal" class="dialogLittle">
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Issue:</span>
+                <input type="text" pInputText [(ngModel)]="issueValue">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon required">Issue Date:</span>
+                <p-calendar [(ngModel)]="issueDate" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" appendTo="body"></p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon" style="height:80px;line-height:80px;">Description/Action:</span>
+                <textarea type="text" pInputTextarea style="height:80px;" [(ngModel)]="actionValue"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Owner:</span>
+                <input type="text" pInputText readonly="true" [(ngModel)]="ownerValue" (click)="getUser()">
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon">Target Close Date:</span>
+                <p-calendar [(ngModel)]="closeDate" dateFormat="yy-mm-dd" [monthNavigator]="true" readonlyInput="true" [yearNavigator]="true" yearRange="{{yearRange}}" appendTo="body"></p-calendar>
+            </div>
+        </div>
+    </div>
+    <div class="ui-g ui-fluid">
+        <div class="ui-g-12 ui-md-12">
+            <div class="ui-inputgroup">
+                <span class="ui-inputgroup-addon" style="height:80px;line-height:80px;">Tracking forum:</span>
+                <textarea type="text" pInputTextarea style="height:80px;" [(ngModel)]="forumValue"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <button pButton type="button" (click)="addIssueSaveBtn()" label="Confirm" style="margin-right:10px" [(disabled)]="!issueValue || !issueDate"></button>
+        <button pButton type="button" (click)="addIssueCancelBtn()" label="Cancel"></button>
+    </div>
+</p-dialog>
+<p-dialog class="dialog" header="Please Choose Your Manager" [(visible)]="managerSearchDialog" [responsive]="true" [modal]="true" width="800">
+    <div class="topBar">
+        Department:<input (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="managerDialogDepartment" class="searchInput">
+        User Name:<input (keyup)="lookClickEnterSearch($event)" type="text" pInputText [(ngModel)]="managerDialogUserName" class="searchInput">
+        <button pButton type="button" (click)="lookClick()" label="Search"></button>
+    </div>
+    <div class="ui-grid" style="padding:5px">
+        <p-dataTable (onRowDblclick)="managerDbclick($event)" [rowHover]=true selectionMode="single" class="data-table" [value]="managerData" rows="10" scrollable="true" scrollHeight="30rem">
+            <p-column styleClass="ui-grid-col-2" field="userName" header="User Name"></p-column>
+            <p-column field="employeeCode" header="Employee ID" styleClass="ui-grid-col-2 align-center"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="jobPosition" header="Job"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="telephone" header="Telphone"></p-column>
+            <p-column styleClass="ui-grid-col-3" field="emailAddress" header="Email"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="departmentName" header="Department"></p-column>
+            <p-column styleClass="ui-grid-col-2" field="masterName" header="Manager"></p-column>
+        </p-dataTable>
+        <p-paginator rows="{{managerDataRows}}" first="{{managerDataFirst}}" totalRecords="{{managerDataLen}}" pageLinkSize="3" [rowsPerPageOptions]="[10,20,30]" (onPageChange)="managerPaginate($event)"></p-paginator>
+    </div>
+</p-dialog>
+<p-growl styleClass="message-class" [(value)]="msgs" life="3000"></p-growl>

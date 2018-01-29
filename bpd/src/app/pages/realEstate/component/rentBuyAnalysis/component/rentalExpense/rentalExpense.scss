@@ -1,0 +1,43 @@
+@import '../../../../../sass/privateStyle';
+.rental-expense {
+    .panel {
+        &>div {
+            .ui-panel-content-wrapper {
+                .ui-panel-content {
+                    overflow: hidden;
+                    &::before {
+                        content: "";
+                        height: 0;
+                        display: table;
+                        clear: both;
+                    }
+                }
+            }
+            .panel-in-panel {
+                margin: 0;
+            }
+        }
+        .inner-table-input {
+            margin-top: 1rem;
+        }
+        .inner-input {
+            margin: 1rem 0;
+        }
+        .inner-button-content {
+            margin: 1rem 0 0 0;
+        }
+    }
+    .real-estate-modify {
+        &>div {
+            width: 30%;
+        }
+        input {
+            width: 85%;
+        }
+    }
+    .data-table {
+        &>div  {
+            margin-top: 1rem;
+        }
+    }
+}
